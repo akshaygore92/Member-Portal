@@ -1,0 +1,550 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prior Authorization Request | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#081425",
+                    "tertiary": "#bec6e0",
+                    "on-error": "#690005",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary-fixed-variant": "#004e5a",
+                    "on-tertiary": "#283044",
+                    "inverse-primary": "#494bd6",
+                    "on-surface": "#d8e3fb",
+                    "inverse-on-surface": "#263143",
+                    "surface-variant": "#2a3548",
+                    "on-surface-variant": "#c7c4d7",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "outline-variant": "#464554",
+                    "on-primary-container": "#0d0096",
+                    "inverse-surface": "#d8e3fb",
+                    "surface-tint": "#c0c1ff",
+                    "secondary-fixed-dim": "#2fd9f4",
+                    "surface-container-low": "#111c2d",
+                    "on-secondary-fixed": "#001f25",
+                    "surface-container-high": "#1f2a3c",
+                    "on-secondary": "#00363e",
+                    "surface": "#081425",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-tertiary-container": "#22293d",
+                    "secondary": "#5de6ff",
+                    "tertiary-fixed": "#dae2fd",
+                    "secondary-container": "#00cbe6",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "error": "#ffb4ab",
+                    "secondary-fixed": "#a2eeff",
+                    "on-background": "#d8e3fb",
+                    "surface-container-highest": "#2a3548",
+                    "primary": "#c0c1ff",
+                    "tertiary-container": "#8990a8",
+                    "outline": "#908fa0",
+                    "on-secondary-container": "#00515d",
+                    "surface-bright": "#2f3a4c",
+                    "on-primary": "#1000a9",
+                    "surface-container": "#152031",
+                    "primary-container": "#8083ff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "background": "#081425",
+                    "on-primary-fixed": "#07006c",
+                    "surface-container-lowest": "#040e1f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-1": "0.25rem",
+                    "margin-safe": "2rem",
+                    "base": "4px",
+                    "unit-2": "0.5rem",
+                    "unit-8": "2rem",
+                    "unit-4": "1rem",
+                    "unit-12": "3rem",
+                    "gutter": "1.5rem"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-xl": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(13, 20, 37, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .ai-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 border-b bg-slate-950/80 backdrop-blur-xl border-slate-800/50 shadow-[0_8px_32px_rgba(99,102,241,0.1)] flex justify-between items-center px-6 h-16 w-full font-inter antialiased">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white">Axis Core AI</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="Claim1.html">Claims</a>
+<a class="text-indigo-400 border-b-2 border-indigo-500 pb-1" href="AddAuth.html">Authorizations</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="PaymentandRecon.html">Billing</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar Shell (Web Only) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full w-64 border-r border-slate-800/50 bg-slate-950 flex-col pt-20">
+<div class="px-6 mb-8">
+<h2 class="text-indigo-400 text-xs font-bold uppercase tracking-[0.2em] mb-1">Orchestration</h2>
+<p class="text-slate-500 text-xs">AI Medical Concierge</p>
+</div>
+<nav class="flex-1">
+<a class="text-slate-500 flex items-center px-6 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300" href="Claim1.html">
+<span class="material-symbols-outlined mr-3" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium tracking-wide">Claims</span>
+</a>
+<a class="text-slate-500 flex items-center px-6 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300" href="Denial.html">
+<span class="material-symbols-outlined mr-3" data-icon="gavel">gavel</span>
+<span class="text-sm font-medium tracking-wide">Appeals</span>
+</a>
+<a class="bg-indigo-500/10 text-indigo-400 border-l-4 border-indigo-500 flex items-center px-6 py-3" href="AddAuth.html">
+<span class="material-symbols-outlined mr-3" data-icon="verified_user">verified_user</span>
+<span class="text-sm font-medium tracking-wide">Authorizations</span>
+</a>
+<a class="text-slate-500 flex items-center px-6 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300" href="PaymentandRecon.html">
+<span class="material-symbols-outlined mr-3" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-sm font-medium tracking-wide">Billing</span>
+</a>
+<a class="text-slate-500 flex items-center px-6 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300" href="OperationalEffDashboard.html">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="text-sm font-medium tracking-wide">Settings</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 active:scale-95 transition-all">
+                New Request
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:pl-64 pt-24 pb-24 md:pb-8 min-h-screen px-4 md:px-8">
+<div class="max-w-6xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline-lg text-display-xl text-on-surface mb-2">New Prior Authorization</h1>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="auto_awesome">auto_awesome</span>
+                        AI-Guided Request Protocol v4.2
+                    </p>
+</div>
+<!-- Wizard Progress -->
+<div class="flex items-center gap-4 bg-surface-container-high p-4 rounded-2xl glass-panel">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold" id="authStepCircle1">1</div>
+<span class="text-[10px] mt-1 text-primary uppercase font-bold tracking-widest">Procedure</span>
+</div>
+<div class="w-12 h-[2px] bg-primary/30 mb-4"></div>
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant flex items-center justify-center text-xs font-bold" id="authStepCircle2">2</div>
+<span class="text-[10px] mt-1 text-slate-500 uppercase font-bold tracking-widest">Clinical</span>
+</div>
+<div class="w-12 h-[2px] bg-slate-800 mb-4"></div>
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant flex items-center justify-center text-xs font-bold" id="authStepCircle3">3</div>
+<span class="text-[10px] mt-1 text-slate-500 uppercase font-bold tracking-widest">Payer</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8" id="authWizardGrid">
+<!-- Left Column: Form Intake -->
+<div class="lg:col-span-7 flex flex-col gap-8" id="authPrimaryColumn">
+<!-- Procedure Information -->
+<section class="glass-panel rounded-3xl p-8 border-l-2 border-primary" id="authStepSection1">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Procedure Info</h3>
+<span class="bg-secondary/10 text-secondary text-[11px] font-bold px-3 py-1 rounded-full border border-secondary/20 flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+                                AI ASSIST ACTIVE
+                            </span>
+</div>
+<div class="space-y-8">
+<div class="group relative">
+<label class="absolute -top-3 left-0 text-xs font-bold text-secondary uppercase tracking-widest">CPT Code / Procedure Name</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-all outline-none py-3 text-lg placeholder:text-slate-600" id="authProcedureInput" placeholder="e.g., 70551 - MRI Brain without contrast" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="group relative">
+<label class="absolute -top-3 left-0 text-xs font-bold text-slate-500 uppercase tracking-widest">ICD-10 Diagnosis</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-all outline-none py-3 text-lg placeholder:text-slate-600" id="authDiagnosisInput" placeholder="G43.909" type="text"/>
+</div>
+<div class="group relative">
+<label class="absolute -top-3 left-0 text-xs font-bold text-slate-500 uppercase tracking-widest">Urgency</label>
+<select class="w-full bg-transparent border-b border-outline focus:border-secondary transition-all outline-none py-3 text-lg text-on-surface" id="authUrgencyInput">
+<option class="bg-slate-900">Standard (5-7 days)</option>
+<option class="bg-slate-900">Expedited (24-48 hours)</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<!-- Clinical Documentation -->
+<section class="glass-panel rounded-3xl p-8 hidden" id="authStepSection2">
+<div class="mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Clinical Documentation</h3>
+<p class="text-on-surface-variant text-sm">Upload MRI notes, physical therapy history, or lab results.</p>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-12 flex flex-col items-center justify-center hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer group" id="authUploadPanel">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="upload_file">upload_file</span>
+</div>
+<p class="text-lg font-medium text-on-surface mb-1">Drag &amp; drop clinical files here</p>
+<p class="text-sm text-slate-500">Supports PDF, DICOM, HL7 (Max 50MB)</p>
+</div>
+<div class="mt-8 space-y-4">
+<!-- Analyzing File Placeholder -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-4 border border-indigo-500/20">
+<div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-indigo-400" data-icon="description">description</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm font-medium">mri_brain_notes_john_doe.pdf</span>
+<span class="text-[10px] text-indigo-400 font-bold uppercase">Analyzing... 84%</span>
+</div>
+<div class="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 w-[84%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: AI Intelligence & Pipeline -->
+<div class="lg:col-span-5 hidden flex-col gap-8" id="authSecondaryColumn">
+<!-- Real-time Clinical Check -->
+<section class="glass-panel rounded-3xl p-6 border border-primary/20 ai-glow" id="authStepSection3">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="clinical_notes">clinical_notes</span>
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface">Milliman Care Check</h3>
+</div>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="mt-1"><span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span></div>
+<div>
+<p class="text-sm font-bold text-on-surface">Conservative Therapy Met</p>
+<p class="text-xs text-on-surface-variant">AI detected 6 weeks of Physical Therapy in uploaded notes. (MCG Guideline AC-034)</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="mt-1"><span class="material-symbols-outlined text-secondary text-sm" data-icon="pending">pending</span></div>
+<div>
+<p class="text-sm font-bold text-secondary">Neurological Deficit Validation</p>
+<p class="text-xs text-on-surface-variant">Scanning document for evidence of 'focal neurological deficit'.</p>
+</div>
+</div>
+<div class="flex gap-4 opacity-40">
+<div class="mt-1"><span class="material-symbols-outlined text-slate-500 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></div>
+<div>
+<p class="text-sm font-bold text-slate-400">Contraindications</p>
+<p class="text-xs text-slate-500">Awaiting document completion.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-800">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs text-slate-400">Approval Probability</span>
+<span class="text-lg font-bold text-secondary">92%</span>
+</div>
+<div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[92%]"></div>
+</div>
+</div>
+</section>
+<!-- Payer Pipeline Status -->
+<section class="glass-panel rounded-3xl p-6">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface mb-6">Payer Pipeline</h3>
+<div class="relative pl-8 space-y-12">
+<!-- Line -->
+<div class="absolute left-3.5 top-2 bottom-2 w-[1px] bg-gradient-to-b from-primary via-primary to-slate-800"></div>
+<!-- Node 1 -->
+<div class="relative">
+<div class="absolute -left-[26px] top-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center ring-4 ring-primary/10">
+<span class="material-symbols-outlined text-xs text-on-primary" data-icon="edit">edit</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Form Intake</p>
+<p class="text-xs text-slate-500">Currently Editing</p>
+</div>
+<!-- Node 2 -->
+<div class="relative">
+<div class="absolute -left-[26px] top-0 w-5 h-5 rounded-full bg-slate-900 border border-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="hub">hub</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Axis Orchestration Engine</p>
+<p class="text-xs text-slate-500">Automatic Clinical Cross-Check</p>
+</div>
+<!-- Node 3 -->
+<div class="relative">
+<div class="absolute -left-[26px] top-0 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-slate-600" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<p class="text-sm font-bold text-slate-500">BCBS Gateway</p>
+<p class="text-xs text-slate-600">EDI 278 Transmission</p>
+</div>
+</div>
+</section>
+<!-- Provider/Payer Mini-Card -->
+<div class="bg-surface-container-highest p-6 rounded-3xl flex items-center gap-4 border border-outline-variant">
+<img alt="BCBS Logo placeholder" class="w-12 h-12 rounded-xl object-cover" data-alt="minimalist blue medical corporate logo on white background representing a professional health insurance company" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM8dyphT_O6PAviSbDxiy235E8GX_igEAYVIquGNtSEwyDSDToeCd9hHk6IpY3wxVargmPL4s2kj5kICZ6S0tKNgYwVyLVG_HbFg9CWkfUHZzisQd2qqOHqtTq1-6BlHcMfiz0EEo3Cr22FMvt5b80CZNnGgMJaYE_In_ZGcJmm9qPxPqRGtohiZxpYN_91QNznQXqI_i7OkzGDcl9ljc_en4SDAgiD5jLIIA65RF0_1hM03t_XVqX13p_7BqbBzTK4paP0zUJbw"/>
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Destination Payer</p>
+<p class="text-sm font-bold text-on-surface">Blue Cross Blue Shield - Texas</p>
+<p class="text-xs text-slate-400">Plan: BlueChoice PPO</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Action Bar (Mobile & Desktop) -->
+<div class="fixed bottom-0 left-0 md:left-64 right-0 p-4 bg-slate-950/80 backdrop-blur-xl border-t border-slate-800/50 flex justify-between items-center z-40">
+<button class="px-6 py-3 text-slate-400 hover:text-white font-bold transition-colors" id="authSaveDraftButton" type="button">Save Draft</button>
+<div class="flex gap-4">
+<button class="px-8 py-3 bg-slate-800 text-on-surface rounded-xl font-bold hover:bg-slate-700 transition-all" id="authBackButton" type="button">Back</button>
+<button class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 active:scale-95 transition-all flex items-center gap-2" id="authNextButton" type="button">
+                        Next Step
+                        <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Shell (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 pb-safe md:hidden bg-slate-950/90 backdrop-blur-md z-50 border-t border-indigo-500/20 shadow-[0_-4px_24px_rgba(99,102,241,0.15)]">
+<a class="flex flex-col items-center justify-center text-slate-500" href="OperationalEffDashboard.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="Claim1.html">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Claims</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-indigo-500/20 text-indigo-300 rounded-xl px-4 py-1" href="AddAuth.html">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Auths</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="PaymentandRecon.html">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">HSA</span>
+</a>
+</nav>
+<script>
+  const authStorageKey = 'priorAuthDraft';
+  const authSuccessKey = 'priorAuthSubmission';
+  const authState = {
+    currentStep: 1,
+    maxStep: 3
+  };
+
+  const authProcedureInput = document.getElementById('authProcedureInput');
+  const authDiagnosisInput = document.getElementById('authDiagnosisInput');
+  const authUrgencyInput = document.getElementById('authUrgencyInput');
+  const authSaveDraftButton = document.getElementById('authSaveDraftButton');
+  const authBackButton = document.getElementById('authBackButton');
+  const authNextButton = document.getElementById('authNextButton');
+  const authPrimaryColumn = document.getElementById('authPrimaryColumn');
+  const authSecondaryColumn = document.getElementById('authSecondaryColumn');
+  const authSections = [
+    document.getElementById('authStepSection1'),
+    document.getElementById('authStepSection2'),
+    document.getElementById('authStepSection3')
+  ];
+  const authStepCircles = [
+    document.getElementById('authStepCircle1'),
+    document.getElementById('authStepCircle2'),
+    document.getElementById('authStepCircle3')
+  ];
+
+  function readAuthDraft() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(authStorageKey));
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeAuthDraft() {
+    localStorage.setItem(authStorageKey, JSON.stringify({
+      procedure: authProcedureInput.value.trim(),
+      diagnosis: authDiagnosisInput.value.trim(),
+      urgency: authUrgencyInput.value,
+      currentStep: authState.currentStep,
+      updatedAt: new Date().toISOString()
+    }));
+  }
+
+  function validateCurrentStep() {
+    if (authState.currentStep === 1) {
+      if (!authProcedureInput.value.trim() || !authDiagnosisInput.value.trim()) {
+        return 'Please complete the procedure and ICD-10 diagnosis before continuing.';
+      }
+    }
+
+    if (authState.currentStep === 2) {
+      return null;
+    }
+
+    return null;
+  }
+
+  function setSectionState() {
+    authSections.forEach((section, index) => {
+      const stepIndex = index + 1;
+      if (!section) {
+        return;
+      }
+      section.classList.toggle('hidden', stepIndex !== authState.currentStep);
+      section.classList.toggle('ring-2', stepIndex === authState.currentStep);
+      section.classList.toggle('ring-secondary', stepIndex === authState.currentStep);
+      section.classList.toggle('opacity-60', false);
+    });
+
+    const showingPayerStep = authState.currentStep === 3;
+    authPrimaryColumn.classList.toggle('hidden', showingPayerStep);
+    authSecondaryColumn.classList.toggle('hidden', !showingPayerStep);
+    authSecondaryColumn.classList.toggle('flex', showingPayerStep);
+    authPrimaryColumn.classList.toggle('lg:col-span-12', !showingPayerStep);
+    authPrimaryColumn.classList.toggle('lg:col-span-7', showingPayerStep);
+    authSecondaryColumn.classList.toggle('lg:col-span-12', showingPayerStep);
+    authSecondaryColumn.classList.toggle('lg:col-span-5', !showingPayerStep);
+
+    authStepCircles.forEach((circle, index) => {
+      const stepIndex = index + 1;
+      if (!circle) {
+        return;
+      }
+      if (stepIndex <= authState.currentStep) {
+        circle.className = 'w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold';
+      } else {
+        circle.className = 'w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant flex items-center justify-center text-xs font-bold';
+      }
+    });
+
+    authBackButton.disabled = authState.currentStep === 1;
+    authBackButton.classList.toggle('opacity-40', authState.currentStep === 1);
+    authBackButton.classList.toggle('cursor-not-allowed', authState.currentStep === 1);
+    authNextButton.firstChild.textContent = authState.currentStep === authState.maxStep ? 'Submit Request ' : 'Next Step ';
+  }
+
+  function showAuthMessage(title, description, success) {
+    let banner = document.getElementById('authStatusBanner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'authStatusBanner';
+      banner.className = 'fixed right-6 top-24 z-[90] max-w-md rounded-2xl border px-5 py-4 text-sm shadow-2xl';
+      document.body.appendChild(banner);
+    }
+    banner.className = success
+      ? 'fixed right-6 top-24 z-[90] max-w-md rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-50 shadow-2xl'
+      : 'fixed right-6 top-24 z-[90] max-w-md rounded-2xl border border-amber-400/20 bg-amber-500/10 px-5 py-4 text-sm text-amber-50 shadow-2xl';
+    banner.innerHTML = `<p class="font-bold">${title}</p><p class="mt-1 opacity-90">${description}</p>`;
+    window.clearTimeout(window.__authBannerTimeout);
+    window.__authBannerTimeout = window.setTimeout(() => banner.remove(), 3200);
+  }
+
+  const savedAuthDraft = readAuthDraft();
+  if (savedAuthDraft.procedure) authProcedureInput.value = savedAuthDraft.procedure;
+  if (savedAuthDraft.diagnosis) authDiagnosisInput.value = savedAuthDraft.diagnosis;
+  if (savedAuthDraft.urgency) authUrgencyInput.value = savedAuthDraft.urgency;
+  if (savedAuthDraft.currentStep) authState.currentStep = Math.min(authState.maxStep, Math.max(1, savedAuthDraft.currentStep));
+
+  authSaveDraftButton.addEventListener('click', () => {
+    writeAuthDraft();
+    showAuthMessage('Draft saved', 'Your prior authorization draft is saved and can be resumed from this step.', true);
+  });
+
+  authBackButton.addEventListener('click', () => {
+    if (authState.currentStep === 1) {
+      return;
+    }
+    authState.currentStep -= 1;
+    writeAuthDraft();
+    setSectionState();
+  });
+
+  authNextButton.addEventListener('click', () => {
+    const validationMessage = validateCurrentStep();
+    if (validationMessage) {
+      showAuthMessage('Missing details', validationMessage, false);
+      return;
+    }
+
+    if (authState.currentStep < authState.maxStep) {
+      authState.currentStep += 1;
+      writeAuthDraft();
+      setSectionState();
+      showAuthMessage('Step complete', `Moved to step ${authState.currentStep} of ${authState.maxStep}.`, true);
+      return;
+    }
+
+    const submission = {
+      requestId: `PA-${Date.now()}`,
+      procedure: authProcedureInput.value.trim(),
+      diagnosis: authDiagnosisInput.value.trim(),
+      urgency: authUrgencyInput.value,
+      submittedAt: new Date().toISOString()
+    };
+    localStorage.setItem(authSuccessKey, JSON.stringify(submission));
+    localStorage.removeItem(authStorageKey);
+    showAuthMessage('Prior authorization submitted', `Request ${submission.requestId} is now in the payer pipeline. Redirecting to Prior Authorizations.`, true);
+    window.setTimeout(() => {
+      window.location.href = 'Auth.html';
+    }, 1400);
+  });
+
+  setSectionState();
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

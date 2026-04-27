@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Axis Core AI | Provider and Member Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .ai-glow {
+            box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#bec6e0",
+                      "on-tertiary": "#283044",
+                      "on-primary": "#1000a9",
+                      "surface-container": "#152031",
+                      "surface-container-high": "#1f2a3c",
+                      "outline-variant": "#464554",
+                      "background": "#081425",
+                      "inverse-primary": "#494bd6",
+                      "on-tertiary-fixed-variant": "#3f465c",
+                      "tertiary": "#bec6e0",
+                      "surface-tint": "#c0c1ff",
+                      "on-error": "#690005",
+                      "on-tertiary-container": "#22293d",
+                      "surface-container-highest": "#2a3548",
+                      "inverse-surface": "#d8e3fb",
+                      "surface-container-lowest": "#040e1f",
+                      "secondary-fixed": "#a2eeff",
+                      "on-secondary-container": "#00515d",
+                      "on-secondary-fixed-variant": "#004e5a",
+                      "primary-fixed": "#e1e0ff",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary": "#00363e",
+                      "error": "#ffb4ab",
+                      "secondary-fixed-dim": "#2fd9f4",
+                      "surface-bright": "#2f3a4c",
+                      "tertiary-fixed": "#dae2fd",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed": "#131b2e",
+                      "tertiary-container": "#8990a8",
+                      "on-primary-fixed": "#07006c",
+                      "on-background": "#d8e3fb",
+                      "on-surface": "#d8e3fb",
+                      "inverse-on-surface": "#263143",
+                      "primary-container": "#8083ff",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "outline": "#908fa0",
+                      "surface-dim": "#081425",
+                      "secondary": "#5de6ff",
+                      "primary": "#c0c1ff",
+                      "on-surface-variant": "#c7c4d7",
+                      "on-secondary-fixed": "#001f25",
+                      "surface-variant": "#2a3548",
+                      "surface-container-low": "#111c2d",
+                      "surface": "#081425",
+                      "secondary-container": "#00cbe6",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "on-primary-container": "#0d0096"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit-2": "0.5rem",
+                      "unit-8": "2rem",
+                      "unit-4": "1rem",
+                      "margin-safe": "2rem",
+                      "margin-safe": "2rem",
+                      "gutter": "1.5rem",
+                      "base": "4px",
+                      "unit-1": "0.25rem",
+                      "unit-12": "3rem"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-xl": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-white dark:text-slate-50 font-inter">Axis Core AI</div>
+<div class="flex gap-4 items-center">
+<a class="hidden md:inline-flex text-slate-400 hover:text-indigo-300 transition-colors font-inter text-sm" href="SignIn.html" id="topSignInLink">Sign In</a>
+<a class="bg-primary-container text-on-primary-container px-5 py-2 rounded-lg font-semibold active:scale-95 transition-transform hover:bg-slate-800/50 inline-flex items-center justify-center" href="#portal-selector" id="topGetStartedLink">Get Started</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-32">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-8 mb-24" id="portal-selector">
+<div class="flex flex-col items-center text-center mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/10 border border-secondary-container/20 text-secondary mb-6 ai-glow">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-sm uppercase tracking-widest text-[10px]">AI Orchestration Active</span>
+</div>
+<h1 class="font-display-xl text-display-xl mb-6 text-white max-w-3xl">Hey, how can I help you today?</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-12">
+                    Axis Core AI is your high-functioning medical concierge, streamlining the complexities of healthcare orchestration through predictive intelligence.
+                </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+<!-- Provider Card -->
+<a class="glass-panel p-8 rounded-xl flex flex-col items-center text-center group cursor-pointer hover:bg-surface-container-high transition-all border-l-2 border-l-indigo-500" href="KYC1.html" id="providerPortalLink">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">medical_services</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">I am a Provider</h3>
+<p class="text-on-surface-variant mb-6">Orchestrate RCM, clinical orders, and revenue integrity with AI precision.</p>
+<span class="mt-auto w-full py-3 rounded-lg border border-outline/30 text-white font-semibold group-hover:bg-primary group-hover:text-on-primary transition-all inline-flex items-center justify-center">Select Portal</span>
+</a>
+<!-- Member Card -->
+<a class="glass-panel p-8 rounded-xl flex flex-col items-center text-center group cursor-pointer hover:bg-surface-container-high transition-all border-l-2 border-l-secondary-container" href="Enrollment.html" id="memberPortalLink">
+<div class="w-16 h-16 rounded-full bg-secondary-container/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary text-3xl">person</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">I am a Member</h3>
+<p class="text-on-surface-variant mb-6">Manage benefits, track claims, and orchestrate your health journey seamlessly.</p>
+<span class="mt-auto w-full py-3 rounded-lg border border-outline/30 text-white font-semibold group-hover:bg-secondary-container group-hover:text-on-secondary-container transition-all inline-flex items-center justify-center">Select Portal</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Capabilities Section -->
+<section class="max-w-7xl mx-auto px-8 pb-32" id="capabilities">
+<div class="flex flex-col md:flex-row gap-12">
+<!-- Provider Column -->
+<div class="flex-1" id="provider-orchestration">
+<div class="flex items-center gap-4 mb-8">
+<span class="h-[1px] flex-1 bg-slate-800"></span>
+<h2 class="font-headline-lg text-white">Provider Orchestration</h2>
+<span class="h-[1px] flex-1 bg-slate-800"></span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Appointments -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Appointment.html">
+<span class="material-symbols-outlined text-primary mb-4">calendar_today</span>
+<h4 class="font-semibold text-white mb-1">Appointments</h4>
+<p class="text-xs text-on-surface-variant">Automated block management and patient reminders.</p>
+</a>
+<!-- Eligibility -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Auth.html">
+<span class="material-symbols-outlined text-primary mb-4">verified</span>
+<h4 class="font-semibold text-white mb-1">Eligibility &amp; Benefits</h4>
+<p class="text-xs text-on-surface-variant">Real-time insurance check with 99% accuracy.</p>
+</a>
+<!-- Prior Auth -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="AddAuth.html">
+<span class="material-symbols-outlined text-primary mb-4">fact_check</span>
+<h4 class="font-semibold text-white mb-1">Prior Authorizations</h4>
+<p class="text-xs text-on-surface-variant">Instant clinical review and submission engine.</p>
+</a>
+<!-- Clinical Orders -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Dashborad.html">
+<span class="material-symbols-outlined text-primary mb-4">assignment</span>
+<h4 class="font-semibold text-white mb-1">Clinical orders</h4>
+<p class="text-xs text-on-surface-variant">Direct lab and imaging integration workflows.</p>
+</a>
+<!-- Member Enrollment -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Enrollment.html" id="providerEnrollmentLink">
+<span class="material-symbols-outlined text-primary mb-4">person_add</span>
+<h4 class="font-semibold text-white mb-1">Member Enrollment</h4>
+<p class="text-xs text-on-surface-variant">Enroll members directly or complete intake on their behalf from the provider side.</p>
+</a>
+<!-- Medical Coding -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform border-l-2 border-l-primary/30 block" href="OperationalEffDashboard.html">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary mb-4">terminal</span>
+<span class="px-2 py-0.5 rounded text-[10px] bg-primary/20 text-primary uppercase font-bold">AI Active</span>
+</div>
+<h4 class="font-semibold text-white mb-1">Medical Coding (CAC)</h4>
+<p class="text-xs text-on-surface-variant">Autonomous computer-assisted coding protocols.</p>
+</a>
+<!-- Revenue Integrity -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="PaymentandRecon.html">
+<span class="material-symbols-outlined text-primary mb-4">account_balance_wallet</span>
+<h4 class="font-semibold text-white mb-1">Revenue Integrity</h4>
+<p class="text-xs text-on-surface-variant">Audit-ready charge capture and monitoring.</p>
+</a>
+<!-- Appeals -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Denial.html">
+<span class="material-symbols-outlined text-primary mb-4">gavel</span>
+<h4 class="font-semibold text-white mb-1">Appeals &amp; Denials</h4>
+<p class="text-xs text-on-surface-variant">Predictive logic for claim resubmission.</p>
+</a>
+<!-- Payment Posting -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="PaymentandRecon.html">
+<span class="material-symbols-outlined text-primary mb-4">payments</span>
+<h4 class="font-semibold text-white mb-1">Payment Posting</h4>
+<p class="text-xs text-on-surface-variant">Automated ERA/EFT reconciliation cycles.</p>
+</a>
+</div>
+</div>
+<!-- Member Column -->
+<div class="flex-1" id="member-journey">
+<div class="flex items-center gap-4 mb-8">
+<span class="h-[1px] flex-1 bg-slate-800"></span>
+<h2 class="font-headline-lg text-white">Member Journey</h2>
+<span class="h-[1px] flex-1 bg-slate-800"></span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Benefits -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Dashborad.html">
+<span class="material-symbols-outlined text-secondary mb-4">shield</span>
+<h4 class="font-semibold text-white mb-1">Benefits &amp; Coverage</h4>
+<p class="text-xs text-on-surface-variant">Unified view of deductibles and plan limits.</p>
+</a>
+<!-- Enrollment -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Enrollment.html" id="memberEnrollmentLink">
+<span class="material-symbols-outlined text-secondary mb-4">how_to_reg</span>
+<h4 class="font-semibold text-white mb-1">Enrollment</h4>
+<p class="text-xs text-on-surface-variant">Complete member enrollment yourself or resume an intake started by your provider.</p>
+</a>
+<!-- Payments HSA -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="MemberbillingandHSA.html">
+<span class="material-symbols-outlined text-secondary mb-4">savings</span>
+<h4 class="font-semibold text-white mb-1">Billing &amp; HSA</h4>
+<p class="text-xs text-on-surface-variant">One-click spending for qualified expenses.</p>
+</a>
+<!-- Appointments -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Appointment.html">
+<span class="material-symbols-outlined text-secondary mb-4">event</span>
+<h4 class="font-semibold text-white mb-1">Appointments &amp; Lab Scheduling</h4>
+<p class="text-xs text-on-surface-variant">Easy booking for specialists and diagnostics.</p>
+</a>
+<!-- Claims -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform border-l-2 border-l-secondary/30 block" href="Dashborad.html" id="memberClaimsLink">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary mb-4">receipt_long</span>
+<span class="px-2 py-0.5 rounded text-[10px] bg-secondary/20 text-secondary uppercase font-bold">Real-time</span>
+</div>
+<h4 class="font-semibold text-white mb-1">Claims Tracking</h4>
+<p class="text-xs text-on-surface-variant">Status updates from submission to adjudication.</p>
+</a>
+<!-- Care Journey -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="Followuplayer.html">
+<span class="material-symbols-outlined text-secondary mb-4">route</span>
+<h4 class="font-semibold text-white mb-1">Pre &amp; post care journey</h4>
+<p class="text-xs text-on-surface-variant">Personalized guidance before and after visits.</p>
+</a>
+<!-- Rx Management -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform block" href="RXandPharmacy.html">
+<span class="material-symbols-outlined text-secondary mb-4">prescriptions</span>
+<h4 class="font-semibold text-white mb-1">Pharmacy support</h4>
+<p class="text-xs text-on-surface-variant">Track prescriptions, refill progress, and member-facing pharmacy updates.</p>
+</a>
+<!-- EOB -->
+<a class="glass-panel p-6 rounded-xl hover:translate-y-[-4px] transition-transform col-span-1 sm:col-span-2 block" href="MemberbillingandHSA.html" id="memberEobLink">
+<div class="flex items-center gap-6">
+<div class="bg-secondary/10 p-3 rounded-lg">
+<span class="material-symbols-outlined text-secondary">description</span>
+</div>
+<div>
+<h4 class="font-semibold text-white mb-1">EOB Explanation</h4>
+<p class="text-xs text-on-surface-variant max-w-md">AI-powered translation of complex 'Explanation of Benefits' into simple, plain language for members.</p>
+</div>
+</div>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<div class="relative rounded-3xl overflow-hidden py-16 px-12 text-center ai-glow border border-indigo-500/30">
+<div class="absolute inset-0 bg-indigo-600/10 backdrop-blur-3xl z-0"></div>
+<div class="relative z-10">
+<h2 class="font-headline-lg text-white mb-6">Ready to orchestrate a better future?</h2>
+<p class="text-on-surface-variant mb-10 max-w-xl mx-auto font-body-md">Join over 500+ health systems using Axis Core AI to reduce administrative friction and improve clinical outcomes.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a class="bg-primary text-on-primary font-bold px-10 py-4 rounded-xl shadow-lg hover:shadow-primary/20 transition-all active:scale-95 inline-flex items-center justify-center" href="#portal-selector" id="heroGetStartedLink">Get Started</a>
+<a class="bg-transparent border border-white/20 text-white font-bold px-10 py-4 rounded-xl hover:bg-white/5 transition-all active:scale-95 inline-flex items-center justify-center" href="SignIn.html" id="requestDemoLink">Sign In</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-slate-950 border-t border-slate-900">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 max-w-7xl mx-auto">
+<div class="flex flex-col gap-2">
+<div class="text-lg font-bold text-indigo-500 font-inter">Axis Core AI</div>
+<p class="font-inter text-sm text-slate-500">&copy; 2024 Axis Core AI Orchestration Layer. Built for high-stakes healthcare.</p>
+</div>
+<div class="flex gap-8 font-inter text-sm text-slate-500">
+<a class="hover:text-indigo-400 transition-colors" href="LandingPage.html">Privacy</a>
+<a class="hover:text-indigo-400 transition-colors" href="LandingPage.html">Security</a>
+<a class="hover:text-indigo-400 transition-colors" href="#provider-orchestration">RCM Features</a>
+<a class="hover:text-indigo-400 transition-colors" href="Enrollment.html">Member Portal</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-500 hover:text-indigo-400 cursor-pointer">public</span>
+<span class="material-symbols-outlined text-slate-500 hover:text-indigo-400 cursor-pointer">share</span>
+</div>
+</div>
+</footer>
+<script>
+  const portalSelector = document.getElementById('portal-selector');
+  const providerPortalLink = document.getElementById('providerPortalLink');
+  const memberPortalLink = document.getElementById('memberPortalLink');
+  const providerEnrollmentLink = document.getElementById('providerEnrollmentLink');
+  const memberEnrollmentLink = document.getElementById('memberEnrollmentLink');
+  const memberClaimsLink = document.getElementById('memberClaimsLink');
+  const memberEobLink = document.getElementById('memberEobLink');
+  const topSignInLink = document.getElementById('topSignInLink');
+  const requestDemoLink = document.getElementById('requestDemoLink');
+  const providerJourneyLinks = Array.from(document.querySelectorAll('#provider-orchestration a'));
+  const memberJourneyLinks = Array.from(document.querySelectorAll('#member-journey a'));
+
+  function setPortalRole(role) {
+    localStorage.setItem('preferredRole', role);
+    localStorage.setItem('kycRole', role);
+  }
+
+  function routeToSignIn(event) {
+    const selectedRole = localStorage.getItem('preferredRole');
+    if (selectedRole) {
+      return;
+    }
+    event.preventDefault();
+    portalSelector.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  providerPortalLink.addEventListener('click', () => setPortalRole('provider'));
+  memberPortalLink.addEventListener('click', () => setPortalRole('member'));
+  providerEnrollmentLink.addEventListener('click', () => setPortalRole('provider'));
+  memberEnrollmentLink.addEventListener('click', () => setPortalRole('member'));
+  memberClaimsLink.addEventListener('click', () => setPortalRole('member'));
+  memberEobLink.addEventListener('click', () => setPortalRole('member'));
+  providerJourneyLinks.forEach((link) => link.addEventListener('click', () => setPortalRole('provider')));
+  memberJourneyLinks.forEach((link) => link.addEventListener('click', () => setPortalRole('member')));
+  topSignInLink.addEventListener('click', routeToSignIn);
+  requestDemoLink.addEventListener('click', routeToSignIn);
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

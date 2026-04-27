@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Care Journey | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #081425;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .ai-glow {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+    }
+    .status-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#3f465c",
+            "on-error": "#690005",
+            "on-tertiary": "#283044",
+            "outline-variant": "#464554",
+            "on-tertiary-container": "#22293d",
+            "on-surface": "#d8e3fb",
+            "tertiary-fixed-dim": "#bec6e0",
+            "secondary-fixed-dim": "#2fd9f4",
+            "on-background": "#d8e3fb",
+            "on-secondary": "#00363e",
+            "primary": "#c0c1ff",
+            "secondary-container": "#00cbe6",
+            "surface-container-lowest": "#040e1f",
+            "on-surface-variant": "#c7c4d7",
+            "surface-variant": "#2a3548",
+            "inverse-on-surface": "#263143",
+            "primary-fixed-dim": "#c0c1ff",
+            "tertiary-fixed": "#dae2fd",
+            "surface-container-highest": "#2a3548",
+            "secondary": "#5de6ff",
+            "primary-fixed": "#e1e0ff",
+            "surface-container": "#152031",
+            "surface-container-low": "#111c2d",
+            "tertiary": "#bec6e0",
+            "on-primary-fixed": "#07006c",
+            "surface": "#081425",
+            "secondary-fixed": "#a2eeff",
+            "on-secondary-fixed-variant": "#004e5a",
+            "surface-bright": "#2f3a4c",
+            "background": "#081425",
+            "on-error-container": "#ffdad6",
+            "surface-container-high": "#1f2a3c",
+            "surface-dim": "#081425",
+            "on-secondary-container": "#00515d",
+            "on-secondary-fixed": "#001f25",
+            "error": "#ffb4ab",
+            "surface-tint": "#c0c1ff",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-tertiary-fixed": "#131b2e",
+            "on-primary": "#1000a9",
+            "error-container": "#93000a",
+            "outline": "#908fa0",
+            "inverse-primary": "#494bd6",
+            "tertiary-container": "#8990a8",
+            "primary-container": "#8083ff",
+            "inverse-surface": "#d8e3fb",
+            "on-primary-container": "#0d0096"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "display-xl": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b bg-slate-950/80 backdrop-blur-md border-slate-800/50 shadow-lg shadow-indigo-500/5 flex justify-between items-center h-16 px-6 w-full">
+<div class="flex items-center gap-8">
+<h1 class="text-lg font-black tracking-tighter text-indigo-500 dark:text-indigo-400">HealthFlow AI</h1>
+<nav class="hidden md:flex gap-6 items-end h-full">
+<a class="font-inter text-sm font-medium tracking-tight text-slate-400 hover:text-slate-100 transition-colors" href="Dashborad.html">Dashboard</a>
+<a class="font-inter text-sm font-medium tracking-tight text-indigo-500 dark:text-indigo-400 border-b-2 border-indigo-500 pb-4" href="Followuplayer.html">Care Journey</a>
+<a class="font-inter text-sm font-medium tracking-tight text-slate-400 hover:text-slate-100 transition-colors" href="Dashborad.html">Dashboard</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-900/50 transition-all duration-200 active:scale-95 text-slate-400">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-slate-900/50 transition-all duration-200 active:scale-95 text-slate-400">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Collapsed Layout for Sub-page focus) -->
+<aside class="fixed left-0 top-0 h-full w-20 border-r bg-slate-950 dark:bg-slate-950 border-slate-800/50 flex flex-col pt-20 z-40">
+<div class="flex flex-col items-center gap-4 w-full">
+<a class="transition-all hover:pl-2 w-full flex justify-center py-4 text-slate-500 hover:text-slate-200" href="Dashborad.html">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</a>
+<a class="transition-all hover:pl-2 w-full flex justify-center py-4 bg-indigo-500/10 text-indigo-400 border-r-4 border-indigo-500" href="Followuplayer.html">
+<span class="material-symbols-outlined" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</a>
+<a class="transition-all hover:pl-2 w-full flex justify-center py-4 text-slate-500 hover:text-slate-200" href="RXandPharmacy.html">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+</a>
+<a class="transition-all hover:pl-2 w-full flex justify-center py-4 text-slate-500 hover:text-slate-200" href="MemberbillingandHSA.html">
+<span class="material-symbols-outlined" data-icon="auto_graph">auto_graph</span>
+</a>
+<a class="mt-auto mb-8 transition-all hover:pl-2 w-full flex justify-center py-4 text-slate-500 hover:text-slate-200" href="LandingPage.html">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-20 pt-24 px-8 pb-12 max-w-6xl mx-auto">
+<!-- AI Recommendation Header -->
+<section class="mb-12">
+<div class="glass-panel ai-glow rounded-xl p-8 flex flex-col md:flex-row gap-6 items-center justify-between border-l-4 border-indigo-500">
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="smart_toy" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Concierge Intelligence</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+              Based on your recent claims activity, I recommend subscribing to real-time status updates to avoid manual follow-ups with your provider.
+            </p>
+</div>
+</div>
+<button class="px-6 py-3 bg-indigo-500 text-white rounded-full font-label-sm text-label-sm hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-indigo-500/20 whitespace-nowrap">
+          Enable Recommended Updates
+        </button>
+</div>
+</section>
+<!-- Subscription Controls -->
+<section>
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Stay Updated On</h3>
+<p class="font-body-lg text-body-lg text-slate-400">I can monitor these for you. What would you like to stay updated on?</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-slate-900/50 rounded-full border border-slate-800">
+<div class="w-2 h-2 rounded-full bg-secondary status-pulse"></div>
+<span class="text-xs font-semibold text-secondary uppercase tracking-widest">Live Sync Enabled</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Subscription Item 1 -->
+<div class="glass-panel rounded-xl p-6 hover:bg-slate-900/40 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-indigo-500/10 rounded-lg text-indigo-400">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+<h4 class="font-headline-md text-body-md text-on-surface font-bold mb-1">Claims status updates</h4>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Integration Active</span>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">Youâ€™ll be notified about these updates via push and secure inbox.</p>
+</div>
+<!-- Subscription Item 2 -->
+<div class="glass-panel rounded-xl p-6 hover:bg-slate-900/40 transition-all">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-slate-800 rounded-lg text-slate-400">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+<h4 class="font-headline-md text-body-md text-on-surface font-bold mb-1">Prior authorization updates</h4>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[10px] bg-tertiary-container/20 text-tertiary px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Pending Review</span>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">Monitoring authorization requests from Blue Shield of CA.</p>
+</div>
+<!-- Subscription Item 3 -->
+<div class="glass-panel rounded-xl p-6 hover:bg-slate-900/40 transition-all">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-indigo-500/10 rounded-lg text-indigo-400">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+<h4 class="font-headline-md text-body-md text-on-surface font-bold mb-1">Payment notifications</h4>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Real-time</span>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">Automatic alerts for deductibles and co-pay adjustments.</p>
+</div>
+<!-- Subscription Item 4 -->
+<div class="glass-panel rounded-xl p-6 hover:bg-slate-900/40 transition-all border-l-2 border-secondary/30">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-secondary/10 rounded-lg text-secondary">
+<span class="material-symbols-outlined" data-icon="medication">medication</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+<h4 class="font-headline-md text-body-md text-on-surface font-bold mb-1">Prescription updates</h4>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Syncing with Pharmacy</span>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">Connected to CVS Health. Tracking refills and ready status.</p>
+</div>
+<!-- Subscription Item 5 -->
+<div class="glass-panel rounded-xl p-6 hover:bg-slate-900/40 transition-all">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-indigo-500/10 rounded-lg text-indigo-400">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+<h4 class="font-headline-md text-body-md text-on-surface font-bold mb-1">Appointment reminders</h4>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Calendar Connected</span>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">Synced with Google Calendar. AI will verify arrival logistics.</p>
+</div>
+<!-- Feedback Placeholder / Action Card -->
+<div class="glass-panel rounded-xl p-6 border-dashed border-2 border-slate-800 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-indigo-500/50 transition-all">
+<div class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center text-slate-500 group-hover:text-indigo-400 mb-3 transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<span class="font-label-sm text-label-sm text-slate-500 group-hover:text-slate-300">Add New Orchestration Logic</span>
+</div>
+</div>
+</section>
+<!-- Orchestration Insights / Process Indicators -->
+<section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="glass-panel rounded-xl p-6 bg-slate-900/20">
+<h5 class="font-label-sm text-label-sm text-indigo-400 uppercase tracking-widest mb-4">Network Health</h5>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface">Payer API Node (v2.4)</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-secondary font-bold">API CONNECTED</span>
+<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+</div>
+</div>
+<div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+<div class="bg-indigo-500 h-full w-[94%]"></div>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="text-xs text-on-surface">Pharmacy Relay</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-secondary font-bold">LIVE SYNC</span>
+<div class="w-1.5 h-1.5 rounded-full bg-secondary status-pulse"></div>
+</div>
+</div>
+<div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[100%]"></div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-6 bg-indigo-500/5 border border-indigo-500/10 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="hub">hub</span>
+</div>
+<h5 class="font-label-sm text-label-sm text-indigo-400 uppercase tracking-widest mb-2">Automated Actions</h5>
+<p class="text-xs text-slate-400 mb-6 leading-relaxed">
+          The orchestration layer will automatically process updates every 15 minutes. High-priority items will bypass standard queues for immediate resolution.
+        </p>
+<div class="flex gap-2">
+<div class="px-3 py-1 bg-slate-900 rounded-full border border-slate-700 text-[10px] font-bold text-slate-300">
+            SECURE_ENCRYPTION_V3
+          </div>
+<div class="px-3 py-1 bg-slate-900 rounded-full border border-slate-700 text-[10px] font-bold text-slate-300">
+            HIPAA_COMPLIANT
+          </div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual Notification Toast (Subtle State) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 glass-panel ai-glow border border-indigo-500/30 rounded-full px-6 py-3 flex items-center gap-3 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
+<span class="material-symbols-outlined text-indigo-400" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-sm font-medium text-indigo-100">Youâ€™ll be notified about these updates in real-time.</p>
+<button class="ml-4 text-xs font-bold text-indigo-400 hover:text-indigo-200 uppercase">Dismiss</button>
+</div>
+<script>
+  const followupStorageKey = 'memberFollowupConfig';
+  const followupStatusKey = 'memberFollowupStatus';
+  const followupToggles = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+  const followupToast = Array.from(document.querySelectorAll('div.fixed')).find((element) =>
+    element.textContent.includes('notified about these updates in real-time')
+  );
+  const followupDismissButton = followupToast ? followupToast.querySelector('button') : null;
+  const followupPrimaryButton = Array.from(document.querySelectorAll('button')).find((button) =>
+    button.textContent.includes('Enable Recommended Updates')
+  );
+  const addLogicButton = Array.from(document.querySelectorAll('span, button')).find((element) =>
+    element.textContent && element.textContent.replace(/\s+/g, ' ').trim() === 'Add New Orchestration Logic'
+  )?.closest('div.glass-panel');
+
+  function labelForToggle(toggle) {
+    const card = toggle.closest('.glass-panel');
+    const label = card ? card.querySelector('h4') : null;
+    return label ? label.textContent.trim() : `toggle-${followupToggles.indexOf(toggle)}`;
+  }
+
+  function normalizeKey(label) {
+    return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+  }
+
+  function readFollowupConfig() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(followupStorageKey));
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeFollowupConfig(config) {
+    localStorage.setItem(followupStorageKey, JSON.stringify(config));
+  }
+
+  function updateToast(message) {
+    if (!followupToast) {
+      return;
+    }
+    const toastMessage = followupToast.querySelector('p');
+    if (toastMessage) {
+      toastMessage.textContent = message;
+    }
+    followupToast.classList.remove('hidden');
+  }
+
+  const savedFollowupConfig = readFollowupConfig();
+  followupToggles.forEach((toggle) => {
+    const key = normalizeKey(labelForToggle(toggle));
+    if (Object.prototype.hasOwnProperty.call(savedFollowupConfig, key)) {
+      toggle.checked = Boolean(savedFollowupConfig[key]);
+    }
+
+    toggle.addEventListener('change', () => {
+      const current = readFollowupConfig();
+      current[key] = toggle.checked;
+      writeFollowupConfig(current);
+      localStorage.setItem(followupStatusKey, 'updated');
+      updateToast(`${labelForToggle(toggle)} ${toggle.checked ? 'enabled' : 'disabled'} for your follow-up preferences.`);
+    });
+  });
+
+  if (followupPrimaryButton) {
+    followupPrimaryButton.addEventListener('click', () => {
+      const current = readFollowupConfig();
+      ['claims_status_updates', 'payment_notifications', 'prescription_updates', 'appointment_reminders'].forEach((key) => {
+        current[key] = true;
+      });
+      writeFollowupConfig(current);
+      followupToggles.forEach((toggle) => {
+        const key = normalizeKey(labelForToggle(toggle));
+        if (Object.prototype.hasOwnProperty.call(current, key)) {
+          toggle.checked = Boolean(current[key]);
+        }
+      });
+      updateToast('Recommended follow-up updates are now enabled and syncing across the member portal.');
+    });
+  }
+
+  if (addLogicButton) {
+    addLogicButton.addEventListener('click', () => {
+      window.location.href = 'FollowupConfig.html';
+    });
+  }
+
+  if (followupDismissButton) {
+    followupDismissButton.addEventListener('click', () => {
+      followupToast.classList.add('hidden');
+    });
+  }
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

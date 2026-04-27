@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sign In | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#081425",
+            panel: "#15263d",
+            primary: "#c0c1ff",
+            secondary: "#5de6ff",
+            danger: "#ffb4ab"
+          },
+          fontFamily: {
+            display: ["Manrope", "Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(93, 230, 255, 0.14), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(192, 193, 255, 0.12), transparent 30%),
+        linear-gradient(180deg, #081425 0%, #0a1627 100%);
+    }
+    .glass-panel {
+      background: rgba(21, 38, 61, 0.76);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(2, 8, 23, 0.42);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .role-active-provider {
+      background: rgba(99, 102, 241, 0.16);
+      border-color: rgba(99, 102, 241, 0.48);
+      color: #ffffff;
+    }
+    .role-active-member {
+      background: rgba(45, 212, 191, 0.14);
+      border-color: rgba(45, 212, 191, 0.48);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-background text-white selection:bg-primary/30">
+  <div class="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-8 lg:px-8">
+    <header class="mb-8 flex items-center justify-between">
+      <a class="font-display text-2xl font-extrabold tracking-tight text-white" href="LandingPage.html">Axis Core AI</a>
+      <a class="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-white/5 hover:text-white" href="LandingPage.html">Back to Home</a>
+    </header>
+
+    <main class="grid flex-1 gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+      <section class="glass-panel rounded-[32px] p-8 lg:p-10">
+        <div class="inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-secondary">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+          Secure Access
+        </div>
+        <h1 class="mt-5 font-display text-4xl font-extrabold tracking-tight text-white" id="signInHeading">Sign in by role, not by guesswork.</h1>
+        <p class="mt-4 max-w-2xl text-base leading-8 text-slate-300">
+          Existing users sign in here. Providers complete credential verification before first access. Members who are new to the platform should start enrollment instead of sign-in.
+        </p>
+
+        <div class="mt-8 hidden items-center gap-3 rounded-full border border-secondary/20 bg-secondary/10 px-4 py-3 text-sm text-secondary" id="roleSummaryBanner">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+          <span id="roleSummaryCopy"></span>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2" id="roleSelector">
+          <button class="role-active-provider rounded-[26px] border px-5 py-5 text-left transition-all" data-role-card="provider" type="button">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-3xl text-primary">medical_services</span>
+              <span class="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Verified Access</span>
+            </div>
+            <h2 class="mt-4 text-lg font-semibold text-white">Provider sign in</h2>
+            <p class="mt-2 text-sm leading-7 text-slate-300">For staff, clinicians, and operations users with an existing provider account.</p>
+          </button>
+
+          <button class="rounded-[26px] border border-white/10 bg-white/5 px-5 py-5 text-left transition-all" data-role-card="member" type="button">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-3xl text-secondary">person</span>
+              <span class="rounded-full bg-secondary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Member Access</span>
+            </div>
+            <h2 class="mt-4 text-lg font-semibold text-white">Member sign in</h2>
+            <p class="mt-2 text-sm leading-7 text-slate-300">For enrolled members checking claims, billing, appointments, pharmacy, and updates.</p>
+          </button>
+        </div>
+
+        <form class="mt-8 space-y-6" id="signInForm">
+          <div class="grid gap-5 md:grid-cols-2">
+            <div class="md:col-span-2">
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Email Address</label>
+              <input class="w-full rounded-[22px] border border-white/10 bg-slate-950/40 px-4 py-3 text-white placeholder:text-slate-500 focus:border-secondary focus:ring-0" id="emailField" placeholder="you@axiscore.ai" type="email"/>
+              <p class="mt-2 hidden text-sm text-danger" id="emailError"></p>
+            </div>
+            <div>
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Password</label>
+              <input class="w-full rounded-[22px] border border-white/10 bg-slate-950/40 px-4 py-3 text-white placeholder:text-slate-500 focus:border-secondary focus:ring-0" id="passwordField" placeholder="Enter password" type="password"/>
+              <p class="mt-2 hidden text-sm text-danger" id="passwordError"></p>
+            </div>
+            <div>
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Account Status</label>
+              <div class="rounded-[22px] border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-300" id="accountStatusCopy">
+                Provider access requires identity and credential verification before first sign-in.
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden rounded-[22px] border border-danger/30 bg-red-500/10 px-4 py-3 text-sm text-red-100" id="formError"></div>
+
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <label class="inline-flex items-center gap-3 text-sm text-slate-300">
+              <input checked class="rounded border-white/10 bg-slate-950/40 text-secondary focus:ring-secondary" type="checkbox"/>
+              Keep me signed in on this device
+            </label>
+            <button class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-slate-950 transition-colors hover:bg-secondary" type="submit">
+              Sign In
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="glass-panel rounded-[32px] p-8">
+          <h2 class="font-display text-2xl font-bold text-white">Do providers need KYC?</h2>
+          <p class="mt-4 text-sm leading-8 text-slate-300">
+            Yes. For providers, this should be treated as identity and credential verification before first access. The provider path should start with verification, while the member path should start with enrollment.
+          </p>
+          <div class="mt-6 space-y-4">
+            <div class="rounded-[24px] border border-white/10 bg-white/5 p-4">
+              <p class="text-sm font-semibold text-white">Provider first-time setup</p>
+              <p class="mt-2 text-sm text-slate-300">Verify identity, role, and documents before entering provider operations.</p>
+            </div>
+            <div class="rounded-[24px] border border-white/10 bg-white/5 p-4">
+              <p class="text-sm font-semibold text-white">Member first-time setup</p>
+              <p class="mt-2 text-sm text-slate-300">Complete enrollment, plan mapping, eligibility, and profile activation.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-[32px] p-8">
+          <h2 class="font-display text-2xl font-bold text-white">Need first-time access?</h2>
+          <div class="mt-6 space-y-4">
+            <a class="flex items-center justify-between rounded-[24px] border border-primary/25 bg-primary/10 px-5 py-4 transition-colors hover:bg-primary/15" href="KYC1.html" id="providerFirstTimeLink">
+              <div>
+                <p class="text-sm font-semibold text-white">Start provider verification</p>
+                <p class="mt-1 text-sm text-slate-300">For providers who still need credential and identity verification.</p>
+              </div>
+              <span class="material-symbols-outlined text-primary">north_east</span>
+            </a>
+            <a class="flex items-center justify-between rounded-[24px] border border-secondary/25 bg-secondary/10 px-5 py-4 transition-colors hover:bg-secondary/15" href="Enrollment.html" id="memberFirstTimeLink">
+              <div>
+                <p class="text-sm font-semibold text-white">Start member enrollment</p>
+                <p class="mt-1 text-sm text-slate-300">For members who are new to the platform and do not have login credentials yet.</p>
+              </div>
+              <span class="material-symbols-outlined text-secondary">north_east</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const roleCards = Array.from(document.querySelectorAll('[data-role-card]'));
+    const emailField = document.getElementById('emailField');
+    const passwordField = document.getElementById('passwordField');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const formError = document.getElementById('formError');
+    const accountStatusCopy = document.getElementById('accountStatusCopy');
+    const signInForm = document.getElementById('signInForm');
+    const signInHeading = document.getElementById('signInHeading');
+    const roleSelector = document.getElementById('roleSelector');
+    const roleSummaryBanner = document.getElementById('roleSummaryBanner');
+    const roleSummaryCopy = document.getElementById('roleSummaryCopy');
+    const providerFirstTimeLink = document.getElementById('providerFirstTimeLink');
+    const memberFirstTimeLink = document.getElementById('memberFirstTimeLink');
+    const hasLandingRoleSelection = ['provider', 'member'].includes(localStorage.getItem('preferredRole'));
+    let selectedRole = localStorage.getItem('preferredRole') === 'member' ? 'member' : 'provider';
+
+    function renderRole() {
+      roleCards.forEach((card) => {
+        const role = card.getAttribute('data-role-card');
+        card.classList.remove('role-active-provider', 'role-active-member', 'border-white/10', 'bg-white/5');
+        if (role === selectedRole) {
+          card.classList.add(role === 'provider' ? 'role-active-provider' : 'role-active-member');
+        } else {
+          card.classList.add('border-white/10', 'bg-white/5');
+        }
+      });
+
+      accountStatusCopy.textContent = selectedRole === 'provider'
+        ? 'Provider access requires identity and credential verification before first sign-in.'
+        : 'Member sign-in works after enrollment has created an active member account.';
+
+      if (hasLandingRoleSelection) {
+        roleSelector.classList.add('hidden');
+        roleSummaryBanner.classList.remove('hidden');
+        roleSummaryBanner.classList.add('inline-flex');
+        roleSummaryCopy.textContent = selectedRole === 'provider'
+          ? 'Provider portal selected on landing. We are keeping this sign-in experience role-specific.'
+          : 'Member portal selected on landing. We are keeping this sign-in experience role-specific.';
+        signInHeading.textContent = selectedRole === 'provider'
+          ? 'Provider sign in, already scoped from landing.'
+          : 'Member sign in, already scoped from landing.';
+        providerFirstTimeLink.classList.toggle('hidden', selectedRole !== 'provider');
+        memberFirstTimeLink.classList.toggle('hidden', selectedRole !== 'member');
+      }
+    }
+
+    roleCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        selectedRole = card.getAttribute('data-role-card');
+        localStorage.setItem('preferredRole', selectedRole);
+        localStorage.setItem('kycRole', selectedRole);
+        renderRole();
+      });
+    });
+
+    function setError(node, message) {
+      if (message) {
+        node.textContent = message;
+        node.classList.remove('hidden');
+      } else {
+        node.textContent = '';
+        node.classList.add('hidden');
+      }
+    }
+
+    signInForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = emailField.value.trim();
+      const password = passwordField.value;
+      let valid = true;
+
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+        setError(emailError, 'Enter a valid email address.');
+        valid = false;
+      } else {
+        setError(emailError, '');
+      }
+
+      if (password.length < 6) {
+        setError(passwordError, 'Password must be at least 6 characters.');
+        valid = false;
+      } else {
+        setError(passwordError, '');
+      }
+
+      if (!valid) {
+        formError.textContent = 'Please complete the sign-in fields before continuing.';
+        formError.classList.remove('hidden');
+        return;
+      }
+
+      formError.classList.add('hidden');
+      localStorage.setItem('preferredRole', selectedRole);
+      localStorage.setItem('kycRole', selectedRole);
+
+      if (selectedRole === 'provider') {
+        window.location.href = 'OperationalEffDashboard.html';
+        return;
+      }
+
+      const completedEnrollment = JSON.parse(localStorage.getItem('latestMemberEnrollment') || 'null');
+      window.location.href = completedEnrollment?.confirmation?.completed ? 'Dashborad.html' : 'Enrollment.html';
+    });
+
+    renderRole();
+  </script>
+  <script src="portal-shell.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,573 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Claim Submission | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#081425",
+            "tertiary": "#bec6e0",
+            "on-error": "#690005",
+            "primary-fixed": "#e1e0ff",
+            "on-secondary-fixed-variant": "#004e5a",
+            "on-tertiary": "#283044",
+            "inverse-primary": "#494bd6",
+            "on-surface": "#d8e3fb",
+            "inverse-on-surface": "#263143",
+            "surface-variant": "#2a3548",
+            "on-surface-variant": "#c7c4d7",
+            "on-error-container": "#ffdad6",
+            "error-container": "#93000a",
+            "tertiary-fixed-dim": "#bec6e0",
+            "outline-variant": "#464554",
+            "on-primary-container": "#0d0096",
+            "inverse-surface": "#d8e3fb",
+            "surface-tint": "#c0c1ff",
+            "secondary-fixed-dim": "#2fd9f4",
+            "surface-container-low": "#111c2d",
+            "on-secondary-fixed": "#001f25",
+            "surface-container-high": "#1f2a3c",
+            "on-secondary": "#00363e",
+            "surface": "#081425",
+            "primary-fixed-dim": "#c0c1ff",
+            "on-tertiary-container": "#22293d",
+            "secondary": "#5de6ff",
+            "tertiary-fixed": "#dae2fd",
+            "secondary-container": "#00cbe6",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-tertiary-fixed-variant": "#3f465c",
+            "error": "#ffb4ab",
+            "secondary-fixed": "#a2eeff",
+            "on-background": "#d8e3fb",
+            "surface-container-highest": "#2a3548",
+            "primary": "#c0c1ff",
+            "tertiary-container": "#8990a8",
+            "outline": "#908fa0",
+            "on-secondary-container": "#00515d",
+            "surface-bright": "#2f3a4c",
+            "on-primary": "#1000a9",
+            "surface-container": "#152031",
+            "primary-container": "#8083ff",
+            "on-tertiary-fixed": "#131b2e",
+            "background": "#081425",
+            "on-primary-fixed": "#07006c",
+            "surface-container-lowest": "#040e1f"
+          },
+          "fontFamily": {
+            "body-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "display-xl": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .glass {
+      background: rgba(13, 20, 37, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .active-nav-border {
+      box-shadow: inset 4px 0 0 0 #6366F1;
+    }
+    input::placeholder {
+      color: #464554;
+    }
+  </style>
+</head>
+<body class="bg-surface-dim text-on-surface font-body-md min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(99,102,241,0.1)] flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-8">
+<h1 class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white font-inter antialiased">Axis Core AI</h1>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-indigo-400 border-b-2 border-indigo-500 pb-1 font-label-sm" href="Claim1.html">Claims</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-label-sm" href="Denial.html">Appeals</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-label-sm" href="OperationalEffDashboard.html">Dashboard</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all active:scale-95 text-slate-400">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="flex items-center gap-2 p-1 hover:bg-slate-800/50 rounded-lg transition-all active:scale-95 text-slate-400">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-sm hidden sm:block">Dr. Sarah Chen</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="fixed left-0 top-0 h-full w-64 border-r border-slate-800/50 bg-slate-950 hidden md:flex flex-col pt-20 z-40">
+<div class="px-6 mb-8">
+<h2 class="text-indigo-500 font-label-sm tracking-widest uppercase opacity-60">Orchestration</h2>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">AI Medical Concierge</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="bg-indigo-500/10 text-indigo-400 border-l-4 border-indigo-500 flex items-center px-4 py-3 group transition-all duration-300" href="Claim1.html">
+<span class="material-symbols-outlined mr-3 group-hover:translate-x-1 transition-transform" data-icon="assignment">assignment</span>
+<span class="font-label-sm">Claims</span>
+</a>
+<a class="text-slate-500 flex items-center px-4 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300 group" href="Denial.html">
+<span class="material-symbols-outlined mr-3 group-hover:translate-x-1 transition-transform" data-icon="gavel">gavel</span>
+<span class="font-label-sm">Appeals</span>
+</a>
+<a class="text-slate-500 flex items-center px-4 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300 group" href="Auth.html">
+<span class="material-symbols-outlined mr-3 group-hover:translate-x-1 transition-transform" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm">Authorizations</span>
+</a>
+<a class="text-slate-500 flex items-center px-4 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300 group" href="PaymentandRecon.html">
+<span class="material-symbols-outlined mr-3 group-hover:translate-x-1 transition-transform" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm">Billing</span>
+</a>
+<a class="text-slate-500 flex items-center px-4 py-3 hover:bg-slate-900/50 hover:text-slate-200 transition-all duration-300 group" href="Dashborad.html">
+<span class="material-symbols-outlined mr-3 group-hover:translate-x-1 transition-transform" data-icon="settings">settings</span>
+<span class="font-label-sm">Settings</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-label-sm py-3 rounded-xl shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+        New Request
+      </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-24 pb-32 px-6 lg:px-12">
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Submission Form (Left Column) -->
+<div class="lg:col-span-8 space-y-8">
+<div class="flex items-center justify-between mb-2">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">New Claim Submission</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+<span class="text-label-sm text-amber-500/80 uppercase">Drafting State</span>
+</div>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant text-label-sm hover:bg-surface-variant transition-colors" id="saveClaimDraftButton" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="save">save</span>
+            Save Progress
+          </button>
+</div>
+<!-- Section: Patient Info -->
+<section class="glass border border-slate-800/50 rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+<h3 class="text-headline-md font-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-400" data-icon="person">person</span>
+            Patient Information
+          </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="space-y-1">
+<label class="text-label-sm text-slate-400 ml-1">Full Name</label>
+<input class="w-full bg-transparent border-0 border-b border-slate-700 focus:ring-0 focus:border-secondary transition-all text-body-md py-2" id="claimPatientName" type="text" value="Alexander Vance"/>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm text-slate-400 ml-1">Member ID</label>
+<input class="w-full bg-transparent border-0 border-b border-slate-700 focus:ring-0 focus:border-secondary transition-all text-body-md py-2" id="claimMemberId" type="text" value="GRP-9920-X12"/>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm text-slate-400 ml-1">Date of Birth</label>
+<input class="w-full bg-transparent border-0 border-b border-slate-700 focus:ring-0 focus:border-secondary transition-all text-body-md py-2" type="date" value="1984-11-24"/>
+</div>
+<div class="space-y-1">
+<label class="text-label-sm text-slate-400 ml-1">Policy Type</label>
+<input class="w-full bg-transparent border-0 border-b border-slate-700 focus:ring-0 focus:border-secondary transition-all text-body-md py-2" type="text" value="HMO Premier Plus"/>
+</div>
+</div>
+</section>
+<!-- Section: AI Clinical Entry & Real-time Coding -->
+<section class="glass border border-slate-800/50 rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-headline-md font-headline-md flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-400" data-icon="clinical_notes">clinical_notes</span>
+              Service Lines &amp; Clinical Details
+            </h3>
+<div class="flex items-center gap-2 bg-secondary/10 px-3 py-1 rounded-full border border-secondary/20">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="psychology">psychology</span>
+<span class="text-[11px] font-bold text-secondary uppercase tracking-tighter">AI Assistant Active</span>
+</div>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="text-label-sm text-slate-400 ml-1">Clinical Narrative (AI will extract codes)</label>
+<textarea class="w-full bg-surface-container-low rounded-xl border-slate-800 border focus:border-secondary focus:ring-1 focus:ring-secondary/20 transition-all text-body-md p-4" id="claimNarrative" placeholder="Enter clinical notes here..." rows="4">Patient presents with acute exacerbation of chronic obstructive pulmonary disease (COPD) with lower respiratory tract infection. Administered nebulizer treatment and ordered chest x-ray...</textarea>
+</div>
+<!-- AI Suggested Codes -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm text-indigo-300 font-bold">SUGGESTED ICD-10</span>
+<span class="text-[10px] bg-indigo-500/20 px-2 py-0.5 rounded text-indigo-400">98% CONFIDENCE</span>
+</div>
+<div class="space-y-2">
+<div class="claim-code-option flex items-center justify-between p-2 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer group" data-code="J44.1" data-code-type="ICD-10" data-description="COPD with (acute) exacerbation">
+<div class="flex items-center gap-3">
+<span class="font-mono text-secondary">J44.1</span>
+<span class="text-body-md text-slate-300">COPD with (acute) exacerbation</span>
+</div>
+<button class="claim-code-add material-symbols-outlined text-slate-600 transition-colors group-hover:text-indigo-400" data-icon="add_circle" type="button">add_circle</button>
+</div>
+<div class="claim-code-option flex items-center justify-between p-2 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer group" data-code="J22" data-code-type="ICD-10" data-description="Acute lower respiratory infection">
+<div class="flex items-center gap-3">
+<span class="font-mono text-secondary">J22</span>
+<span class="text-body-md text-slate-300">Acute lower respiratory infection</span>
+</div>
+<button class="claim-code-add material-symbols-outlined text-slate-600 transition-colors group-hover:text-indigo-400" data-icon="add_circle" type="button">add_circle</button>
+</div>
+</div>
+</div>
+<div class="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm text-indigo-300 font-bold">SUGGESTED CPT</span>
+<span class="text-[10px] bg-indigo-500/20 px-2 py-0.5 rounded text-indigo-400">ANALYZING...</span>
+</div>
+<div class="space-y-2">
+<div class="claim-code-option flex items-center justify-between p-2 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer group" data-code="99214" data-code-type="CPT" data-description="Office/outpatient visit (Moderate)">
+<div class="flex items-center gap-3">
+<span class="font-mono text-secondary">99214</span>
+<span class="text-body-md text-slate-300">Office/outpatient visit (Moderate)</span>
+</div>
+<button class="claim-code-add material-symbols-outlined text-slate-600 transition-colors group-hover:text-indigo-400" data-icon="add_circle" type="button">add_circle</button>
+</div>
+<div class="claim-code-option flex items-center justify-between p-2 hover:bg-indigo-500/10 rounded-lg transition-colors cursor-pointer group" data-code="94640" data-code-type="CPT" data-description="Nebulizer treatment">
+<div class="flex items-center gap-3">
+<span class="font-mono text-secondary">94640</span>
+<span class="text-body-md text-slate-300">Nebulizer treatment</span>
+</div>
+<button class="claim-code-add material-symbols-outlined text-slate-600 transition-colors group-hover:text-indigo-400" data-icon="add_circle" type="button">add_circle</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
+<div class="rounded-2xl border border-indigo-500/20 bg-surface-container-low p-5">
+<div class="flex items-center justify-between gap-3">
+<div>
+<p class="text-label-sm font-bold text-slate-200 uppercase tracking-widest">Selected Codes</p>
+<p class="mt-1 text-xs text-slate-500">Suggested and manual codes stay visible here before you submit.</p>
+</div>
+<span class="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-300" id="addedCodesCount">0 Codes</span>
+</div>
+<div class="mt-4 space-y-3" id="addedCodesList">
+<div class="rounded-xl border border-dashed border-slate-700 bg-slate-950/40 px-4 py-5 text-sm text-slate-500">No CPT or ICD-10 codes added yet.</div>
+</div>
+</div>
+<div class="rounded-2xl border border-slate-800/60 bg-surface-container-low p-5">
+<div>
+<p class="text-label-sm font-bold text-slate-200 uppercase tracking-widest">Add Manual Code</p>
+<p class="mt-1 text-xs text-slate-500">Use this for payer-specific codes or clinician-entered additions.</p>
+</div>
+<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+<label class="space-y-2">
+<span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Type</span>
+<select class="w-full rounded-xl border border-slate-700 bg-slate-950/70 text-slate-100" id="manualCodeType">
+<option value="ICD-10">ICD-10</option>
+<option value="CPT">CPT</option>
+</select>
+</label>
+<label class="space-y-2">
+<span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Code</span>
+<input class="w-full rounded-xl border border-slate-700 bg-slate-950/70 text-slate-100 placeholder:text-slate-600" id="manualCodeValue" placeholder="Enter code" type="text"/>
+</label>
+<label class="space-y-2">
+<span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Description</span>
+<input class="w-full rounded-xl border border-slate-700 bg-slate-950/70 text-slate-100 placeholder:text-slate-600" id="manualCodeDescription" placeholder="Enter description" type="text"/>
+</label>
+</div>
+<div class="mt-4 flex flex-wrap items-center gap-3">
+<button class="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-400" id="addManualCodeButton" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+Add Code
+</button>
+<p class="text-xs text-slate-500" id="manualCodeStatus">Manual additions will appear in Selected Codes immediately.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Attachments -->
+<section class="glass border border-slate-800/50 rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+<h3 class="text-headline-md font-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-400" data-icon="upload_file">upload_file</span>
+            Attachments &amp; Documentation
+          </h3>
+<div class="border-2 border-dashed border-slate-800 rounded-xl p-12 text-center hover:border-indigo-500/50 transition-all cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-slate-600 group-hover:text-indigo-400 mb-4" data-icon="cloud_upload">cloud_upload</span>
+<p class="text-body-lg text-slate-400">Drag &amp; drop lab reports, imaging, or prescriptions</p>
+<p class="text-label-sm text-slate-600 mt-2">Maximum file size: 25MB (PDF, JPG, DICOM)</p>
+</div>
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="flex items-center justify-between bg-surface-container-high p-3 rounded-lg border border-slate-700">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-400" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="text-label-sm">Chest_Xray_Vance_Nov24.pdf</span>
+</div>
+<button class="text-slate-500 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar: Revenue Integrity Check (Right Column) -->
+<aside class="lg:col-span-4 space-y-6">
+<div class="glass border border-slate-800/50 rounded-2xl p-6 sticky top-24">
+<div class="flex items-center justify-between mb-6">
+<h4 class="text-label-sm font-bold text-slate-200 tracking-widest uppercase">Revenue Integrity</h4>
+<span class="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[12px]" data-icon="bolt">bolt</span>
+              LIVE
+            </span>
+</div>
+<div class="space-y-4">
+<!-- Integrity Score Card -->
+<div class="bg-surface-container-lowest border border-slate-800 p-4 rounded-xl text-center">
+<p class="text-label-sm text-slate-500 mb-1">Pre-submission Validation</p>
+<div class="text-4xl font-display-xl text-indigo-400 mb-1">84<span class="text-lg opacity-50">/100</span></div>
+<div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-indigo-500 h-full w-[84%]"></div>
+</div>
+</div>
+<!-- Findings List -->
+<div class="space-y-3">
+<div class="p-3 rounded-xl bg-error-container/20 border border-error/20 flex gap-3">
+<span class="material-symbols-outlined text-error" data-icon="error">error</span>
+<div>
+<p class="text-label-sm font-bold text-error">Missing Modifier</p>
+<p class="text-[12px] text-slate-400 leading-tight">CPT 94640 may require -25 modifier for this visit type.</p>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex gap-3">
+<span class="material-symbols-outlined text-amber-500" data-icon="warning">warning</span>
+<div>
+<p class="text-label-sm font-bold text-amber-500">Authorization Mismatch</p>
+<p class="text-[12px] text-slate-400 leading-tight">Member ID GRP-9920-X12 shows no active auth for outpatient x-ray.</p>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex gap-3">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle">check_circle</span>
+<div>
+<p class="text-label-sm font-bold text-emerald-500">ICD-10 Specificity</p>
+<p class="text-[12px] text-slate-400 leading-tight">Code J44.1 meets highest specificity requirements for payor.</p>
+</div>
+</div>
+</div>
+<!-- Summary Totals -->
+<div class="pt-4 border-t border-slate-800">
+<div class="flex justify-between text-label-sm mb-2">
+<span class="text-slate-500">Total Charges</span>
+<span class="text-slate-200 font-mono">$482.00</span>
+</div>
+<div class="flex justify-between text-label-sm mb-4">
+<span class="text-slate-500">Est. Reimbursement</span>
+<span class="text-emerald-400 font-mono">$324.50</span>
+</div>
+<button class="w-full bg-indigo-500 hover:bg-indigo-400 text-white font-headline-md py-4 rounded-xl shadow-lg shadow-indigo-500/25 transition-all active:scale-95 flex items-center justify-center gap-3" id="submitClaimButton" type="button">
+                Submit Claim
+                <span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+<div class="mt-4 hidden rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4" id="claimSubmissionNotice">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-300">check_circle</span>
+<div>
+<p class="text-sm font-bold text-emerald-200">Claim submitted successfully.</p>
+<p class="mt-1 text-xs text-emerald-100/80" id="claimSubmissionMessage">The claim has been queued for payer review.</p>
+<a class="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-emerald-200 hover:text-white" href="Claim1.html">Open Claims Workspace <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+</div>
+</div>
+<p class="text-center text-[10px] text-slate-600 mt-4 uppercase tracking-widest">Awaiting final validation to reach 100% integrity</p>
+</div>
+</div>
+</div>
+<!-- Orchestration Intelligence Meta Info -->
+<div class="glass border border-slate-800/50 rounded-2xl p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="insights">insights</span>
+</div>
+<div>
+<p class="text-label-sm font-bold text-slate-300">AI Concierge Context</p>
+<p class="text-[11px] text-slate-500">This patient's primary payor typically processes respiratory claims in 14 days.</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full h-16 flex justify-around items-center px-4 pb-safe bg-slate-950/90 backdrop-blur-md border-t border-indigo-500/20 md:hidden z-50 rounded-t-2xl shadow-[0_-4px_24px_rgba(99,102,241,0.15)]">
+<a class="flex flex-col items-center justify-center text-slate-500 hover:bg-indigo-500/5 px-4 py-1" href="Dashborad.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-indigo-500/20 text-indigo-300 rounded-xl px-4 py-1" href="Claim1.html">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Claims</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:bg-indigo-500/5 px-4 py-1" href="Auth.html">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">Auths</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:bg-indigo-500/5 px-4 py-1" href="PaymentandRecon.html">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">HSA</span>
+</a>
+</nav>
+<!-- Decorative background elements -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 opacity-30 pointer-events-none">
+<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[35%] h-[35%] bg-cyan-600/10 blur-[100px] rounded-full"></div>
+</div>
+<script>
+  const addedCodes = [];
+  const addedCodesList = document.getElementById('addedCodesList');
+  const addedCodesCount = document.getElementById('addedCodesCount');
+  const manualCodeStatus = document.getElementById('manualCodeStatus');
+  const claimSubmissionNotice = document.getElementById('claimSubmissionNotice');
+  const claimSubmissionMessage = document.getElementById('claimSubmissionMessage');
+  const patientNameField = document.getElementById('claimPatientName');
+  const memberIdField = document.getElementById('claimMemberId');
+  const clinicalNarrativeField = document.getElementById('claimNarrative');
+
+  function renderAddedCodes() {
+    addedCodesCount.textContent = `${addedCodes.length} ${addedCodes.length === 1 ? 'Code' : 'Codes'}`;
+
+    if (!addedCodes.length) {
+      addedCodesList.innerHTML = '<div class="rounded-xl border border-dashed border-slate-700 bg-slate-950/40 px-4 py-5 text-sm text-slate-500">No CPT or ICD-10 codes added yet.</div>';
+      return;
+    }
+
+    addedCodesList.innerHTML = addedCodes.map((item, index) => `
+      <div class="flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3">
+        <div>
+          <div class="flex items-center gap-3">
+            <span class="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-300">${item.type}</span>
+            <span class="font-mono text-secondary">${item.code}</span>
+          </div>
+          <p class="mt-2 text-sm text-slate-300">${item.description}</p>
+        </div>
+        <button class="rounded-full border border-slate-700 p-2 text-slate-400 transition-colors hover:text-white" onclick="removeAddedCode(${index})" type="button">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function addCode(type, code, description) {
+    const normalizedType = (type || '').trim();
+    const normalizedCode = (code || '').trim().toUpperCase();
+    const normalizedDescription = (description || '').trim();
+
+    if (!normalizedCode || !normalizedDescription) {
+      manualCodeStatus.textContent = 'Code and description are required.';
+      return false;
+    }
+
+    const existing = addedCodes.find((item) => item.type === normalizedType && item.code === normalizedCode);
+    if (existing) {
+      manualCodeStatus.textContent = `${normalizedType} ${normalizedCode} is already selected.`;
+      return false;
+    }
+
+    addedCodes.push({ type: normalizedType, code: normalizedCode, description: normalizedDescription });
+    manualCodeStatus.textContent = `${normalizedType} ${normalizedCode} added to the claim.`;
+    renderAddedCodes();
+    return true;
+  }
+
+  window.removeAddedCode = function (index) {
+    const removed = addedCodes.splice(index, 1)[0];
+    manualCodeStatus.textContent = removed ? `${removed.type} ${removed.code} removed.` : 'Selected codes updated.';
+    renderAddedCodes();
+  };
+
+  document.querySelectorAll('.claim-code-add').forEach((button) => {
+    button.addEventListener('click', () => {
+      const option = button.closest('.claim-code-option');
+      addCode(option.dataset.codeType, option.dataset.code, option.dataset.description);
+    });
+  });
+
+  document.getElementById('addManualCodeButton').addEventListener('click', () => {
+    const added = addCode(
+      document.getElementById('manualCodeType').value,
+      document.getElementById('manualCodeValue').value,
+      document.getElementById('manualCodeDescription').value
+    );
+
+    if (added) {
+      document.getElementById('manualCodeValue').value = '';
+      document.getElementById('manualCodeDescription').value = '';
+    }
+  });
+
+  document.getElementById('saveClaimDraftButton').addEventListener('click', () => {
+    localStorage.setItem('claimSubmissionDraft', JSON.stringify({
+      savedAt: new Date().toISOString(),
+      patientName: patientNameField.value,
+      memberId: memberIdField.value,
+      narrative: clinicalNarrativeField.value,
+      codes: addedCodes
+    }));
+    manualCodeStatus.textContent = 'Claim draft saved locally.';
+  });
+
+  document.getElementById('submitClaimButton').addEventListener('click', () => {
+    if (!addedCodes.length) {
+      manualCodeStatus.textContent = 'Add at least one CPT or ICD-10 code before submitting.';
+      return;
+    }
+
+    const claimId = `CLM-${Date.now().toString().slice(-6)}-A`;
+    const claimPayload = {
+      claimId,
+      patientName: patientNameField.value,
+      memberId: memberIdField.value,
+      submittedAt: new Date().toISOString(),
+      status: 'Submitted',
+      narrative: clinicalNarrativeField.value,
+      codes: addedCodes
+    };
+
+    const claims = JSON.parse(localStorage.getItem('submittedClaims') || '[]');
+    claims.unshift(claimPayload);
+    localStorage.setItem('submittedClaims', JSON.stringify(claims));
+    localStorage.setItem('latestSubmittedClaim', JSON.stringify(claimPayload));
+
+    claimSubmissionNotice.classList.remove('hidden');
+    claimSubmissionMessage.textContent = `${claimId} for ${claimPayload.patientName} was submitted with ${addedCodes.length} selected code${addedCodes.length === 1 ? '' : 's'}.`;
+    manualCodeStatus.textContent = 'Submission completed successfully.';
+  });
+
+  renderAddedCodes();
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

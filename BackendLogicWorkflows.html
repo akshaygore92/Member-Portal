@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backend Logic Workflows | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#081425",
+            panel: "#132338",
+            panelSoft: "#1a2c45",
+            primary: "#c0c1ff",
+            secondary: "#5de6ff",
+            success: "#6ee7b7",
+            warning: "#ffd58a",
+            danger: "#ff8b9e"
+          },
+          fontFamily: {
+            display: ["Manrope", "Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(93, 230, 255, 0.10), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(192, 193, 255, 0.12), transparent 28%),
+        linear-gradient(180deg, #081425 0%, #0b1728 100%);
+      color: #d8e3fb;
+    }
+    .glass-panel {
+      background: rgba(19, 35, 56, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 50px rgba(2, 8, 23, 0.34);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    .lane-arrow::after {
+      content: "->";
+      color: rgba(93, 230, 255, 0.7);
+      font-weight: 700;
+      margin-left: 0.75rem;
+    }
+    .lane-arrow:last-child::after {
+      content: "";
+      margin-left: 0;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-background text-white selection:bg-primary/30">
+  <main class="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+    <header class="glass-panel rounded-[32px] p-8 lg:p-10">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div class="max-w-4xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-secondary">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">schema</span>
+            Developer Reference
+          </div>
+          <h1 class="mt-5 font-display text-4xl font-extrabold tracking-tight text-white lg:text-5xl">Backend logic workflows for the provider and member portals.</h1>
+          <p class="mt-5 max-w-3xl text-sm leading-8 text-slate-300">
+            This page documents the backend orchestration behind the portal experience. It is meant for developers, architects, and delivery teams.
+            The portals are the interaction layer for members and providers to use AI and legacy-friendly flows. Auto-adjudication is already assumed to exist upstream,
+            so the workflows below focus on intake, orchestration, routing, enrichment, state transitions, integrations, notifications, and audit.
+          </p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:w-[360px]">
+          <div class="rounded-[24px] border border-white/10 bg-white/5 p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Primary Actors</p>
+            <p class="mt-3 text-lg font-bold text-white">Member, Provider, Nventr, Human Ops</p>
+          </div>
+          <div class="rounded-[24px] border border-white/10 bg-white/5 p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Key Modes</p>
+            <p class="mt-3 text-lg font-bold text-white">Prompt, Voice, File, Workflow Routing</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Runtime Assumptions</p>
+        <div class="mt-5 space-y-4 text-sm leading-8 text-slate-300">
+          <p><strong class="text-white">1. Auto-adjudication already exists.</strong> The portal does not replace adjudication logic. It prepares, enriches, routes, tracks, and explains work around adjudication.</p>
+          <p><strong class="text-white">2. Portal is an orchestration surface.</strong> Members and providers use the UI, AI assistant, voice prompts, and file uploads to trigger backend workflows.</p>
+          <p><strong class="text-white">3. AI is assistive and operational.</strong> Nventr can collect missing fields, classify intent, summarize artifacts, package workflows, and escalate to human teams.</p>
+          <p><strong class="text-white">4. Legacy flows remain available.</strong> Even when AI can perform the action, users can still move through the classic form-by-form experience.</p>
+        </div>
+      </div>
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Core Backend Layers</p>
+        <div class="mt-5 grid gap-3">
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-sm font-semibold text-white">Portal API Gateway</p>
+            <p class="mt-2 text-sm text-slate-300">Session bootstrap, role-based routing, request normalization, auth context, throttling.</p>
+          </div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-sm font-semibold text-white">Workflow Orchestrator</p>
+            <p class="mt-2 text-sm text-slate-300">State machines, task routing, retries, compensating actions, event emission.</p>
+          </div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-sm font-semibold text-white">Domain Services</p>
+            <p class="mt-2 text-sm text-slate-300">Enrollment, claims intake, prior auth, appointments, pharmacy, billing, follow-up, notifications.</p>
+          </div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-sm font-semibold text-white">AI + Human Handoff Layer</p>
+            <p class="mt-2 text-sm text-slate-300">Prompt handling, ambient listening, summarization, file extraction, escalation packets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 glass-panel rounded-[30px] p-7">
+      <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Reference Architecture</p>
+      <div class="mt-6 grid gap-3 lg:grid-cols-6">
+        <div class="lane-arrow rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">Portal UI</div>
+        <div class="lane-arrow rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">API Gateway</div>
+        <div class="lane-arrow rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">Workflow Orchestrator</div>
+        <div class="lane-arrow rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">Domain Services</div>
+        <div class="lane-arrow rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">Integrations</div>
+        <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm font-semibold text-white">Audit + Events</div>
+      </div>
+      <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-[24px] border border-primary/15 bg-primary/10 p-5">
+          <p class="text-sm font-semibold text-white">Member / Provider interactions</p>
+          <p class="mt-2 text-sm leading-7 text-slate-300">Screen navigation, prompt bar, voice prompts, uploads, approval clicks, save draft, retry, resume.</p>
+        </div>
+        <div class="rounded-[24px] border border-secondary/15 bg-secondary/10 p-5">
+          <p class="text-sm font-semibold text-white">AI interactions</p>
+          <p class="mt-2 text-sm leading-7 text-slate-300">Intent classification, summarization, extraction, recommendation, workflow packaging, human handoff.</p>
+        </div>
+        <div class="rounded-[24px] border border-success/15 bg-success/10 p-5">
+          <p class="text-sm font-semibold text-white">Integration interactions</p>
+          <p class="mt-2 text-sm leading-7 text-slate-300">Payers, pharmacy networks, scheduling systems, payment gateway, notifications, CRM or ops queue.</p>
+        </div>
+        <div class="rounded-[24px] border border-warning/15 bg-warning/10 p-5">
+          <p class="text-sm font-semibold text-white">State + audit</p>
+          <p class="mt-2 text-sm leading-7 text-slate-300">Workflow state, timestamps, actor, correlation ID, file references, event topic, handoff history.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <div class="mb-4">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Workflow Catalog</p>
+        <h2 class="mt-2 font-display text-3xl font-bold text-white">Backend workflows that sit behind the portals and AI actions.</h2>
+      </div>
+      <div class="space-y-5">
+        <details class="glass-panel rounded-[28px] p-6" open>
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-01</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Portal access and role bootstrap</h3>
+              <p class="mt-2 text-sm text-slate-300">Used when a visitor picks Provider or Member on the landing page and enters sign-in or first-time setup.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Persist selected role context and requested portal entry point.</li>
+                <li>Create anonymous session or signed-in session bootstrap record.</li>
+                <li>Resolve feature flags, role policies, tenant, and AI settings.</li>
+                <li>Route user either to provider verification, member enrollment, or the correct dashboard.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">State keys</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>role_context</code></li>
+                <li><code>session_id</code></li>
+                <li><code>entry_flow</code></li>
+                <li><code>dashboard_route</code></li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">AI role</p>
+              <p class="mt-3 text-sm leading-7 text-slate-300">Suggest next best route, explain first-time access, and prepare the right workflow shell before the user reaches the next screen.</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-02</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Member enrollment and activation</h3>
+              <p class="mt-2 text-sm text-slate-300">Registration, KYC, plan mapping, eligibility, payment setup, dependent support, and dashboard activation.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-4">
+            <div class="lg:col-span-2">
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create <code>member_enrollment_draft</code> on registration.</li>
+                <li>Call KYC service for ID and identity validation.</li>
+                <li>Fetch plan data using member ID, sponsor, or direct plan selection.</li>
+                <li>Run eligibility verification through payer connectivity.</li>
+                <li>If required, tokenize payment method and persist billing setup reference.</li>
+                <li>Activate member record, generate member ID, and emit activation event.</li>
+                <li>Provision dashboard, notification preferences, and dependent-management capability.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Primary services</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Enrollment Service</li>
+                <li>KYC Service</li>
+                <li>Eligibility Service</li>
+                <li>Plan Mapping Service</li>
+                <li>Payment Profile Service</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Output events</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>member.enrollment.saved</code></li>
+                <li><code>member.eligibility.verified</code></li>
+                <li><code>member.activated</code></li>
+                <li><code>member.preferences.updated</code></li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-03</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Provider verification and workspace activation</h3>
+              <p class="mt-2 text-sm text-slate-300">Provider first-time setup before access to claims, authorizations, payments, appointments, pharmacy, and members.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create provider verification case.</li>
+                <li>Store demographic and credential metadata.</li>
+                <li>Validate uploaded license or ID against provider registry or credentialing source.</li>
+                <li>Activate provider workspace permissions and org affiliation.</li>
+                <li>Bootstrap queue counts, dashboard metrics, and AI workspace context.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Queues</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>provider_verification_review</code></li>
+                <li><code>provider_activation</code></li>
+                <li><code>provider_workspace_bootstrap</code></li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">AI role</p>
+              <p class="mt-3 text-sm leading-7 text-slate-300">Explain required uploads, summarize verification state, and prepare a human review packet if verification confidence is low.</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-04</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Claim submission and pre-adjudication orchestration</h3>
+              <p class="mt-2 text-sm text-slate-300">Claims are prepared, enriched, routed, and tracked here. Auto-adjudication remains external and already established.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-4">
+            <div class="lg:col-span-2">
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Capture claim draft, selected CPT and ICD codes, supporting files, and submitter context.</li>
+                <li>Run AI enrichment: code recommendation, missing attachment checks, denial-risk flags, revenue-integrity checks.</li>
+                <li>Persist normalized claim packet and create claim work item.</li>
+                <li>Submit packet to clearinghouse or claim intake gateway.</li>
+                <li>Track intake status, acknowledgements, edits, and downstream auto-adjudication references.</li>
+                <li>Surface status, appeal eligibility, and follow-up tasks back into the portal.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Claims Intake Service</li>
+                <li>Coding Assist Service</li>
+                <li>Revenue Integrity Service</li>
+                <li>Attachment Store</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Output events</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>claim.saved</code></li>
+                <li><code>claim.submitted</code></li>
+                <li><code>claim.status.changed</code></li>
+                <li><code>claim.appeal.ready</code></li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-05</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Prior authorization and utilization review</h3>
+              <p class="mt-2 text-sm text-slate-300">Provider submits request directly or uses AI with files, voice, or prompt-led intake.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create authorization request and correlate clinical files.</li>
+                <li>Run AI extraction for diagnosis, procedure, urgency, and missing medical-necessity evidence.</li>
+                <li>Generate payer packet and e-form payload.</li>
+                <li>Submit to authorization endpoint or admin queue.</li>
+                <li>Track review state and notify provider of next action.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Human-in-the-loop points</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Clinical review exception</li>
+                <li>Missing attachment escalation</li>
+                <li>Payer-specific manual portal fallback</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Key statuses</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Draft</li>
+                <li>Validating</li>
+                <li>Submitted</li>
+                <li>Pending payer review</li>
+                <li>Approved / Denied / Needs more info</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-06</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Appointment search, booking, and calendar sync</h3>
+              <p class="mt-2 text-sm text-slate-300">Members can search providers or ask Nventr to schedule. Providers can manage operational queues.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-4">
+            <div class="lg:col-span-2">
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Resolve network providers based on plan, geography, specialty, and preferences.</li>
+                <li>Fetch slot availability from scheduling system.</li>
+                <li>Reserve slot, create appointment request, and wait for acceptance if asynchronous.</li>
+                <li>Persist confirmed appointment and update member calendar view model.</li>
+                <li>Emit reminders, prep instructions, and follow-up triggers.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Integrations</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Scheduling API</li>
+                <li>Provider directory</li>
+                <li>Calendar projection store</li>
+                <li>Reminder service</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">AI role</p>
+              <p class="mt-3 text-sm leading-7 text-slate-300">Translate natural language like "book a cardiology appointment next week" into structured provider, date, time, and network filters.</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-07</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Pharmacy, refill, substitution, and network selection</h3>
+              <p class="mt-2 text-sm text-slate-300">Supports refill approval, change pharmacy, brand-vs-generic exceptions, and specialty escalations.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Fetch active prescriptions and refill eligibility.</li>
+                <li>Check network pharmacies, fulfillment options, and utilization rules.</li>
+                <li>Create refill request or substitution review case.</li>
+                <li>Update medication status table and notify member or provider.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Exception queues</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>refill_too_soon</code></li>
+                <li><code>brand_generic_review</code></li>
+                <li><code>specialty_escalation</code></li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Output events</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li><code>rx.refill.requested</code></li>
+                <li><code>rx.pharmacy.changed</code></li>
+                <li><code>rx.exception.created</code></li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-08</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Billing, payments, EOB explanation, and payment posting visibility</h3>
+              <p class="mt-2 text-sm text-slate-300">Combines member-facing payments and explanations with provider-side payment and reconciliation visibility.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-4">
+            <div class="lg:col-span-2">
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Fetch statements, EOBs, balances, receipts, HSA context, and payment-plan eligibility.</li>
+                <li>For member payment, tokenize card or HSA source and send to payment gateway.</li>
+                <li>For provider posting, ingest ERA or payment batch exception states from financial integration layer.</li>
+                <li>Use AI to explain statements and EOBs in plain language.</li>
+                <li>Persist receipt artifacts and notification history.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Member outputs</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Payment success or failure</li>
+                <li>Download receipt</li>
+                <li>Statement and report files</li>
+                <li>Email draft to administrator</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Provider outputs</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>ERA exceptions</li>
+                <li>Underpayment worklist</li>
+                <li>Posting completion metrics</li>
+                <li>PITL recovery tasks</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-09</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">Follow-up orchestration and care journey automation</h3>
+              <p class="mt-2 text-sm text-slate-300">Handles reminders, operational follow-up rules, pre/post care timing, escalations, and status syncing.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Read configured rule set, member state, appointment state, or claims state.</li>
+                <li>Generate follow-up tasks and determine delivery channel and time window.</li>
+                <li>Trigger notifications, tasks, or human outreach case.</li>
+                <li>Store acknowledgement, completion, and retry history.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Common triggers</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Appointment booked or completed</li>
+                <li>Prior auth denied or pending</li>
+                <li>Claim needs documents</li>
+                <li>Prescription refill due</li>
+                <li>Enrollment incomplete</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Output services</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Email / SMS / push notification</li>
+                <li>Provider work queue</li>
+                <li>Live agent callback request</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">WF-10</p>
+              <h3 class="mt-2 text-2xl font-bold text-white">AI prompt, voice, file, ambient listening, and human handoff</h3>
+              <p class="mt-2 text-sm text-slate-300">The cross-cutting workflow that turns Nventr into an execution surface instead of just a chatbot.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-6 grid gap-6 lg:grid-cols-4">
+            <div class="lg:col-span-2">
+              <p class="text-sm font-semibold text-white">Backend flow</p>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Accept prompt source: typed, voice transcript, uploaded files, or ambient listening transcript.</li>
+                <li>Classify intent: claims, auth, payment, appointment, enrollment, pharmacy, care journey, support.</li>
+                <li>Extract entities and required evidence.</li>
+                <li>Either answer directly, launch a workflow, or create a human handoff packet.</li>
+                <li>Persist conversation metadata, workflow correlation ID, and audit record.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">AI artifacts</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Intent classification</li>
+                <li>Entity extraction</li>
+                <li>Summaries and action plan</li>
+                <li>Workflow launch command</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Handoff packet</p>
+              <ul class="mt-3 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Conversation summary</li>
+                <li>Files and references</li>
+                <li>Suggested next action</li>
+                <li>Confidence and unresolved questions</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <div class="mb-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Detailed Feature Workflows</p>
+        <h2 class="mt-2 font-display text-3xl font-bold text-white">Feature-by-feature backend logic for implementation planning.</h2>
+        <p class="mt-3 max-w-4xl text-sm leading-8 text-slate-300">
+          Each workflow below connects a visible prototype feature to the backend trigger, orchestration steps, services, state, events, and escalation paths that engineering will need.
+          These are intentionally implementation-facing so product, architecture, and delivery teams can review scope from one page.
+        </p>
+      </div>
+
+      <div class="grid gap-5 xl:grid-cols-2">
+        <details class="glass-panel rounded-[28px] p-6" open>
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-01</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Access, sign-in, role routing, and demo reset</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers landing page persona selection, returning sign-in, first-time setup, role switching, and consolidated demo reset.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Trigger</p>
+              <p class="mt-2 text-sm leading-7 text-slate-300">User selects Provider or Member, signs in, chooses first-time setup, or resets demo state.</p>
+              <p class="mt-4 text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create or resume session with tenant, persona, auth status, and requested entry point.</li>
+                <li>Evaluate role policy, onboarding state, enrollment state, and provider verification state.</li>
+                <li>Route provider to verification or provider dashboard; route member to enrollment resume or member dashboard.</li>
+                <li>Emit route decision and update last-accessed workspace.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and state</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>IAM, Role Policy, Session Bootstrap, Demo State Service.</li>
+                <li><code>session_id</code>, <code>role_context</code>, <code>onboarding_status</code>, <code>dashboard_route</code>.</li>
+                <li>Events: <code>access.role.selected</code>, <code>access.signin.completed</code>, <code>access.route.resolved</code>.</li>
+                <li>Fallback: if state is ambiguous, route to role selector with a safe explanation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-02</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Persistent AI shell, prompt routing, and workflow queue</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers Nventr assistant, suggested prompts, workflow launch, action queue, page-aware context, and legacy fallback.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Receive prompt, page context, role, user state, and any attached workflow references.</li>
+                <li>Classify intent into claims, prior auth, payments, appointments, enrollment, pharmacy, care journey, or support.</li>
+                <li>Validate required entities and request missing fields conversationally when needed.</li>
+                <li>Queue a workflow command or return an explain-only response if mutation is not needed.</li>
+                <li>Persist audit trail with source page, prompt text, confidence, and correlation ID.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>AI Action Service, Workflow Command Bus, Prompt Policy, Audit Service.</li>
+                <li>Events: <code>ai.prompt.received</code>, <code>ai.intent.classified</code>, <code>workflow.command.queued</code>.</li>
+                <li>State: <code>conversation_id</code>, <code>intent</code>, <code>entity_refs</code>, <code>action_status</code>.</li>
+                <li>Human checkpoint: low confidence, PHI-sensitive mutation, or user-requested escalation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-03</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Voice prompts, ambient listening, call-center AI, and live agent</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers voice capture, ambient intake, transcript summarization, call resolution, and live-agent handoff readiness.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Capture consent, input channel, language, device context, and session correlation ID.</li>
+                <li>Stream or upload audio to transcription service with PHI-safe retention policy.</li>
+                <li>Summarize transcript, classify call intent, and extract member, claim, auth, payment, or scheduling references.</li>
+                <li>Create an intake case and route to AI resolution, callback queue, or live specialist.</li>
+                <li>Store final transcript summary, unresolved questions, and SLA metadata.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and controls</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Voice Gateway, Speech-to-Text, Call Intent Classifier, Agent Queue, SLA Service.</li>
+                <li>Events: <code>voice.capture.started</code>, <code>ambient.summary.ready</code>, <code>handoff.case.created</code>.</li>
+                <li>Controls: consent required, transcript retention class, escalation threshold, queue ownership.</li>
+                <li>Output: call summary, recommended next action, assigned queue, and user-facing status.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-04</p>
+              <h3 class="mt-2 text-xl font-bold text-white">File-based AI actions and document lifecycle</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers claim documents, prior auth packets, appeal evidence, statements, EOBs, referrals, and lab or imaging files.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Upload file to secure object store and create document metadata record.</li>
+                <li>Run malware scan, file-type validation, OCR, classification, and PHI tagging.</li>
+                <li>Extract structured fields and attach document references to the active workflow.</li>
+                <li>Run confidence checks and route low-confidence extraction to human review.</li>
+                <li>Apply retention policy and maintain immutable access audit.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and state</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Document Store, OCR, Extraction, PHI Tagger, Attachment Policy, Audit.</li>
+                <li>Events: <code>document.uploaded</code>, <code>document.extracted</code>, <code>document.review.required</code>.</li>
+                <li>State: <code>document_id</code>, <code>document_type</code>, <code>confidence</code>, <code>workflow_ref</code>.</li>
+                <li>Output: normalized fields, extracted summary, evidence packet, and source links.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-05</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Provider dashboard and operational intelligence</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers coding yield, clean claim rate, denials, MLR, MIPS, CMS stars, predictive UM episodes, spend reduction, and next-best actions.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Ingest claims, auth, quality, utilization, payment, pharmacy, and member engagement facts into analytics models.</li>
+                <li>Calculate KPI tiles by provider, region, payer, plan, episode, and time window.</li>
+                <li>Run predictive UM scoring to estimate episode volume, spend reduction, and MLR impact.</li>
+                <li>Generate recommended operational actions with links into claims, auth, payments, member ops, or care workflows.</li>
+                <li>Persist dashboard view model so the UI loads without replaying each source query.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and metrics</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Analytics Warehouse, Quality Measures, UM Forecasting, Dashboard Projection, Recommendation Engine.</li>
+                <li>Events: <code>dashboard.metric.refreshed</code>, <code>dashboard.action.generated</code>.</li>
+                <li>Metrics: MIPS, CMS stars, MLR by plan, clean claim rate, denial risk, recovery opportunity.</li>
+                <li>Human checkpoint: executive approval for policy-level UM or MLR interventions.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-06</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Claim submission, autonomous coding, QA, and revenue integrity</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers claim intake, CPT/ICD selection, CAC, QA review, missing attachments, clean-claim readiness, and revenue leakage checks.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create claim draft with provider, member, encounter, diagnoses, procedures, attachments, and payer context.</li>
+                <li>Run coding assist against clinical notes and selected code set.</li>
+                <li>Validate modifiers, medical necessity, attachment completeness, and payer edit rules.</li>
+                <li>Calculate denial risk and revenue integrity risk before submission.</li>
+                <li>Submit clean packet to claim intake or clearinghouse and track acknowledgement.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Claim Intake, CAC, Payer Edit Rules, Attachment Store, Clearinghouse Connector.</li>
+                <li>Events: <code>claim.draft.saved</code>, <code>claim.qa.completed</code>, <code>claim.submitted</code>.</li>
+                <li>State: <code>coding_confidence</code>, <code>attachment_status</code>, <code>denial_risk</code>, <code>external_claim_ref</code>.</li>
+                <li>Fallback: manual coder review when confidence or documentation quality is below threshold.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-07</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Claims triage, appeals, denials, and evidence packaging</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers claim queue prioritization, denial analysis, appeal-ready evidence, auto-appeal candidates, and specialist handoff.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Normalize claim status updates from intake, payer response, or adjudication output.</li>
+                <li>Cluster claims by denied, pending, missing info, appealable, or recovered state.</li>
+                <li>Map denial reason to payer policy, authorization history, documentation, and similar appeal outcomes.</li>
+                <li>Build appeal packet with evidence, counterpoints, due date, and reviewer assignment.</li>
+                <li>Submit appeal or route to human review with full context.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Claim Status, Denial Reason Mapper, Evidence Packager, Appeal Queue, Case Management.</li>
+                <li>Events: <code>claim.denied</code>, <code>appeal.packet.ready</code>, <code>appeal.submitted</code>.</li>
+                <li>State: <code>appeal_confidence</code>, <code>evidence_refs</code>, <code>appeal_due_at</code>, <code>reviewer_id</code>.</li>
+                <li>Human checkpoint: appeals above value threshold or with policy ambiguity.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-08</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Prior authorization, utilization review, clinical orders, and e-forms</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers auth queue, request wizard, medical necessity review, order validation, payer forms, supporting files, and packet generation.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create auth draft with member, provider, diagnosis, procedure, urgency, order, payer, and facility context.</li>
+                <li>Extract clinical evidence from notes, labs, imaging, referrals, and uploaded files.</li>
+                <li>Evaluate medical necessity and payer-specific requirements.</li>
+                <li>Generate e-form payload and packet checklist with missing fields clearly marked.</li>
+                <li>Submit to payer API, manual portal queue, or human utilization reviewer.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Prior Auth Service, UM Rules, Clinical Evidence Extractor, E-Form Builder, Payer Connector.</li>
+                <li>Events: <code>auth.draft.saved</code>, <code>auth.packet.validated</code>, <code>auth.submitted</code>, <code>auth.status.changed</code>.</li>
+                <li>Status: draft, validating, missing info, submitted, pending payer, approved, denied.</li>
+                <li>Human checkpoint: medical necessity uncertainty or payer portal-only submission.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-09</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Provider payments, EDI 835, ERA, posting, underpay recovery, and PITL</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers provider financial operations, ERA exceptions, posting gaps, co-pay mismatches, contract variance, recovery case creation, and human governance.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Ingest EDI 835, ERA, EFT, encounter ledger, and contract terms into normalized remit records.</li>
+                <li>Match remits to claims, expected allowed amount, patient responsibility, and posted balance.</li>
+                <li>Detect underpayments, duplicate adjustments, co-pay gaps, and posting exceptions.</li>
+                <li>Create recovery tasks with value, payer, reason code, suggested action, and PITL checkpoint.</li>
+                <li>Generate batch report, receipt artifacts, and notification or email drafts.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Remit Parser, Posting Engine, Contract Variance, Recovery Case, PITL Governance.</li>
+                <li>Events: <code>era.ingested</code>, <code>payment.posting.exception</code>, <code>underpay.case.created</code>.</li>
+                <li>State: <code>batch_id</code>, <code>posting_status</code>, <code>variance_amount</code>, <code>recovery_owner</code>.</li>
+                <li>Human checkpoint: recovery submission, write-off, or payer dispute.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-10</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Provider member management and assisted enrollment</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers provider member directory, provider-side member detail, enrollment drafts, resume flow, member activation, and next-best actions.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Build provider member directory from active members, assisted enrollment drafts, and attributed panels.</li>
+                <li>Surface status, plan, contact, last activity, blockers, and next action for each record.</li>
+                <li>Resume enrollment draft with original step state and provider context.</li>
+                <li>Route completed members into claims, appointments, billing, or provider dashboard monitoring.</li>
+                <li>Emit member-ops events and synchronize provider notifications.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Member Directory, Enrollment Draft, Provider Attribution, Next-Best Action.</li>
+                <li>Events: <code>member.directory.refreshed</code>, <code>enrollment.draft.resumed</code>, <code>member.ops.action.created</code>.</li>
+                <li>State: <code>member_record_type</code>, <code>draft_step</code>, <code>activation_status</code>, <code>next_action</code>.</li>
+                <li>Human checkpoint: missing consent, blocked KYC, or plan eligibility exception.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-11</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Member enrollment, KYC, eligibility, plan mapping, payment setup, and activation</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers member self-service enrollment and provider-assisted member enrollment from registration through dashboard handoff.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create enrollment draft with entry mode, applicant profile, household, and contact preferences.</li>
+                <li>Run KYC, identity, eligibility, plan selection, and coverage-date validation.</li>
+                <li>Capture payment setup or HSA preference when required.</li>
+                <li>Persist notification preferences and dependent relationships.</li>
+                <li>Issue member ID, activate coverage, and route to member dashboard or provider detail.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Enrollment, KYC, Eligibility, Plan Catalog, Payment Profile, Notification Preference.</li>
+                <li>Events: <code>enrollment.step.saved</code>, <code>eligibility.verified</code>, <code>member.activated</code>.</li>
+                <li>State: <code>enrollment_id</code>, <code>current_step</code>, <code>plan_id</code>, <code>coverage_start</code>, <code>member_id</code>.</li>
+                <li>Human checkpoint: identity mismatch, eligibility error, or payment setup failure.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-12</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Member dashboard, coverage, benefits, claims status, and multilingual support</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers the member command center, benefits status, plan details, claim updates, next steps, language preference, and live-help cues.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Load member dashboard projection with plan, coverage, eligibility, claims, billing, pharmacy, appointments, and care tasks.</li>
+                <li>Resolve language preference and localized content set.</li>
+                <li>Generate member-safe next-best actions and prompt chips.</li>
+                <li>Route claim-status questions to claim status projection and EOB explanation when relevant.</li>
+                <li>Escalate to live support when request exceeds self-service scope.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Member Projection, Benefits, Claims Status, Localization, Support Queue.</li>
+                <li>Events: <code>member.dashboard.loaded</code>, <code>member.language.updated</code>, <code>support.handoff.requested</code>.</li>
+                <li>State: <code>coverage_status</code>, <code>language</code>, <code>next_actions</code>, <code>claim_summary</code>.</li>
+                <li>Fallback: show plain-language guidance and route to human support.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-13</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Member billing, HSA, point-of-service payment, EOB agent, and statement AI</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers balances, HSA, payment plans, POS guidance, statement explanations, EOB explanations, receipts, downloads, and admin email drafts.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Fetch balances, EOBs, statements, receipts, payment plan eligibility, HSA balance, and payment sources.</li>
+                <li>Normalize statement and EOB line items into member-safe explanation records.</li>
+                <li>Generate POS payment recommendation based on amount due, HSA eligibility, plan rules, and available payment methods.</li>
+                <li>Process payment or create payment-plan request through payment gateway.</li>
+                <li>Generate receipt, report download, administrator email draft, and portal notification.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Billing, EOB Parser, Statement AI, HSA Connector, Payment Gateway, Artifact Generator.</li>
+                <li>Events: <code>billing.statement.explained</code>, <code>payment.submitted</code>, <code>receipt.generated</code>.</li>
+                <li>State: <code>balance_due</code>, <code>hsa_available</code>, <code>payment_status</code>, <code>artifact_refs</code>.</li>
+                <li>Human checkpoint: dispute, failed payment, unclear EOB, or hardship request.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-14</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Appointments, provider search, lab scheduling, and calendar sync</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers in-network provider search, slot booking, lab or test follow-up, prep instructions, reminders, and provider scheduling visibility.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Resolve specialty, location, member plan, network status, preferred time, and accessibility preferences.</li>
+                <li>Search provider directory and appointment-slot inventory.</li>
+                <li>Reserve slot, confirm booking, and create calendar projection.</li>
+                <li>If test or lab follow-up is needed, validate order, lab catalog, location, and prep rules.</li>
+                <li>Emit reminders, care prep, and post-visit follow-up tasks.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Provider Directory, Scheduling, Lab Catalog, Calendar Projection, Reminder Service.</li>
+                <li>Events: <code>appointment.search.completed</code>, <code>appointment.booked</code>, <code>lab.order.scheduled</code>.</li>
+                <li>State: <code>provider_id</code>, <code>slot_id</code>, <code>appointment_status</code>, <code>prep_instructions</code>.</li>
+                <li>Human checkpoint: no slots, out-of-network provider, or order validation failure.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-15</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Care journey, pre/post care management, follow-up configuration, and reminders</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers care journey updates, appointment prep, post-visit outreach, follow-up rules, escalation logic, and member notifications.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Read care events from appointments, claims, auth, pharmacy, enrollment, and member preferences.</li>
+                <li>Evaluate follow-up rules by event type, risk, channel, time window, and escalation condition.</li>
+                <li>Create reminders, task cards, provider work queue items, or live-agent callback cases.</li>
+                <li>Track delivery, acknowledgement, completion, retries, and opt-out preferences.</li>
+                <li>Update dashboard and care journey projections.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Care Journey, Rules Engine, Notification, Task Queue, Preference Service.</li>
+                <li>Events: <code>care.task.created</code>, <code>followup.rule.changed</code>, <code>notification.delivered</code>.</li>
+                <li>State: <code>care_plan_ref</code>, <code>trigger_event</code>, <code>delivery_channel</code>, <code>completion_status</code>.</li>
+                <li>Human checkpoint: failed outreach, unresolved member issue, or clinical escalation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-16</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Pharmacy, Rx management, refills, network pharmacy, delivery, and exceptions</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers refill requests, coverage checks, selected pharmacy, delivery status, brand-vs-generic review, refill-too-soon, vacation override, and specialty pharmacy routing.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Fetch member medication list, refill status, formulary, coverage, provider order, and selected pharmacy.</li>
+                <li>Validate refill eligibility, quantity, date window, prior auth dependency, and delivery availability.</li>
+                <li>Process refill request or provider approval and notify pharmacy network.</li>
+                <li>For exceptions, create brand-generic, refill-too-soon, vacation override, or specialty routing case.</li>
+                <li>Update medication status table and member/provider notifications.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>PBM/Formulary, Pharmacy Network, Medication Status, Delivery, Exception Queue.</li>
+                <li>Events: <code>rx.refill.requested</code>, <code>rx.pharmacy.changed</code>, <code>rx.exception.created</code>.</li>
+                <li>State: <code>medication_id</code>, <code>refill_status</code>, <code>pharmacy_id</code>, <code>delivery_status</code>.</li>
+                <li>Human checkpoint: specialty drug, exception approval, or clinical/provider confirmation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-17</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Dependents, household coverage, guardianship, and consent</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers adding dependents, managing household members, relationship rules, consent, guardian permissions, and dependent-specific care actions.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Create household relationship request with dependent demographics and relationship type.</li>
+                <li>Validate coverage eligibility, age-based rules, guardianship, and required consent.</li>
+                <li>Attach dependent to member household and update coverage projection.</li>
+                <li>Enable dependent-specific appointments, billing visibility, pharmacy context, and notification rules.</li>
+                <li>Audit relationship changes and permission scope.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Household Service, Consent Service, Eligibility, Permission Policy, Member Projection.</li>
+                <li>Events: <code>dependent.added</code>, <code>household.coverage.updated</code>, <code>consent.updated</code>.</li>
+                <li>State: <code>relationship_type</code>, <code>dependent_status</code>, <code>permission_scope</code>.</li>
+                <li>Human checkpoint: custody/guardian dispute or failed eligibility verification.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-18</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Notifications, settings, accessibility, telemetry, and audit</h3>
+              <p class="mt-2 text-sm text-slate-300">Covers shared settings, notification panels, voice reply preference, language preference, legacy-mode visibility, usage telemetry, accessibility events, and audit evidence.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Persist user settings for language, voice replies, notification channel, and legacy-flow visibility.</li>
+                <li>Route workflow notifications through preference and compliance policy.</li>
+                <li>Instrument prompt usage, workflow launches, downloads, handoffs, and fallback-to-legacy behavior.</li>
+                <li>Capture accessibility-relevant UI state for critical modals and live regions where needed.</li>
+                <li>Attach every user-visible mutation to an audit event and correlation ID.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Preference, Notification, Product Telemetry, Accessibility QA, Audit/Observability.</li>
+                <li>Events: <code>settings.updated</code>, <code>notification.sent</code>, <code>telemetry.event.recorded</code>.</li>
+                <li>State: <code>language</code>, <code>voice_reply_enabled</code>, <code>notification_channel</code>, <code>audit_ref</code>.</li>
+                <li>Human checkpoint: delivery failure, data access review, or compliance audit request.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-panel rounded-[28px] p-6">
+          <summary class="flex cursor-pointer items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-primary">FW-19</p>
+              <h3 class="mt-2 text-xl font-bold text-white">Auto-adjudication status integration and external-system sync</h3>
+              <p class="mt-2 text-sm text-slate-300">Auto-adjudication is assumed to exist upstream; this workflow defines how the portal consumes and explains external adjudication outputs.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400">unfold_more</span>
+          </summary>
+          <div class="mt-5 grid gap-5 md:grid-cols-2">
+            <div>
+              <p class="text-sm font-semibold text-white">Backend steps</p>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
+                <li>Subscribe to adjudication output events or poll status by external claim reference.</li>
+                <li>Normalize adjudication result into claim status, EOB line items, member responsibility, and denial codes.</li>
+                <li>Project provider view for claim queue and member view for claim/EOB explanation.</li>
+                <li>Create follow-up tasks for denial, missing information, payment posting, or member notification.</li>
+                <li>Preserve external IDs and source timestamps for audit and reconciliation.</li>
+              </ol>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">Services and events</p>
+              <ul class="mt-2 space-y-2 text-sm leading-7 text-slate-300">
+                <li>Adjudication Adapter, Claim Projection, EOB Projection, Denial Mapper, Event Bus.</li>
+                <li>Events: <code>adjudication.result.received</code>, <code>claim.projection.updated</code>, <code>eob.available</code>.</li>
+                <li>State: <code>external_claim_ref</code>, <code>adjudication_status</code>, <code>denial_codes</code>, <code>member_responsibility</code>.</li>
+                <li>Fallback: manual status review when external event is missing, late, or contradictory.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="mt-8 glass-panel rounded-[30px] p-7">
+      <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Feature Coverage Index</p>
+      <h2 class="mt-2 font-display text-3xl font-bold text-white">Every visible feature mapped to a backend workflow.</h2>
+      <div class="mt-6 overflow-x-auto rounded-[24px] border border-white/10">
+        <table class="w-full min-w-[920px] border-collapse text-left text-sm">
+          <thead class="bg-white/5 text-xs uppercase tracking-[0.2em] text-slate-400">
+            <tr>
+              <th class="px-4 py-4 font-semibold">Feature</th>
+              <th class="px-4 py-4 font-semibold">Workflow</th>
+              <th class="px-4 py-4 font-semibold">Primary Pages</th>
+              <th class="px-4 py-4 font-semibold">Backend Ownership</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10 text-slate-300">
+            <tr><td class="px-4 py-4">Portal access, sign-in, role routing</td><td class="px-4 py-4">FW-01</td><td class="px-4 py-4">Landing, Sign In, KYC</td><td class="px-4 py-4">IAM, Role Policy</td></tr>
+            <tr><td class="px-4 py-4">Nventr assistant, prompt queue, legacy fallback</td><td class="px-4 py-4">FW-02</td><td class="px-4 py-4">All core pages</td><td class="px-4 py-4">AI Action, Workflow Command Bus</td></tr>
+            <tr><td class="px-4 py-4">Voice prompts, ambient listening, call-center AI, live agent</td><td class="px-4 py-4">FW-03</td><td class="px-4 py-4">Provider Dashboard, Assistant, Appointment</td><td class="px-4 py-4">Voice Gateway, Agent Queue</td></tr>
+            <tr><td class="px-4 py-4">File-based AI actions, OCR, extraction</td><td class="px-4 py-4">FW-04</td><td class="px-4 py-4">Assistant, Claims, Prior Auth, Billing</td><td class="px-4 py-4">Document Store, Extraction</td></tr>
+            <tr><td class="px-4 py-4">MIPS, CMS stars, MLR, predictive UM, operational dashboard</td><td class="px-4 py-4">FW-05</td><td class="px-4 py-4">Provider Dashboard</td><td class="px-4 py-4">Analytics, UM Forecasting</td></tr>
+            <tr><td class="px-4 py-4">Claim submission, CAC, QA, clean-claim, revenue integrity</td><td class="px-4 py-4">FW-06</td><td class="px-4 py-4">Claims, Claims Workbench</td><td class="px-4 py-4">Claims Intake, Coding Assist</td></tr>
+            <tr><td class="px-4 py-4">Appeals, denials, denial prevention, evidence packaging</td><td class="px-4 py-4">FW-07</td><td class="px-4 py-4">Appeals &amp; Denials, Claims Workbench</td><td class="px-4 py-4">Denial Mapper, Appeal Queue</td></tr>
+            <tr><td class="px-4 py-4">Prior auth, utilization management, clinical orders, e-forms</td><td class="px-4 py-4">FW-08</td><td class="px-4 py-4">Prior Authorizations, New Prior Authorization</td><td class="px-4 py-4">Auth, UM Rules, E-Form Builder</td></tr>
+            <tr><td class="px-4 py-4">EDI 835, ERA, payment posting, underpay recovery, PITL</td><td class="px-4 py-4">FW-09</td><td class="px-4 py-4">Payments &amp; Reconciliation</td><td class="px-4 py-4">Remit, Posting, Recovery</td></tr>
+            <tr><td class="px-4 py-4">Provider member directory, detail, assisted enrollment</td><td class="px-4 py-4">FW-10</td><td class="px-4 py-4">Provider Members, Provider Member Detail, Enrollment</td><td class="px-4 py-4">Member Directory, Enrollment Draft</td></tr>
+            <tr><td class="px-4 py-4">Member enrollment, KYC, eligibility, plan mapping, activation</td><td class="px-4 py-4">FW-11</td><td class="px-4 py-4">Enrollment, KYC</td><td class="px-4 py-4">Enrollment, Eligibility, Plan Catalog</td></tr>
+            <tr><td class="px-4 py-4">Member dashboard, benefits, coverage, claims status, multilingual support</td><td class="px-4 py-4">FW-12</td><td class="px-4 py-4">Member Dashboard</td><td class="px-4 py-4">Member Projection, Localization</td></tr>
+            <tr><td class="px-4 py-4">Billing, HSA, POS payment, EOB agent, statement AI</td><td class="px-4 py-4">FW-13</td><td class="px-4 py-4">Billing &amp; HSA, Member Dashboard</td><td class="px-4 py-4">Billing, Payment, EOB, Statement AI</td></tr>
+            <tr><td class="px-4 py-4">Appointments, provider search, lab/test scheduling</td><td class="px-4 py-4">FW-14</td><td class="px-4 py-4">Appointments</td><td class="px-4 py-4">Scheduling, Provider Directory, Lab Catalog</td></tr>
+            <tr><td class="px-4 py-4">Care journey, pre/post care, reminders, follow-up configuration</td><td class="px-4 py-4">FW-15</td><td class="px-4 py-4">Care Journey, Follow-Up Configuration</td><td class="px-4 py-4">Care Journey, Rules, Notification</td></tr>
+            <tr><td class="px-4 py-4">Rx management, refills, delivery, network pharmacy, brand/generic</td><td class="px-4 py-4">FW-16</td><td class="px-4 py-4">Pharmacy</td><td class="px-4 py-4">PBM, Pharmacy Network, Exception Queue</td></tr>
+            <tr><td class="px-4 py-4">Dependents, household coverage, guardianship, consent</td><td class="px-4 py-4">FW-17</td><td class="px-4 py-4">Dependents</td><td class="px-4 py-4">Household, Consent, Eligibility</td></tr>
+            <tr><td class="px-4 py-4">Notifications, settings, telemetry, accessibility, audit</td><td class="px-4 py-4">FW-18</td><td class="px-4 py-4">Shared Shell, All Pages</td><td class="px-4 py-4">Preference, Telemetry, Audit</td></tr>
+            <tr><td class="px-4 py-4">Auto-adjudication output sync</td><td class="px-4 py-4">FW-19</td><td class="px-4 py-4">Claims, EOB, Billing, Dashboard</td><td class="px-4 py-4">Adjudication Adapter, Projections</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-2">
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Shared Event Model</p>
+        <pre class="mt-5 rounded-[24px] border border-white/10 bg-slate-950/60 p-5 text-sm leading-7 text-slate-200">{
+  "event_id": "evt_01JAXISCORE7P5",
+  "correlation_id": "corr_claim_48392",
+  "workflow_type": "claim_submission",
+  "actor_type": "provider",
+  "actor_id": "prov_2041",
+  "source_channel": "portal_prompt",
+  "status": "submitted",
+  "entity_refs": {
+    "claim_id": "CLM-48392",
+    "member_id": "MBR-109944"
+  },
+  "ai_context": {
+    "intent": "submit_claim",
+    "confidence": 0.94,
+    "handoff_required": false
+  },
+  "timestamps": {
+    "received_at": "2026-04-27T11:15:00Z",
+    "updated_at": "2026-04-27T11:15:12Z"
+  }
+}</pre>
+      </div>
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Suggested Service Boundaries</p>
+        <div class="mt-5 grid gap-3">
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">IAM Service:</strong> auth, role policy, session context, tenant policy</div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">Workflow Service:</strong> orchestration, retries, task state, correlation IDs</div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">AI Action Service:</strong> prompt interpretation, extraction, summaries, workflow launch</div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">Claims / Auth / Billing / Rx / Appointment / Enrollment services:</strong> domain ownership and business rules</div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">Integration Service:</strong> payer APIs, pharmacy APIs, calendars, payment gateway, notifications</div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm text-slate-300"><strong class="text-white">Audit and Observability Service:</strong> logs, traces, events, support replay, compliance evidence</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-2">
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">State and Persistence Checklist</p>
+        <ul class="mt-5 space-y-3 text-sm leading-7 text-slate-300">
+          <li><strong class="text-white">Draft state:</strong> enrollment, prior auth, claims, payments, follow-up configuration.</li>
+          <li><strong class="text-white">Operational state:</strong> claim queue, denial queue, auth queue, payment exceptions, Rx exceptions, appointment queue.</li>
+          <li><strong class="text-white">AI state:</strong> prompt history, file references, transcript summary, handoff packet, confidence score.</li>
+          <li><strong class="text-white">User-facing state:</strong> portal notifications, success messages, calendar projection, statement availability, receipts.</li>
+          <li><strong class="text-white">Audit state:</strong> actor, timestamp, before/after status, external request ID, workflow correlation ID.</li>
+        </ul>
+      </div>
+      <div class="glass-panel rounded-[30px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-secondary">Implementation Notes For Dev Teams</p>
+        <ul class="mt-5 space-y-3 text-sm leading-7 text-slate-300">
+          <li>Use workflow IDs and correlation IDs across UI, APIs, workers, queues, and notifications.</li>
+          <li>Keep AI execution separate from core domain mutation so human override stays possible.</li>
+          <li>Treat voice and file-based actions as alternate input channels for the same backend commands.</li>
+          <li>Persist normalized view models for dashboards so member and provider screens load quickly without replaying every integration call.</li>
+          <li>Design every workflow with <strong class="text-white">status + retry + escalation + audit</strong> as first-class concerns.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

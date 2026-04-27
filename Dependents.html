@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Member Dependents | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #081425; color: #d8e3fb; }
+    .glass-panel {
+      background: rgba(19, 35, 56, 0.78);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+  </style>
+</head>
+<body class="min-h-screen bg-background text-white selection:bg-cyan-400/20">
+  <main class="px-5 py-6 lg:px-8">
+    <div class="mx-auto max-w-6xl space-y-6">
+      <section class="glass-panel rounded-[32px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Household Access</p>
+        <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight text-white">Add dependents and manage family coverage in one place.</h1>
+        <p class="mt-3 max-w-3xl text-sm leading-8 text-slate-300">Members can add dependents, keep household details current, and use Nventr to help with coverage setup before appointments or billing questions.</p>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div class="glass-panel rounded-[30px] p-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-white">Dependents</h2>
+              <p class="mt-1 text-sm text-slate-400">Everyone linked to this member account.</p>
+            </div>
+            <button class="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-300" id="openDependentModal" type="button">Add Dependent</button>
+          </div>
+          <div class="mt-6 space-y-4" id="dependentList"></div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="glass-panel rounded-[30px] p-6">
+            <h2 class="text-xl font-bold text-white">What Nventr Can Help With</h2>
+            <div class="mt-5 space-y-3 text-sm text-slate-300">
+              <div class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3">Suggest which dependents need separate enrollment follow-up.</div>
+              <div class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3">Prepare family member details before an appointment is booked.</div>
+              <div class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3">Flag when household coverage or billing details look incomplete.</div>
+            </div>
+          </div>
+          <div class="glass-panel rounded-[30px] p-6">
+            <h2 class="text-xl font-bold text-white">Quick Actions</h2>
+            <div class="mt-5 flex flex-col gap-3">
+              <a class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10" href="Enrollment.html">Start dependent enrollment support</a>
+              <a class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10" href="Appointment.html">Book an appointment for a dependent</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-950/75 px-5" id="dependentModal">
+    <div class="glass-panel w-full max-w-2xl rounded-[32px] p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">New Dependent</p>
+          <h2 class="mt-2 text-2xl font-bold text-white">Add a household member</h2>
+        </div>
+        <button class="rounded-full border border-white/10 p-2 text-slate-400 transition-colors hover:text-white" id="closeDependentModal" type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <label class="space-y-2">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Full Name</span>
+          <input class="w-full rounded-[20px] border border-white/10 bg-slate-950/60 px-4 py-3 text-white placeholder:text-slate-600" id="dependentName" placeholder="Enter name" type="text"/>
+        </label>
+        <label class="space-y-2">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Relationship</span>
+          <select class="w-full rounded-[20px] border border-white/10 bg-slate-950/60 px-4 py-3 text-white" id="dependentRelationship">
+            <option>Spouse</option>
+            <option>Child</option>
+            <option>Parent</option>
+            <option>Other dependent</option>
+          </select>
+        </label>
+        <label class="space-y-2">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Date of Birth</span>
+          <input class="w-full rounded-[20px] border border-white/10 bg-slate-950/60 px-4 py-3 text-white" id="dependentDob" type="date"/>
+        </label>
+        <label class="space-y-2">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Notes</span>
+          <input class="w-full rounded-[20px] border border-white/10 bg-slate-950/60 px-4 py-3 text-white placeholder:text-slate-600" id="dependentNotes" placeholder="Coverage or care notes" type="text"/>
+        </label>
+      </div>
+      <p class="mt-4 text-sm text-cyan-200 hidden" id="dependentStatus"></p>
+      <div class="mt-6 flex justify-end gap-3">
+        <button class="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-slate-300 transition-colors hover:bg-white/5 hover:text-white" id="cancelDependent" type="button">Cancel</button>
+        <button class="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-300" id="saveDependent" type="button">Save Dependent</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    localStorage.setItem('preferredRole', 'member');
+
+    const dependentList = document.getElementById('dependentList');
+    const dependentModal = document.getElementById('dependentModal');
+    const dependentStatus = document.getElementById('dependentStatus');
+
+    function getDependents() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('memberDependents') || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function setDependents(records) {
+      localStorage.setItem('memberDependents', JSON.stringify(records));
+    }
+
+    function renderDependents() {
+      const records = getDependents();
+      if (!records.length) {
+        dependentList.innerHTML = '<div class="rounded-[22px] border border-dashed border-slate-700 bg-slate-950/40 px-4 py-5 text-sm text-slate-500">No dependents added yet.</div>';
+        return;
+      }
+
+      dependentList.innerHTML = records.map((item) => `
+        <div class="rounded-[24px] border border-white/10 bg-white/5 p-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-white">${item.name}</p>
+              <p class="mt-1 text-xs text-slate-400">${item.relationship} • DOB ${item.dob || 'Not added'}</p>
+              <p class="mt-3 text-sm text-slate-300">${item.notes || 'No additional notes'}</p>
+            </div>
+            <span class="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200">Linked</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModal() {
+      dependentModal.classList.remove('hidden');
+      dependentModal.classList.add('flex');
+    }
+
+    function closeModal() {
+      dependentModal.classList.add('hidden');
+      dependentModal.classList.remove('flex');
+      dependentStatus.classList.add('hidden');
+      dependentStatus.textContent = '';
+    }
+
+    document.getElementById('openDependentModal').addEventListener('click', openModal);
+    document.getElementById('closeDependentModal').addEventListener('click', closeModal);
+    document.getElementById('cancelDependent').addEventListener('click', closeModal);
+
+    document.getElementById('saveDependent').addEventListener('click', () => {
+      const name = document.getElementById('dependentName').value.trim();
+      const relationship = document.getElementById('dependentRelationship').value;
+      const dob = document.getElementById('dependentDob').value;
+      const notes = document.getElementById('dependentNotes').value.trim();
+
+      if (!name) {
+        dependentStatus.textContent = 'Dependent name is required.';
+        dependentStatus.classList.remove('hidden');
+        return;
+      }
+
+      const records = getDependents();
+      records.unshift({ id: `dep-${Date.now()}`, name, relationship, dob, notes });
+      setDependents(records);
+      dependentStatus.textContent = `${name} was added successfully.`;
+      dependentStatus.classList.remove('hidden');
+      renderDependents();
+
+      document.getElementById('dependentName').value = '';
+      document.getElementById('dependentDob').value = '';
+      document.getElementById('dependentNotes').value = '';
+      setTimeout(closeModal, 900);
+    });
+
+    renderDependents();
+  </script>
+  <script src="portal-shell.js"></script>
+</body>
+</html>

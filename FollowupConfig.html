@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Follow-Up Configuration | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #081425; color: #d8e3fb; }
+    .glass-panel {
+      background: rgba(19, 35, 56, 0.78);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-background text-white">
+  <main class="px-5 py-6 lg:px-8">
+    <div class="mx-auto max-w-6xl space-y-6">
+      <section class="glass-panel rounded-[32px] p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Follow-Up Configuration</p>
+        <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight text-white">Control reminders, AI follow-up logic, and member notification timing.</h1>
+        <p class="mt-3 max-w-3xl text-sm leading-8 text-slate-300">Use this page to decide how often Nventr follows up, which events should trigger alerts, and whether care guidance should escalate to a human concierge.</p>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div class="glass-panel rounded-[30px] p-6">
+          <h2 class="text-xl font-bold text-white">Automation Rules</h2>
+          <div class="mt-6 space-y-4" id="followupRules"></div>
+        </div>
+        <div class="space-y-6">
+          <div class="glass-panel rounded-[30px] p-6">
+            <h2 class="text-xl font-bold text-white">Escalation</h2>
+            <p class="mt-3 text-sm leading-7 text-slate-300">If AI cannot resolve a member issue, Nventr can hand off to a human care concierge automatically.</p>
+            <div class="mt-5 flex items-center justify-between rounded-[20px] border border-white/10 bg-white/5 px-4 py-3">
+              <div>
+                <p class="text-sm font-semibold text-white">Human handoff on unresolved issues</p>
+                <p class="mt-1 text-xs text-slate-400">Recommended for billing disputes, prescription issues, and scheduling conflicts.</p>
+              </div>
+              <input checked id="handoffToggle" type="checkbox"/>
+            </div>
+          </div>
+          <div class="glass-panel rounded-[30px] p-6">
+            <h2 class="text-xl font-bold text-white">Save</h2>
+            <p class="mt-3 text-sm leading-7 text-slate-300">Changes are stored locally for the member experience demo.</p>
+            <button class="mt-5 rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-300" id="saveFollowupConfig" type="button">Save Configuration</button>
+            <p class="mt-4 hidden text-sm text-cyan-200" id="followupStatus"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    localStorage.setItem('preferredRole', 'member');
+
+    const rules = [
+      { key: 'claims', label: 'Claims updates', detail: 'Alert me when a claim status changes or requires action.' },
+      { key: 'billing', label: 'Billing reminders', detail: 'Send payment reminders before due dates.' },
+      { key: 'appointments', label: 'Appointment reminders', detail: 'Notify me before appointments and offer rebooking help.' },
+      { key: 'pharmacy', label: 'Prescription updates', detail: 'Track refills, ready-for-pickup alerts, and delays.' },
+      { key: 'care_journey', label: 'Care journey nudges', detail: 'Send pre-visit and post-visit checklists.' }
+    ];
+
+    function getConfig() {
+      try {
+        return JSON.parse(localStorage.getItem('memberFollowupConfig') || 'null') || {
+          claims: true,
+          billing: true,
+          appointments: true,
+          pharmacy: true,
+          care_journey: true,
+          handoff: true
+        };
+      } catch (error) {
+        return {
+          claims: true,
+          billing: true,
+          appointments: true,
+          pharmacy: true,
+          care_journey: true,
+          handoff: true
+        };
+      }
+    }
+
+    const config = getConfig();
+    document.getElementById('handoffToggle').checked = config.handoff;
+
+    document.getElementById('followupRules').innerHTML = rules.map((rule) => `
+      <label class="flex items-center justify-between gap-4 rounded-[22px] border border-white/10 bg-white/5 px-4 py-4">
+        <div>
+          <p class="text-sm font-semibold text-white">${rule.label}</p>
+          <p class="mt-1 text-xs text-slate-400">${rule.detail}</p>
+        </div>
+        <input class="followup-toggle" data-key="${rule.key}" ${config[rule.key] ? 'checked' : ''} type="checkbox"/>
+      </label>
+    `).join('');
+
+    document.getElementById('saveFollowupConfig').addEventListener('click', () => {
+      const nextConfig = { handoff: document.getElementById('handoffToggle').checked };
+      document.querySelectorAll('.followup-toggle').forEach((input) => {
+        nextConfig[input.dataset.key] = input.checked;
+      });
+      localStorage.setItem('memberFollowupConfig', JSON.stringify(nextConfig));
+      const status = document.getElementById('followupStatus');
+      status.textContent = 'Follow-up preferences saved successfully.';
+      status.classList.remove('hidden');
+    });
+  </script>
+  <script src="portal-shell.js"></script>
+</body>
+</html>

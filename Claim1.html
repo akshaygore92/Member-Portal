@@ -1,0 +1,478 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Claims Workspace | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-bright": "#2f3a4c",
+                  "on-secondary-fixed-variant": "#004e5a",
+                  "on-primary": "#1000a9",
+                  "inverse-primary": "#494bd6",
+                  "on-error": "#690005",
+                  "tertiary-fixed": "#dae2fd",
+                  "on-surface-variant": "#c7c4d7",
+                  "tertiary-fixed-dim": "#bec6e0",
+                  "secondary-fixed": "#a2eeff",
+                  "inverse-surface": "#d8e3fb",
+                  "surface": "#081425",
+                  "secondary-container": "#00cbe6",
+                  "on-tertiary": "#283044",
+                  "on-tertiary-fixed-variant": "#3f465c",
+                  "on-secondary": "#00363e",
+                  "primary": "#c0c1ff",
+                  "outline-variant": "#464554",
+                  "surface-container-lowest": "#040e1f",
+                  "tertiary": "#bec6e0",
+                  "tertiary-container": "#8990a8",
+                  "on-secondary-container": "#00515d",
+                  "on-primary-fixed-variant": "#2f2ebe",
+                  "on-primary-container": "#0d0096",
+                  "secondary-fixed-dim": "#2fd9f4",
+                  "surface-container": "#152031",
+                  "on-tertiary-container": "#22293d",
+                  "inverse-on-surface": "#263143",
+                  "on-primary-fixed": "#07006c",
+                  "surface-container-high": "#1f2a3c",
+                  "primary-container": "#8083ff",
+                  "on-error-container": "#ffdad6",
+                  "primary-fixed-dim": "#c0c1ff",
+                  "surface-dim": "#081425",
+                  "on-tertiary-fixed": "#131b2e",
+                  "surface-container-highest": "#2a3548",
+                  "secondary": "#5de6ff",
+                  "error-container": "#93000a",
+                  "on-surface": "#d8e3fb",
+                  "outline": "#908fa0",
+                  "surface-container-low": "#111c2d",
+                  "surface-variant": "#2a3548",
+                  "surface-tint": "#c0c1ff",
+                  "primary-fixed": "#e1e0ff",
+                  "on-background": "#d8e3fb",
+                  "error": "#ffb4ab",
+                  "on-secondary-fixed": "#001f25",
+                  "background": "#081425"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "base": "4px",
+                  "unit-4": "1rem",
+                  "unit-12": "3rem",
+                  "unit-1": "0.25rem",
+                  "gutter": "1.5rem",
+                  "unit-2": "0.5rem",
+                  "margin-safe": "2rem",
+                  "unit-8": "2rem"
+          },
+          "fontFamily": {
+                  "display-xl": ["Inter"],
+                  "body-md": ["Inter"],
+                  "headline-lg": ["Inter"],
+                  "headline-md": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "label-sm": ["Inter"]
+          },
+          "fontSize": {
+                  "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                  "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                  "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-panel {
+      background: rgba(21, 32, 49, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .ai-accent-left {
+      border-left: 2px solid #c0c1ff;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .sync-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+<div class="flex items-center gap-8">
+<div class="text-xl font-bold tracking-tighter text-white bg-clip-text">Orchestra AI</div>
+<div class="hidden md:flex gap-6">
+<nav class="flex gap-6 font-inter text-sm font-medium tracking-wide">
+<a class="text-slate-400 hover:text-slate-100 transition-colors duration-200" href="OperationalEffDashboard.html">Dashboard</a>
+<a class="text-indigo-400 font-bold border-b-2 border-indigo-500" href="Claim1.html">Claims</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors duration-200" href="Auth.html">Authorizations</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors duration-200" href="PaymentandRecon.html">Payments</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full border border-white/5">
+<span class="material-symbols-outlined text-secondary text-sm sync-pulse">sync</span>
+<span class="text-[10px] font-label-sm text-secondary uppercase tracking-widest">Real-time Sync</span>
+</div>
+<button class="material-symbols-outlined text-slate-400 hover:bg-white/5 p-2 rounded-full duration-150">psychology</button>
+<button class="material-symbols-outlined text-slate-400 hover:bg-white/5 p-2 rounded-full duration-150">notifications</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-indigo-500/30 object-cover" data-alt="Professional portrait of a healthcare executive in a modern office with soft natural lighting and glass background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDudjeG_XpO1MU2IPtmaYhjUl1ixdXPrv8FkC8i2Zc8ENAyj7wc0eb3NQrZcu5a815sQp11ETjCPk2VNoZfXobE4spic5XWVLk66QJKsTz3wU5I1N7uUh7bFy29DBv1feoEoprliBn6rdxx9MpgcGvK4oWf_oE0k0ZC1LLiNSIvk2b-_9DekimDe4x1wrdQcq5NxIfD9RE6ZxrNl-3ULkMGAXyQKk2_ZVyQqXVu-ppTT1xKvy7vK3ASuZpXcVnPpYYt4fXuqygdQg"/>
+</div>
+</header>
+<!-- SideNavBar (Mobile Bottom / Desktop Left) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col items-center py-8 z-40 bg-slate-950/90 backdrop-blur-lg border-r border-slate-800 shadow-2xl w-20 hidden md:flex">
+<div class="mb-12">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 w-full">
+<a class="text-slate-500 py-4 flex flex-col items-center justify-center hover:text-indigo-300 hover:bg-white/5 transition-all" href="OperationalEffDashboard.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-inter text-[10px] mt-1 font-semibold">Dashboard</span>
+</a>
+<a class="text-indigo-400 bg-indigo-500/10 border-r-4 border-indigo-500 py-4 flex flex-col items-center justify-center" href="Claim1.html">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-inter text-[10px] mt-1 font-semibold">Claims</span>
+</a>
+<a class="text-slate-500 py-4 flex flex-col items-center justify-center hover:text-indigo-300 hover:bg-white/5 transition-all" href="Auth.html">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-inter text-[10px] mt-1 font-semibold">Auth</span>
+</a>
+<a class="text-slate-500 py-4 flex flex-col items-center justify-center hover:text-indigo-300 hover:bg-white/5 transition-all" href="PaymentandRecon.html">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-inter text-[10px] mt-1 font-semibold">Payments</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:text-white" data-icon="help_outline">help_outline</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-white" data-icon="logout">logout</button>
+</div>
+</aside>
+<main class="md:ml-20 p-gutter lg:p-unit-8">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-unit-8">
+<div>
+<h1 class="font-display-xl text-display-xl text-white">Claims Orchestration</h1>
+<p class="font-body-lg text-on-surface-variant mt-2 max-w-2xl">Autonomous lifecycle management and denial resolution powered by Axis Core AI.</p>
+</div>
+<div class="flex gap-unit-2">
+<a class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-sm flex items-center gap-2 hover:brightness-110 active:scale-95 duration-150" href="Claims.html">
+<span class="material-symbols-outlined text-lg">add</span>
+          New Submission
+        </a>
+</div>
+</header>
+<!-- Orchestration Timeline -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-unit-4 mb-unit-12">
+<div class="glass-panel p-6 rounded-xl flex items-center justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label-sm text-tertiary uppercase tracking-widest mb-1">Phase 01</p>
+<h3 class="font-headline-md text-white">Smart Coding</h3>
+<p class="text-on-surface-variant text-sm mt-1">98.4% Accuracy AI-Verify</p>
+</div>
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center relative z-10">
+<span class="material-symbols-outlined text-secondary">code_blocks</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="glass-panel p-6 rounded-xl flex items-center justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label-sm text-tertiary uppercase tracking-widest mb-1">Phase 02</p>
+<h3 class="font-headline-md text-white">Submission</h3>
+<p class="text-on-surface-variant text-sm mt-1">1,204 Active Batch Flows</p>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center relative z-10">
+<span class="material-symbols-outlined text-primary">send</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="glass-panel p-6 rounded-xl flex items-center justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-label-sm text-tertiary uppercase tracking-widest mb-1">Phase 03</p>
+<h3 class="font-headline-md text-white">Adjudication</h3>
+<p class="text-on-surface-variant text-sm mt-1">Real-time Payer Feedback</p>
+</div>
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center relative z-10">
+<span class="material-symbols-outlined text-tertiary">fact_check</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-tertiary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-unit-8">
+<!-- Denials Queue - Priority AI Area -->
+<section class="xl:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">warning</span>
+<h2 class="font-headline-md text-white">Critical Denials Queue</h2>
+</div>
+<span class="text-sm text-on-surface-variant">Last updated: 2 mins ago</span>
+</div>
+<div class="space-y-4" id="criticalDenialsQueue">
+<!-- Denial Item 1 -->
+<div class="glass-panel rounded-xl p-6 ai-accent-left relative overflow-hidden" data-claim-amount="$4,820.00" data-claim-id="CLM-98234-A" data-claim-reason="Likely Medical Necessity mismatch. CP-T code 99214 requires supplemental clinical records not found in current attachment set." data-patient-id="0233-X" data-patient-name="Jonathan Richards">
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-2">
+<span class="font-bold text-white">#CLM-98234-A</span>
+<span class="bg-error/10 text-error text-[10px] px-2 py-0.5 rounded font-bold uppercase border border-error/20">Denied</span>
+<span class="text-on-surface-variant text-xs font-medium">Provider: Dr. Sarah Vance</span>
+</div>
+<h4 class="font-body-lg text-white mb-2">Patient: Jonathan Richards (ID: 0233-X)</h4>
+<div class="bg-surface-container-low rounded-lg p-3 border border-white/5">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-lg">auto_awesome</span>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-tighter">AI Reason Detection</p>
+<p class="text-sm text-on-surface-variant mt-1 italic">"Likely Medical Necessity mismatch. CP-T code 99214 requires supplemental clinical records not found in current attachment set."</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-between items-end gap-4 min-w-[140px]">
+<div class="text-right">
+<p class="text-sm text-on-surface-variant">Value</p>
+<p class="text-xl font-bold text-white">$4,820.00</p>
+</div>
+<button class="appeal-claim-button w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-sm">history_edu</span>
+                  Appeal
+                </button>
+</div>
+</div>
+</div>
+<!-- Denial Item 2 -->
+<div class="glass-panel rounded-xl p-6 ai-accent-left relative overflow-hidden opacity-90" data-claim-amount="$1,250.00" data-claim-id="CLM-98235-B" data-claim-reason="Duplicate submission detected. Cross-reference shows ID CLM-97001 was processed 14 days ago." data-patient-id="5521-G" data-patient-name="Amelia Thorne">
+<div class="flex flex-col md:flex-row justify-between gap-6">
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-2">
+<span class="font-bold text-white">#CLM-98235-B</span>
+<span class="bg-error/10 text-error text-[10px] px-2 py-0.5 rounded font-bold uppercase border border-error/20">Denied</span>
+<span class="text-on-surface-variant text-xs font-medium">Facility: Northwest Medical Center</span>
+</div>
+<h4 class="font-body-lg text-white mb-2">Patient: Amelia Thorne (ID: 5521-G)</h4>
+<div class="bg-surface-container-low rounded-lg p-3 border border-white/5">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-lg">auto_awesome</span>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-tighter">AI Reason Detection</p>
+<p class="text-sm text-on-surface-variant mt-1 italic">"Duplicate submission detected. Cross-reference shows ID #CLM-97001 was processed 14 days ago."</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-between items-end gap-4 min-w-[140px]">
+<div class="text-right">
+<p class="text-sm text-on-surface-variant">Value</p>
+<p class="text-xl font-bold text-white">$1,250.00</p>
+</div>
+<button class="appeal-claim-button w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-sm">history_edu</span>
+                  Appeal
+                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sidebar Column: Real-time Stats & Recent -->
+<aside class="space-y-8">
+<!-- AI Orchestrator Agent (Docked) -->
+<div class="bg-primary-container/10 border border-primary/20 rounded-2xl p-6 backdrop-blur-md relative">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(192,193,255,0.4)]">
+<span class="material-symbols-outlined text-on-primary">bolt</span>
+</div>
+<div>
+<h3 class="text-white font-bold">Nventr AI</h3>
+<p class="text-primary text-xs uppercase tracking-widest font-bold">Orchestrator Active</p>
+</div>
+</div>
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+            "I've identified 12 claims ready for auto-appeal based on new clinical documentation. Shall I proceed?"
+          </p>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-on-primary text-xs font-bold py-2 rounded-lg">Approve All</button>
+<button class="flex-1 bg-white/5 border border-white/10 text-white text-xs font-bold py-2 rounded-lg">Review</button>
+</div>
+</div>
+<!-- System Sync Indicators -->
+<div class="glass-panel rounded-xl p-6">
+<h4 class="font-label-sm text-tertiary uppercase tracking-widest mb-4">Network Connectivity</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary sync-pulse"></div>
+<span class="text-sm text-white">United Healthcare Gateway</span>
+</div>
+<span class="text-[10px] text-on-surface-variant font-mono">12ms</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary sync-pulse"></div>
+<span class="text-sm text-white">Aetna Clinical API</span>
+</div>
+<span class="text-[10px] text-on-surface-variant font-mono">24ms</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-sm text-white">BCBS Network</span>
+</div>
+<span class="text-[10px] text-error font-mono font-bold">RETRYING</span>
+</div>
+</div>
+</div>
+<!-- Quick Status Metrics -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl text-center">
+<p class="text-[10px] text-tertiary uppercase font-bold mb-1">Approved</p>
+<p class="text-2xl font-display-xl text-white">2.4k</p>
+</div>
+<div class="glass-panel p-4 rounded-xl text-center">
+<p class="text-[10px] text-tertiary uppercase font-bold mb-1">Pending</p>
+<p class="text-2xl font-display-xl text-white">184</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- Recent Claims Table (Modern Minimalist) -->
+<section class="mt-unit-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-white">Recent Activity</h2>
+<button class="text-primary text-sm font-medium hover:underline">View all transactions</button>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-high border-b border-white/5">
+<th class="px-6 py-4 font-label-sm text-tertiary uppercase tracking-widest">Claim ID</th>
+<th class="px-6 py-4 font-label-sm text-tertiary uppercase tracking-widest">Recipient</th>
+<th class="px-6 py-4 font-label-sm text-tertiary uppercase tracking-widest">Service Date</th>
+<th class="px-6 py-4 font-label-sm text-tertiary uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 font-label-sm text-tertiary uppercase tracking-widest text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5" id="recentClaimsBody">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-bold text-white">#CLM-98240</td>
+<td class="px-6 py-4 text-on-surface-variant">Elena Gilbert</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-secondary text-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Submitted
+                </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-mono">$840.00</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-bold text-white">#CLM-98239</td>
+<td class="px-6 py-4 text-on-surface-variant">Marcus Wright</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 23, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-tertiary text-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Pending
+                </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-mono">$2,100.00</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-bold text-white">#CLM-98238</td>
+<td class="px-6 py-4 text-on-surface-variant">Sarah Connor</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 22, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Approved
+                </span>
+</td>
+<td class="px-6 py-4 text-right text-white font-mono">$512.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Nventr AI Floating Helper -->
+<div class="fixed bottom-unit-8 right-unit-8 z-50">
+<button class="w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(192,193,255,0.4)] hover:scale-110 active:scale-95 duration-200 group">
+<span class="material-symbols-outlined text-on-primary text-3xl group-hover:rotate-12 duration-200">auto_awesome</span>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-error text-[10px] text-white flex items-center justify-center rounded-full font-bold border-2 border-background">12</div>
+</button>
+</div>
+<script>
+  function openAppeal(claim) {
+    localStorage.setItem('selectedAppealClaim', JSON.stringify({
+      ...claim,
+      routedAt: new Date().toISOString()
+    }));
+    window.location.href = 'Denial.html';
+  }
+
+  document.querySelectorAll('.appeal-claim-button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const card = button.closest('[data-claim-id]');
+      openAppeal({
+        claimId: card.dataset.claimId,
+        patientName: card.dataset.patientName,
+        patientId: card.dataset.patientId,
+        amount: card.dataset.claimAmount,
+        reason: card.dataset.claimReason,
+        status: 'Denied'
+      });
+    });
+  });
+
+  const recentClaimsBody = document.getElementById('recentClaimsBody');
+  const submittedClaims = JSON.parse(localStorage.getItem('submittedClaims') || '[]');
+
+  submittedClaims.slice(0, 3).forEach((claim) => {
+    const row = document.createElement('tr');
+    row.className = 'hover:bg-white/5 transition-colors';
+    row.innerHTML = `
+      <td class="px-6 py-4 font-bold text-white">#${claim.claimId}</td>
+      <td class="px-6 py-4 text-on-surface-variant">${claim.patientName}</td>
+      <td class="px-6 py-4 text-on-surface-variant">${new Date(claim.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
+      <td class="px-6 py-4">
+        <span class="flex items-center gap-2 text-secondary text-sm font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          ${claim.status}
+        </span>
+      </td>
+      <td class="px-6 py-4 text-right text-white font-mono">${claim.codes.length} codes</td>
+    `;
+    recentClaimsBody.prepend(row);
+  });
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

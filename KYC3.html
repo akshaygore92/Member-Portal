@@ -1,0 +1,363 @@
+﻿<!-- KYC Onboarding - Verification -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Provider Verification - Document Upload | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "on-surface": "#d8e3fb",
+                    "surface-container": "#152031",
+                    "surface-container-highest": "#2a3548",
+                    "secondary-fixed": "#a2eeff",
+                    "on-background": "#d8e3fb",
+                    "surface-variant": "#2a3548",
+                    "error-container": "#93000a",
+                    "surface-container-low": "#111c2d",
+                    "surface": "#081425",
+                    "primary-fixed": "#e1e0ff",
+                    "on-secondary": "#00363e",
+                    "on-tertiary-fixed": "#131b2e",
+                    "on-tertiary": "#283044",
+                    "secondary-fixed-dim": "#2fd9f4",
+                    "on-secondary-fixed-variant": "#004e5a",
+                    "inverse-on-surface": "#263143",
+                    "surface-dim": "#081425",
+                    "on-primary-fixed": "#07006c",
+                    "tertiary": "#bec6e0",
+                    "tertiary-container": "#8990a8",
+                    "surface-container-lowest": "#040e1f",
+                    "on-primary-container": "#0d0096",
+                    "secondary": "#5de6ff",
+                    "inverse-primary": "#494bd6",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface-container-high": "#1f2a3c",
+                    "secondary-container": "#00cbe6",
+                    "surface-tint": "#c0c1ff",
+                    "inverse-surface": "#d8e3fb",
+                    "on-error": "#690005",
+                    "outline": "#908fa0",
+                    "background": "#081425",
+                    "outline-variant": "#464554",
+                    "error": "#ffb4ab",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#1000a9",
+                    "surface-bright": "#2f3a4c",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary-container": "#22293d",
+                    "on-secondary-fixed": "#001f25",
+                    "on-surface-variant": "#c7c4d7",
+                    "on-secondary-container": "#00515d",
+                    "primary-container": "#8083ff",
+                    "primary": "#c0c1ff",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-xl": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(144, 143, 160, 0.1);
+        }
+        .ai-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+        .step-active {
+            box-shadow: 0 0 15px rgba(192, 193, 255, 0.4);
+        }
+        .upload-ready {
+            border-color: rgba(45, 212, 191, 0.6);
+            background: rgba(20, 83, 45, 0.18);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col h-screen w-64 border-r border-slate-800 bg-slate-900 z-40">
+<div class="p-6">
+<span class="text-lg font-black text-white">Axis Core AI</span>
+<div class="mt-2 flex flex-col">
+<span class="text-xs font-bold text-indigo-400 tracking-widest uppercase">Onboarding</span>
+<span class="text-[10px] text-slate-500">AI Orchestration Layer</span>
+</div>
+</div>
+<nav class="flex-1 mt-4 space-y-1">
+<!-- Identity Tab -->
+<a class="text-slate-500 hover:bg-slate-800/50 px-4 py-3 flex items-center gap-3 transition-all ease-in-out duration-300" href="KYC1.html">
+<span class="material-symbols-outlined">fingerprint</span>
+<span class="font-inter text-sm font-medium">Basic Details</span>
+</a>
+<!-- Verification Tab (ACTIVE) -->
+<a class="bg-indigo-500/10 text-indigo-400 border-l-4 border-indigo-500 px-4 py-3 flex items-center gap-3 transition-all ease-in-out duration-300" href="KYC3.html">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-inter text-sm font-medium">Upload &amp; Verify</span>
+</a>
+<!-- Completion Tab -->
+<a class="text-slate-500 hover:bg-slate-800/50 px-4 py-3 flex items-center gap-3 transition-all ease-in-out duration-300" href="KYC4.html">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="font-inter text-sm font-medium">Confirmation</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-800">
+<div class="flex items-center gap-3 mb-6 p-2 rounded-lg bg-surface-container">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-indigo-500/30">
+<img alt="Medical Professional Profile" data-alt="professional medical doctor portrait with high-key lighting and clinical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwxzFcSRNqJh1JSBTWS3N8uniUv-vhOFSMjiE-7q4-Q-TtI6xBl6z-cJ6H-F6haXH_01nU0FslVoBfOfmaW1rg5NhmCp21wY0lH2zcR3Ug7oP_8oA2pcFD1GMdMo1GRKylgH6WNMpHT-Zp807-Z1yaw14dHjpvd8zh7k6gCOxVwbXuRzXMzlLr3xZGGxTmRmoIAzIgPWJT25oDrDNWqtEor6mm-IgxuFnxi2elGNkiEfL1iMpR4TrrEmSe2ZbKqwd74uyK_1hN9w"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white">Dr. Aris Thorne</span>
+<span class="text-[10px] text-indigo-400">Chief Resident</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="text-slate-500 hover:bg-slate-800/50 px-2 py-2 flex items-center gap-3 rounded transition-all">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+<span class="text-xs">Support</span>
+</div>
+<div class="text-slate-500 hover:bg-slate-800/50 px-2 py-2 flex items-center gap-3 rounded transition-all">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span class="text-xs">Settings</span>
+</div>
+</div>
+<button class="w-full mt-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition-all active:scale-95 duration-200">
+                Save Progress
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 min-h-screen flex flex-col bg-surface-dim">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 h-16 w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 shadow-lg shadow-indigo-500/5">
+<div class="flex items-center gap-4">
+<span class="font-inter antialiased text-xl font-bold tracking-tight text-indigo-400">Step 2: Upload Documents &amp; Verification</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-indigo-500">help_outline</span>
+<span class="material-symbols-outlined text-indigo-500">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Onboarding Journey -->
+<section class="flex-1 p-unit-8 max-w-5xl mx-auto w-full">
+<!-- Progress Tracker -->
+<div class="mb-unit-12 flex items-center justify-between relative px-unit-4">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-slate-800 -z-10 transform -translate-y-1/2"></div>
+<!-- Step 1 Done -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white ring-4 ring-indigo-500/20">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<span class="text-label-sm font-label-sm text-indigo-400">Basic Details</span>
+</div>
+<!-- Step 2 Active -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white step-active ring-4 ring-indigo-500/40">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface">Upload &amp; Verify</span>
+</div>
+<!-- Step 3 Pending -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-lg">task_alt</span>
+</div>
+<span class="text-label-sm font-label-sm text-slate-500">Confirmation</span>
+</div>
+</div>
+<!-- Verification Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Main Form Section -->
+<div class="lg:col-span-8 space-y-8">
+<div class="glass-panel p-unit-8 rounded-xl ai-glow">
+<h2 class="font-headline-md text-headline-md text-white mb-2">Upload documents for verification</h2>
+<p class="text-slate-400 mb-8">Upload your government ID or medical license so the system can complete your KYC verification before confirmation.</p>
+<!-- Drag & Drop Area -->
+<label class="border-2 border-dashed border-indigo-500/30 rounded-xl p-12 flex flex-col items-center justify-center bg-indigo-500/5 hover:bg-indigo-500/10 transition-colors group cursor-pointer" for="documentUpload" id="uploadZone">
+<div class="w-16 h-16 rounded-full bg-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-indigo-400 text-3xl">cloud_upload</span>
+</div>
+<h3 class="font-headline-md text-white text-lg mb-1">Drag and drop document</h3>
+<p class="text-slate-500 text-sm mb-2">Support for PDF, PNG, JPG (Max 10MB)</p>
+<p class="hidden text-sm text-secondary mb-6" id="fileStatus"></p>
+<span class="px-6 py-2 bg-indigo-500 text-white rounded-lg font-bold hover:bg-indigo-400 transition-colors">
+                                Select File
+                            </span>
+<input accept=".pdf,.png,.jpg,.jpeg" class="hidden" id="documentUpload" type="file"/>
+</label>
+<div class="hidden rounded-lg border border-error/40 bg-error-container/20 px-4 py-3 text-sm text-on-error-container mt-6" id="uploadError">
+Please upload a valid PDF, PNG, or JPG file before continuing.
+</div>
+<!-- Info Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+<div class="p-4 rounded-lg bg-surface-container border-l-2 border-indigo-500">
+<div class="flex items-center gap-2 mb-2 text-indigo-400">
+<span class="material-symbols-outlined text-sm">visibility</span>
+<span class="text-xs font-bold uppercase tracking-wider">Visibility</span>
+</div>
+<p class="text-sm text-slate-400">To ensure the integrity of the Axis Core AI network, we require a high-resolution scan of your medical license or government-issued identification.</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container border-l-2 border-indigo-500">
+<div class="flex items-center gap-2 mb-2 text-indigo-400">
+<span class="material-symbols-outlined text-sm">encrypted</span>
+<span class="text-xs font-bold uppercase tracking-wider">Encryption</span>
+</div>
+<p class="text-sm text-slate-400">To ensure the integrity of the Axis Core AI network, we require a high-resolution scan of your medical license or government-issued identification.</p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-between pt-4">
+<a class="flex items-center gap-2 px-6 py-3 text-slate-400 hover:text-white transition-colors" href="KYC1.html">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="font-bold">Back</span>
+ </a>
+<a class="flex items-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all active:scale-95 ai-glow shadow-lg shadow-indigo-500/20" href="KYC4.html" id="uploadContinue">
+<span>Continue to Completion</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- AI Orchestration Sidebar -->
+<div class="lg:col-span-4 space-y-6">
+<div class="glass-panel p-6 rounded-xl border border-indigo-500/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="relative">
+<div class="w-2 h-2 bg-secondary rounded-full absolute -top-1 -right-1 animate-pulse"></div>
+<span class="material-symbols-outlined text-indigo-400">psychology</span>
+</div>
+<span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">AI Orchestrator</span>
+</div>
+<p class="text-sm text-slate-300 leading-relaxed italic">
+                            "I'm ready to analyze your credentials. Once uploaded, my neural engine will cross-reference your identity with the Global Medical Registry in real-time."
+                        </p>
+</div>
+<!-- Intelligence Chips -->
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sm text-indigo-400">history</span>
+<span class="text-xs text-slate-400">Avg. Processing Time</span>
+</div>
+<div class="px-2 py-1 bg-secondary/10 rounded-full">
+<span class="text-[10px] font-bold text-secondary tracking-tighter">~12 SECONDS</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sm text-indigo-400">shield</span>
+<span class="text-xs text-slate-400">Compliance Level</span>
+</div>
+<div class="px-2 py-1 bg-secondary/10 rounded-full">
+<span class="text-[10px] font-bold text-secondary tracking-tighter">HIPAA/GDPR</span>
+</div>
+</div>
+</div>
+<!-- Decorative Graphic -->
+<div class="rounded-xl overflow-hidden h-48 relative glass-panel">
+<img class="w-full h-full object-cover opacity-50 mix-blend-overlay" data-alt="abstract close-up of complex server hardware with glowing blue and indigo led lights in dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3-J36enlJ8wN-F_A9AjmrOvm7b1ZUKZiZMiZ-ouBzOTiwBoQbBTtsLgOgcNi9UlqNF1Dzhn-2qvE7fkmHb8Kd6vJcaqaYRbB__F2eeBvhxuy3-BJHoAf1TSMb-wkeHXUxRYK0Oh17l-r8_Tri2uF1vpxDAGBgx9bjY4Tvm5LWlgyEjooTPsjMimw0qZh7cOxra_AJlAY2bFIJU5jZbHhSReHdJ15M18VoaYL8GP6ohi1BLTt-DBVMmTuIS4RcweFVrOQBEinoOg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="text-[10px] font-black text-white/40 tracking-widest uppercase">System Core Status: Active</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB Suppression (Per Mandate for Onboarding) -->
+<script>
+  localStorage.setItem('preferredRole', 'provider');
+  localStorage.setItem('kycRole', 'provider');
+  const documentUpload = document.getElementById('documentUpload');
+  const uploadZone = document.getElementById('uploadZone');
+  const fileStatus = document.getElementById('fileStatus');
+  const uploadError = document.getElementById('uploadError');
+  const uploadContinue = document.getElementById('uploadContinue');
+  const allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+
+  function setUploadState(fileName) {
+    if (fileName) {
+      fileStatus.textContent = `Selected: ${fileName}`;
+      fileStatus.classList.remove('hidden');
+      uploadZone.classList.add('upload-ready');
+    } else {
+      fileStatus.textContent = '';
+      fileStatus.classList.add('hidden');
+      uploadZone.classList.remove('upload-ready');
+    }
+  }
+
+  const storedDocumentName = localStorage.getItem('kycDocumentName') || '';
+  setUploadState(storedDocumentName);
+
+  documentUpload.addEventListener('change', () => {
+    const file = documentUpload.files[0];
+    if (!file) return;
+    const extension = file.name.split('.').pop().toLowerCase();
+    const valid = allowedExtensions.includes(extension) && file.size <= 10 * 1024 * 1024;
+
+    if (!valid) {
+      localStorage.removeItem('kycDocumentName');
+      setUploadState('');
+      uploadError.classList.remove('hidden');
+      documentUpload.value = '';
+      return;
+    }
+
+    localStorage.setItem('kycDocumentName', file.name);
+    uploadError.classList.add('hidden');
+    setUploadState(file.name);
+  });
+
+  uploadContinue.addEventListener('click', (event) => {
+    if (!localStorage.getItem('kycDocumentName')) {
+      event.preventDefault();
+      uploadError.classList.remove('hidden');
+    }
+  });
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+
+
+

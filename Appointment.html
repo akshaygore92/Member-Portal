@@ -1,0 +1,1019 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Appointments | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#111c2d",
+                        "outline": "#908fa0",
+                        "on-surface": "#d8e3fb",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#2a3548",
+                        "secondary": "#5de6ff",
+                        "on-secondary-fixed": "#001f25",
+                        "background": "#081425",
+                        "error": "#ffb4ab",
+                        "on-background": "#d8e3fb",
+                        "primary-fixed": "#e1e0ff",
+                        "surface-variant": "#2a3548",
+                        "surface-tint": "#c0c1ff",
+                        "surface-container-high": "#1f2a3c",
+                        "on-primary-fixed": "#07006c",
+                        "surface-container": "#152031",
+                        "on-tertiary-container": "#22293d",
+                        "inverse-on-surface": "#263143",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "tertiary-container": "#8990a8",
+                        "on-secondary-container": "#00515d",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-primary-container": "#0d0096",
+                        "tertiary": "#bec6e0",
+                        "on-tertiary-fixed": "#131b2e",
+                        "surface-dim": "#081425",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary-container": "#8083ff",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface": "#081425",
+                        "secondary-container": "#00cbe6",
+                        "on-tertiary": "#283044",
+                        "surface-container-lowest": "#040e1f",
+                        "outline-variant": "#464554",
+                        "primary": "#c0c1ff",
+                        "on-secondary": "#00363e",
+                        "tertiary-fixed": "#dae2fd",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-error": "#690005",
+                        "inverse-primary": "#494bd6",
+                        "on-primary": "#1000a9",
+                        "surface-bright": "#2f3a4c",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "inverse-surface": "#d8e3fb",
+                        "secondary-fixed": "#a2eeff",
+                        "tertiary-fixed-dim": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-xl": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(17, 28, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(144, 143, 160, 0.1);
+        }
+        .ai-pulse {
+            box-shadow: 0 0 0 0 rgba(93, 230, 255, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(93, 230, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(93, 230, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(93, 230, 255, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50 shadow-[0_8px_32px_0_rgba(99,102,241,0.05)]">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white font-inter tracking-tight">Axis Core AI</span>
+</div>
+<div class="flex-1 max-w-md px-8">
+<div class="relative flex items-center bg-slate-800/50 rounded-full px-4 py-1.5 border border-slate-700/50">
+<span class="material-symbols-outlined text-slate-400 text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-slate-200 w-full" placeholder="Search appointments..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-indigo-500 dark:text-indigo-400 hover:bg-slate-800/50 transition-all rounded-full"><span class="material-symbols-outlined">smart_toy</span></button>
+<button class="p-2 text-slate-400 hover:bg-slate-800/50 transition-all rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-1 hover:bg-slate-800/50 transition-all rounded-full border border-slate-700">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="professional male portrait with confident expression wearing suit against dark studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAICS5O7YtG_dZOWUA_CYyUB29nTuv0hRz6Sd2qSdLgSW3850HYRqZc87h58YC1W-qZFB72wJ9tLlWBu_oNboXHQw6vJSdce0A-nx1uhloyBq6G2QX2XHdSd4QO4KfaKzx0NajB-5tc_nH-tIP_3vkQIcYJxfIOo7WWepDqeUI9QMA8YLmG3GWCnJj0_e0hofU_9sfm7B0RGzGitNvuLM6pcrS1N0WcrrPDbNk64Jpdy7TXn_O9SUBIZ0xcJwg63ZxnZ3U0jzyrKw"/>
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full z-40 flex flex-col pt-20 pb-6 bg-slate-950/60 backdrop-blur-md w-20 hover:w-64 transition-all duration-300 border-r border-slate-800/50 group">
+<div class="flex flex-col gap-2 px-3 flex-1">
+<!-- Dashboard -->
+<a class="flex items-center h-12 px-3 text-slate-500 hover:bg-slate-800/40 hover:text-indigo-300 transition-all ease-in-out duration-300 rounded-lg" href="Dashborad.html" id="appointmentDashboardLink">
+<span class="material-symbols-outlined min-w-[40px]">grid_view</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Dashboard</span>
+</a>
+<!-- Appointments (Active) -->
+<a class="flex items-center h-12 px-3 bg-indigo-500/10 text-indigo-400 border-l-2 border-indigo-500 transition-all ease-in-out duration-300 rounded-lg" href="Appointment.html">
+<span class="material-symbols-outlined min-w-[40px]">calendar_today</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Appointments</span>
+</a>
+<!-- Claims -->
+<a class="flex items-center h-12 px-3 text-slate-500 hover:bg-slate-800/40 hover:text-indigo-300 transition-all ease-in-out duration-300 rounded-lg" href="Dashborad.html" id="appointmentClaimsLink">
+<span class="material-symbols-outlined min-w-[40px]">description</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Claims</span>
+</a>
+<!-- Pharmacy -->
+<a class="flex items-center h-12 px-3 text-slate-500 hover:bg-slate-800/40 hover:text-indigo-300 transition-all ease-in-out duration-300 rounded-lg" href="RXandPharmacy.html" id="appointmentPharmacyLink">
+<span class="material-symbols-outlined min-w-[40px]">medication</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Pharmacy</span>
+</a>
+</div>
+<div class="px-3 space-y-2 border-t border-slate-800/50 pt-4">
+<a class="flex items-center h-10 px-3 text-slate-500 hover:bg-slate-800/40 hover:text-indigo-300 transition-all ease-in-out duration-300 rounded-lg" href="LandingPage.html">
+<span class="material-symbols-outlined min-w-[40px]">settings</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Settings</span>
+</a>
+<a class="flex items-center h-10 px-3 text-slate-500 hover:bg-slate-800/40 hover:text-indigo-300 transition-all ease-in-out duration-300 rounded-lg" href="LandingPage.html">
+<span class="material-symbols-outlined min-w-[40px]">help_outline</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-inter text-sm font-medium ml-2">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-20 pt-24 px-8 pb-12 transition-all duration-300 min-h-screen">
+<!-- Header Section with Live Sync -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Appointment Orchestration</h1>
+<p class="text-on-surface-variant font-body-md mt-1">Manage hybrid workflows for members and healthcare providers.</p>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+<span class="text-xs font-label-sm text-secondary uppercase tracking-wider">Live Sync</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/50"></div>
+<span class="text-xs font-label-sm text-on-surface-variant">EMR: Epic / Cerner connected</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Column: Member Journey & Booking -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<!-- Search & Filter Bar -->
+<section class="glass-panel rounded-2xl p-6">
+<div class="flex flex-wrap gap-4">
+<div class="flex-1 min-w-[200px]">
+<label class="block text-xs font-label-sm text-on-surface-variant mb-1 ml-1 uppercase">Specialty</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none text-on-surface rounded-xl px-4 py-2.5 appearance-none focus:ring-1 focus:ring-secondary/50" id="appointmentSpecialtySelect">
+<option>Cardiology</option>
+<option>Neurology</option>
+<option>Primary Care</option>
+<option>Dermatology</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-xs font-label-sm text-on-surface-variant mb-1 ml-1 uppercase">Location</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none text-on-surface rounded-xl px-4 py-2.5 appearance-none focus:ring-1 focus:ring-secondary/50" id="appointmentLocationSelect">
+<option>New York Health Hub</option>
+<option>Virtual Visit</option>
+<option>San Francisco Clinic</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline pointer-events-none">location_on</span>
+</div>
+</div>
+<button class="mt-5 px-6 bg-primary-container text-on-primary-container font-label-sm rounded-xl hover:bg-primary-container/90 transition-colors flex items-center gap-2 h-[44px]" id="findProviderButton" type="button">
+<span class="material-symbols-outlined text-lg">search</span> Find Provider
+                        </button>
+</div>
+<p class="mt-4 text-sm text-on-surface-variant" id="appointmentSearchHint">Search providers and request an appointment. If a slot is available, we will accept it and place it on your calendar.</p>
+</section>
+<!-- Modern Calendar & Time Slots -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Calendar View -->
+<div class="glass-panel rounded-2xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-body-lg text-on-surface" id="appointmentCalendarTitle">September 2024</h3>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-surface-container-highest rounded-lg transition-colors" id="appointmentPrevMonth" type="button"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-1 hover:bg-surface-container-highest rounded-lg transition-colors" id="appointmentNextMonth" type="button"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center text-xs font-label-sm text-on-surface-variant mb-4">
+<div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
+</div>
+<div class="grid grid-cols-7 gap-2" id="appointmentCalendarGrid"></div>
+<p class="mt-4 text-sm text-secondary" id="appointmentSelectedDateLabel">Selected date: --</p>
+</div>
+<!-- Time Slot Selection -->
+<div class="glass-panel rounded-2xl p-6">
+<h3 class="font-headline-md text-body-lg text-on-surface mb-4">Available Slots</h3>
+<div class="space-y-3">
+<button class="appointment-slot w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-highest/50 border border-secondary/30 hover:border-secondary transition-all" data-provider="Dr. Sarah Chen" data-time="09:15 AM" data-location="Health Hub" type="button">
+<div class="text-left">
+<p class="text-on-surface font-medium">09:15 AM</p>
+<p class="text-xs text-on-surface-variant">Dr. Sarah Chen</p>
+</div>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</button>
+<button class="appointment-slot w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container-highest border border-transparent transition-all" data-provider="Dr. Sarah Chen" data-time="11:00 AM" data-location="Health Hub" type="button">
+<div class="text-left">
+<p class="text-on-surface font-medium">11:00 AM</p>
+<p class="text-xs text-on-surface-variant">Dr. Sarah Chen</p>
+</div>
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+<button class="appointment-slot w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container-highest border border-transparent transition-all" data-provider="Dr. Michael Roe" data-time="02:30 PM" data-location="Virtual" type="button">
+<div class="text-left">
+<p class="text-on-surface font-medium">02:30 PM</p>
+<p class="text-xs text-on-surface-variant">Dr. Michael Roe</p>
+</div>
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Upcoming Appointments List -->
+<section class="glass-panel rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Member Itinerary</h3>
+<span class="text-xs font-label-sm text-outline px-2 py-1 rounded bg-surface-container-highest" id="appointmentCountBadge">4 Scheduled</span>
+</div>
+<div class="space-y-4" id="memberItineraryList">
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface-container/40 border-l-4 border-secondary">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">monitor_heart</span>
+</div>
+<div class="flex-1">
+<h4 class="text-on-surface font-medium">Annual Cardiology Review</h4>
+<p class="text-xs text-on-surface-variant">Tomorrow at 09:15 AM â€¢ Health Hub</p>
+</div>
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20">Confirmed</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface-container/40 border-l-4 border-tertiary-container">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-container">psychology</span>
+</div>
+<div class="flex-1">
+<h4 class="text-on-surface font-medium">Mental Wellness Check-in</h4>
+<p class="text-xs text-on-surface-variant">Sep 12 at 04:00 PM â€¢ Virtual</p>
+</div>
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-tertiary-container/10 text-tertiary border border-tertiary-container/20">Rescheduled</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Provider Management & AI Agent -->
+<div class="col-span-12 lg:col-span-5 space-y-6" id="appointmentRightColumn">
+<!-- Provider Daily Queue -->
+<section class="glass-panel rounded-2xl p-6 border-l-2 border-indigo-500" id="providerHighlightsSection">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Provider Queue</h3>
+<p class="text-xs text-on-surface-variant">Today: 14 Appointments</p>
+</div>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors" id="providerQueueMenuButton" type="button">
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Patient 1: In Progress -->
+<div class="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20" id="providerSessionCard">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<img class="w-10 h-10 rounded-full object-cover grayscale opacity-80" data-alt="close-up of a young woman with natural expression looking at camera in soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuu_-CvXELYq8gD04SAtoaJkUKXuHtCs9bk1PBUKIClw_sPsQnIcA4Wbu3E94iMbiB7m6qbQLn7oK6ZbCrY01v-O0IKqzeIYycsamM9V4Z0gnqnGXdUl_34TbYnDvw43wTTTahR5fOrbDRUS9nDzYo3OagYklV00AVTjOvh-aqpgh2jzfOMfixJbii6VTYLy4VCcyPtN_j3AriDeNgYwmjL3lzHkF7m9OQicIVP5AC_-ePYoarC8iD73HWIUt1puLILlnk6FiHJQ"/>
+<div>
+<p class="text-on-surface font-medium">Elena Rodriguez</p>
+<p class="text-xs text-on-surface-variant">08:45 AM â€¢ Follow-up</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary/20 text-secondary text-[10px] font-bold uppercase" id="providerSessionStatusBadge">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                                    In-progress
+                                </div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-1.5 rounded-lg bg-surface-container-highest text-xs font-medium hover:bg-surface-container-high transition-colors" id="viewAppointmentHistoryButton" type="button">View History</button>
+<button class="flex-1 py-1.5 rounded-lg bg-indigo-500 text-white text-xs font-medium hover:bg-indigo-600 transition-colors" id="finishAppointmentSessionButton" type="button">Finish Session</button>
+</div>
+</div>
+<!-- Patient 2: Scheduled -->
+<div class="p-4 rounded-xl bg-surface-container/40 border border-outline-variant/20 group hover:border-indigo-500/40 transition-all" id="providerConflictCard">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-3">
+<img class="w-10 h-10 rounded-full object-cover grayscale opacity-60" data-alt="portrait of a middle aged man with glasses and professional attire in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1vrso0cCIdcgu4p8CGoI8Z61BU1XY6_NBH7HJMtEZvYIl4MLrDVFkzNyl-rUxFcYwqKtjquEG31_1kfOcM1r8bkXBTB700c2xooHWevcaz3TLVk1etMfNQ_Z8R1Lgex24cEMebhTcGny40wo80gSfKU-B_H7U6tVgQJ22Of-f2NXGOP-EDzmhyA9TzVZpgd0Lyl3dqIope8y4mFSImeCVX9tCXRhOZ7y4ndbc5m-1FqVBjrBFot_4pgBaCmAiAA5GwIFhASWTqw"/>
+<div>
+<p class="text-on-surface font-medium">Marcus Sterling</p>
+<p class="text-xs text-on-surface-variant">09:30 AM â€¢ Consultation</p>
+</div>
+</div>
+<span class="text-[10px] font-bold uppercase text-outline" id="providerConflictStatusBadge">Scheduled</span>
+</div>
+<!-- Conflict Warning Visualization -->
+<div class="mb-4 p-2 rounded bg-error-container/20 border border-error-container/30 flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">warning</span>
+<p class="text-[10px] text-error">Schedule overlap with Hospital Rounds detected.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-medium text-on-surface-variant hover:bg-surface-container-highest transition-colors" id="providerRescheduleButton" type="button">Reschedule</button>
+<button class="flex-1 py-1.5 rounded-lg bg-surface-container-highest text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors" id="providerAcceptButton" type="button">Accept</button>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Agent Interaction (Nventr) -->
+<section class="glass-panel rounded-2xl p-1 bg-gradient-to-br from-indigo-500/10 to-secondary/10">
+<div class="bg-background/80 backdrop-blur-xl rounded-[15px] p-6">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center ai-pulse">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h4 class="text-on-surface font-bold text-sm tracking-tight">Axis AI Orchestrator</h4>
+<span class="text-[10px] text-secondary font-label-sm uppercase">Active Intelligence</span>
+</div>
+</div>
+<div class="bg-surface-container-high/40 rounded-xl p-4 mb-4 border-l-2 border-secondary">
+<p class="text-sm text-on-surface italic">"I've found 3 cardiologist slots for tomorrow. Would you like to book one?"</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[11px] font-medium hover:bg-secondary/20 transition-all flex items-center gap-1.5" id="suggestEarlierSlotsButton" type="button">
+<span class="material-symbols-outlined text-sm">fast_forward</span> Suggest earlier slots
+                            </button>
+<button class="px-3 py-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[11px] font-medium hover:bg-secondary/20 transition-all flex items-center gap-1.5" id="findNearestProviderButton" type="button">
+<span class="material-symbols-outlined text-sm">near_me</span> Find nearest provider
+                            </button>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20">
+<div class="relative">
+<input class="w-full bg-surface-container border-none text-xs text-on-surface rounded-lg py-3 pl-4 pr-10 focus:ring-1 focus:ring-secondary/40" id="appointmentAiInput" placeholder="Type instructions for AI..." type="text"/>
+<button class="absolute right-3 top-2.5 text-secondary" id="appointmentAiSendButton" type="button">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- System Stats/Analytics -->
+<section class="grid grid-cols-2 gap-4" id="appointmentStatsSection">
+<div class="glass-panel rounded-2xl p-4 text-center">
+<p class="text-[10px] text-on-surface-variant uppercase mb-1">Efficiency Rate</p>
+<p class="text-2xl font-display-xl text-secondary">94%</p>
+</div>
+<div class="glass-panel rounded-2xl p-4 text-center">
+<p class="text-[10px] text-on-surface-variant uppercase mb-1">No-Shows</p>
+<p class="text-2xl font-display-xl text-error">-12%</p>
+</div>
+</section>
+</div>
+</div>
+<!-- Floating Action Button Contextual -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-indigo-500 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-50" id="appointmentFab" type="button">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</main>
+<script>
+  const appointmentRole = localStorage.getItem('kycRole') || localStorage.getItem('preferredRole') || 'member';
+  const appointmentDashboardLink = document.getElementById('appointmentDashboardLink');
+  const appointmentClaimsLink = document.getElementById('appointmentClaimsLink');
+  const appointmentPharmacyLink = document.getElementById('appointmentPharmacyLink');
+  const findProviderButton = document.getElementById('findProviderButton');
+  const appointmentCountBadge = document.getElementById('appointmentCountBadge');
+  const memberItineraryList = document.getElementById('memberItineraryList');
+  const suggestEarlierSlotsButton = document.getElementById('suggestEarlierSlotsButton');
+  const findNearestProviderButton = document.getElementById('findNearestProviderButton');
+  const appointmentAiInput = document.getElementById('appointmentAiInput');
+  const appointmentAiSendButton = document.getElementById('appointmentAiSendButton');
+  const slotButtons = Array.from(document.querySelectorAll('.appointment-slot'));
+  const appointmentSpecialtySelect = document.getElementById('appointmentSpecialtySelect');
+  const appointmentLocationSelect = document.getElementById('appointmentLocationSelect');
+  const appointmentCalendarTitle = document.getElementById('appointmentCalendarTitle');
+  const appointmentCalendarGrid = document.getElementById('appointmentCalendarGrid');
+  const appointmentSelectedDateLabel = document.getElementById('appointmentSelectedDateLabel');
+  const appointmentPrevMonth = document.getElementById('appointmentPrevMonth');
+  const appointmentNextMonth = document.getElementById('appointmentNextMonth');
+  const appointmentSearchHint = document.getElementById('appointmentSearchHint');
+  const providerHighlightsSection = document.getElementById('providerHighlightsSection');
+  const appointmentStatsSection = document.getElementById('appointmentStatsSection');
+  const appointmentFab = document.getElementById('appointmentFab');
+  const providerQueueMenuButton = document.getElementById('providerQueueMenuButton');
+  const viewAppointmentHistoryButton = document.getElementById('viewAppointmentHistoryButton');
+  const finishAppointmentSessionButton = document.getElementById('finishAppointmentSessionButton');
+  const providerRescheduleButton = document.getElementById('providerRescheduleButton');
+  const providerAcceptButton = document.getElementById('providerAcceptButton');
+  const providerConflictCard = document.getElementById('providerConflictCard');
+  const providerSessionStatusBadge = document.getElementById('providerSessionStatusBadge');
+  const providerConflictStatusBadge = document.getElementById('providerConflictStatusBadge');
+
+  appointmentDashboardLink.href = appointmentRole === 'provider' ? 'OperationalEffDashboard.html' : 'Dashborad.html';
+  appointmentClaimsLink.href = appointmentRole === 'provider' ? 'Claim1.html' : 'Dashborad.html';
+  appointmentPharmacyLink.href = 'RXandPharmacy.html';
+
+  const appointmentStorage = {
+    bookings: 'memberAppointments',
+    provider: 'memberSelectedProvider',
+    providerQueue: 'providerAppointmentQueue'
+  };
+
+  const today = new Date();
+  let currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  let selectedAppointmentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+  const inNetworkProviders = [
+    { name: 'Dr. Sarah Chen', specialty: 'Cardiology', location: 'Health Hub', distance: '1.2 miles', nextSlot: '09:15 AM' },
+    { name: 'Dr. Michael Roe', specialty: 'Cardiology', location: 'Virtual Visit', distance: 'Virtual', nextSlot: '02:30 PM' },
+    { name: 'Dr. Priya Nair', specialty: 'Cardiology', location: 'Northside Clinic', distance: '2.6 miles', nextSlot: '08:30 AM' }
+  ];
+
+  function formatDateKey(date) {
+    return date.toISOString().split('T')[0];
+  }
+
+  function formatDisplayDate(dateValue) {
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function readAppointmentJson(key, fallback) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key));
+      return parsed || fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function writeAppointmentJson(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function ensureAppointmentModal() {
+    let modal = document.getElementById('appointmentActionModal');
+    if (modal) {
+      return modal;
+    }
+
+    modal = document.createElement('div');
+    modal.id = 'appointmentActionModal';
+    modal.className = 'fixed inset-0 z-[90] hidden items-center justify-center bg-slate-950/80 px-4';
+    modal.innerHTML = `
+      <div class="w-full max-w-2xl rounded-3xl border border-slate-700 bg-slate-950 p-6 shadow-2xl shadow-slate-950/60">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-secondary" id="appointmentModalEyebrow">Appointments</p>
+            <h3 class="mt-2 text-2xl font-bold text-white" id="appointmentModalTitle">Details</h3>
+            <p class="mt-2 text-sm text-slate-400" id="appointmentModalDescription"></p>
+          </div>
+          <button class="rounded-full border border-slate-700 p-2 text-slate-400 hover:text-white" id="appointmentModalClose" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="mt-5 max-h-[55vh] overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900/60 p-4" id="appointmentModalBody"></div>
+        <div class="mt-5 flex flex-wrap justify-end gap-3" id="appointmentModalActions"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('#appointmentModalClose').addEventListener('click', () => modal.classList.add('hidden'));
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+    return modal;
+  }
+
+  function showAppointmentModal(config) {
+    const modal = ensureAppointmentModal();
+    modal.querySelector('#appointmentModalEyebrow').textContent = config.eyebrow || 'Appointments';
+    modal.querySelector('#appointmentModalTitle').textContent = config.title;
+    modal.querySelector('#appointmentModalDescription').textContent = config.description || '';
+    modal.querySelector('#appointmentModalBody').innerHTML = config.body || '';
+    const actions = modal.querySelector('#appointmentModalActions');
+    actions.innerHTML = '';
+
+    (config.actions || [{ label: 'Close', onClick: () => modal.classList.add('hidden') }]).forEach((action) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = action.primary
+        ? 'rounded-full bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-indigo-400'
+        : 'rounded-full border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-slate-500';
+      button.textContent = action.label;
+      button.addEventListener('click', () => action.onClick(modal));
+      actions.appendChild(button);
+    });
+
+    modal.classList.remove('hidden');
+  }
+
+  function renderCalendar() {
+    appointmentCalendarTitle.textContent = currentMonthDate.toLocaleDateString([], { month: 'long', year: 'numeric' });
+    appointmentSelectedDateLabel.textContent = `Selected date: ${formatDisplayDate(selectedAppointmentDate)}`;
+    appointmentCalendarGrid.innerHTML = '';
+
+    const monthStart = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth(), 1);
+    const startOffset = (monthStart.getDay() + 6) % 7;
+    const firstGridDate = new Date(monthStart);
+    firstGridDate.setDate(monthStart.getDate() - startOffset);
+    const bookings = readAppointmentJson(appointmentStorage.bookings, []);
+    const bookedDates = new Set(bookings.map((booking) => booking.date));
+
+    for (let index = 0; index < 42; index += 1) {
+      const cellDate = new Date(firstGridDate);
+      cellDate.setDate(firstGridDate.getDate() + index);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'relative h-10 rounded-xl text-sm transition-colors';
+
+      const inCurrentMonth = cellDate.getMonth() === currentMonthDate.getMonth();
+      const isSelected = formatDateKey(cellDate) === formatDateKey(selectedAppointmentDate);
+      const isBooked = bookedDates.has(formatDateKey(cellDate));
+
+      button.className += inCurrentMonth
+        ? ' text-on-surface hover:bg-surface-container-highest'
+        : ' text-outline/40 hover:bg-surface-container-low';
+
+      if (isSelected) {
+        button.className += ' bg-indigo-500 text-white shadow-lg';
+      } else if (isBooked) {
+        button.className += ' border border-secondary/30 bg-secondary/10 text-secondary';
+      }
+
+      button.innerHTML = `
+        <span>${cellDate.getDate()}</span>
+        ${isBooked ? '<span class="absolute bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-secondary"></span>' : ''}
+      `;
+      button.addEventListener('click', () => {
+        selectedAppointmentDate = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+        renderCalendar();
+      });
+      appointmentCalendarGrid.appendChild(button);
+    }
+  }
+
+  function renderAppointmentCount() {
+    const bookings = readAppointmentJson(appointmentStorage.bookings, []);
+    appointmentCountBadge.textContent = `${bookings.length + 2} Scheduled`;
+  }
+
+  function getProviderQueueState() {
+    return readAppointmentJson(appointmentStorage.providerQueue, {
+      sessionStatus: 'In-progress',
+      conflictStatus: 'Scheduled',
+      notes: []
+    });
+  }
+
+  function setProviderQueueState(updates) {
+    const nextState = {
+      ...getProviderQueueState(),
+      ...updates
+    };
+    writeAppointmentJson(appointmentStorage.providerQueue, nextState);
+    return nextState;
+  }
+
+  function renderProviderQueueState() {
+    if (appointmentRole !== 'provider') {
+      return;
+    }
+    const queueState = getProviderQueueState();
+    if (providerSessionStatusBadge) {
+      providerSessionStatusBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-secondary ${queueState.sessionStatus === 'Completed' ? '' : 'animate-pulse'}"></span>${queueState.sessionStatus}`;
+    }
+    if (providerConflictStatusBadge) {
+      providerConflictStatusBadge.textContent = queueState.conflictStatus;
+    }
+  }
+
+  function addAppointmentToItinerary(provider, time, location) {
+    const bookings = readAppointmentJson(appointmentStorage.bookings, []);
+    const booking = {
+      id: `appt-${Date.now()}`,
+      provider,
+      time,
+      location,
+      date: formatDateKey(selectedAppointmentDate),
+      createdAt: new Date().toISOString()
+    };
+    bookings.unshift(booking);
+    writeAppointmentJson(appointmentStorage.bookings, bookings.slice(0, 6));
+    renderStoredBookings();
+    renderAppointmentCount();
+  }
+
+  function renderStoredBookings() {
+    const bookings = readAppointmentJson(appointmentStorage.bookings, []);
+    memberItineraryList.querySelectorAll('[data-generated-booking="true"]').forEach((node) => node.remove());
+    renderAppointmentCount();
+    bookings.slice().reverse().forEach((booking) => {
+      const card = document.createElement('div');
+      card.dataset.generatedBooking = 'true';
+      card.className = 'flex items-center gap-4 p-4 rounded-xl bg-surface-container/40 border-l-4 border-secondary';
+      card.innerHTML = `
+        <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary">event_available</span>
+        </div>
+        <div class="flex-1">
+          <h4 class="text-on-surface font-medium">${booking.provider}</h4>
+          <p class="text-xs text-on-surface-variant">${formatDisplayDate(booking.date)} at ${booking.time} • ${booking.location}</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20">Booked</span>
+      `;
+      memberItineraryList.prepend(card);
+    });
+    renderCalendar();
+  }
+
+  function getFilteredProviders(queryText) {
+    const specialty = appointmentSpecialtySelect.value.toLowerCase();
+    const location = appointmentLocationSelect.value.toLowerCase();
+    const query = (queryText || '').trim().toLowerCase();
+
+    return inNetworkProviders.filter((provider) => {
+      const specialtyMatch = provider.specialty.toLowerCase() === specialty;
+      const locationMatch = location === 'virtual visit'
+        ? provider.location.toLowerCase().includes('virtual')
+        : provider.location.toLowerCase().includes(location.split(' ')[0].toLowerCase()) || provider.location.toLowerCase().includes('health hub');
+      const queryMatch = !query || `${provider.name} ${provider.specialty} ${provider.location}`.toLowerCase().includes(query);
+      return specialtyMatch && locationMatch && queryMatch;
+    });
+  }
+
+  function showProviderPicker(source, queryText) {
+    const matchingProviders = getFilteredProviders(queryText);
+    showAppointmentModal({
+      eyebrow: 'In-Network Providers',
+      title: 'Choose a provider within network',
+      description: source === 'ai' ? 'Nventr prepared these in-network suggestions for you.' : 'Select a provider and continue to booking.',
+      body: `
+        <div class="space-y-3">
+          ${matchingProviders.length ? matchingProviders.map((provider) => `
+            <button class="network-provider-option flex w-full items-start justify-between rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-4 text-left transition-colors hover:border-secondary" data-name="${provider.name}" data-location="${provider.location}" data-slot="${provider.nextSlot}" type="button">
+              <div>
+                <p class="font-semibold text-white">${provider.name}</p>
+                <p class="mt-1 text-sm text-slate-400">${provider.specialty} • ${provider.location} • ${provider.distance}</p>
+                <p class="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-secondary">Next slot ${provider.nextSlot}</p>
+              </div>
+              <span class="material-symbols-outlined text-secondary">arrow_forward</span>
+            </button>
+          `).join('') : `
+            <div class="rounded-2xl border border-dashed border-slate-700 bg-slate-950/50 p-5 text-sm text-slate-400">
+              No provider matched this search. Try a different specialty, location, or search phrase.
+            </div>
+          `}
+        </div>
+      `
+    });
+
+    const modal = document.getElementById('appointmentActionModal');
+    modal.querySelectorAll('.network-provider-option').forEach((button) => {
+      button.addEventListener('click', () => {
+        writeAppointmentJson(appointmentStorage.provider, {
+          name: button.dataset.name,
+          location: button.dataset.location,
+          nextSlot: button.dataset.slot
+        });
+        modal.classList.add('hidden');
+        bookAppointment(button.dataset.name, button.dataset.slot, button.dataset.location);
+      });
+    });
+  }
+
+  function bookAppointment(provider, time, location) {
+    addAppointmentToItinerary(provider, time, location);
+    showAppointmentModal({
+      eyebrow: 'Appointment Confirmed',
+      title: 'Appointment request accepted',
+      description: `${provider} was booked for ${formatDisplayDate(selectedAppointmentDate)} at ${time}.`,
+      body: `
+        <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-50/90">
+          <p class="font-bold text-emerald-100">Slot available and confirmed</p>
+          <p class="mt-2">This appointment now appears in your appointment list and is marked on the calendar.</p>
+        </div>
+      `,
+      actions: [
+        { label: 'Done', primary: true, onClick: (modal) => modal.classList.add('hidden') }
+      ]
+    });
+  }
+
+  function showProviderHistoryDrawer() {
+    showAppointmentModal({
+      eyebrow: 'Provider History',
+      title: 'Elena Rodriguez timeline',
+      description: 'AI stitched recent visits, pre-visit prep, and likely follow-up tasks into one provider-side view.',
+      body: `
+        <div class="space-y-4 text-sm text-slate-200">
+          <div class="rounded-2xl border border-indigo-400/20 bg-indigo-500/10 p-4">
+            <p class="font-bold text-indigo-100">Session context</p>
+            <p class="mt-2 text-indigo-50/80">Cardiology follow-up, last echocardiogram completed 18 days ago, medication adherence 97%.</p>
+          </div>
+          <div class="grid gap-3 md:grid-cols-2">
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Recent touchpoints</p>
+              <ul class="mt-3 space-y-2 text-slate-300">
+                <li>Apr 18 - Lab review completed</li>
+                <li>Apr 11 - Telehealth symptom check</li>
+                <li>Apr 02 - Medication adherence outreach</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">AI suggestions</p>
+              <ul class="mt-3 space-y-2 text-slate-300">
+                <li>Queue follow-up summary to member portal</li>
+                <li>Offer virtual follow-up in 2 weeks</li>
+                <li>Attach care-plan update to the chart</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      `,
+      actions: [
+        { label: 'Send Summary', onClick: (modal) => { setProviderQueueState({ notes: ['After-visit summary queued'] }); modal.classList.add('hidden'); } },
+        { label: 'Close', primary: true, onClick: (modal) => modal.classList.add('hidden') }
+      ]
+    });
+  }
+
+  function showProviderFinishDrawer() {
+    showAppointmentModal({
+      eyebrow: 'Close Session',
+      title: 'Finish Elena Rodriguez session',
+      description: 'Wrap the encounter, queue next steps, and hand off the summary without leaving the page.',
+      body: `
+        <div class="space-y-4 text-sm text-slate-200">
+          <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+            <p class="font-bold text-emerald-100">Ready to finalize</p>
+            <p class="mt-2 text-emerald-50/80">Nventr prepared the after-visit summary, medication reminders, and suggested follow-up cadence.</p>
+          </div>
+          <div class="grid gap-3 md:grid-cols-3">
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Summary</p>
+              <p class="mt-2 text-white">Drafted</p>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Follow-up</p>
+              <p class="mt-2 text-white">2 weeks</p>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Care Team</p>
+              <p class="mt-2 text-white">Notified</p>
+            </div>
+          </div>
+        </div>
+      `,
+      actions: [
+        {
+          label: 'Complete Session',
+          primary: true,
+          onClick: (modal) => {
+            setProviderQueueState({ sessionStatus: 'Completed', notes: ['Session completed and summary shared'] });
+            renderProviderQueueState();
+            modal.classList.add('hidden');
+            showAppointmentModal({
+              eyebrow: 'Session Closed',
+              title: 'Encounter completed',
+              description: 'The after-visit summary and follow-up tasks were handed off.',
+              body: '<div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-50/90">Elena Rodriguez now shows as completed in the provider queue. Follow-up reminders were sent to the member portal.</div>',
+              actions: [{ label: 'Done', primary: true, onClick: (innerModal) => innerModal.classList.add('hidden') }]
+            });
+          }
+        },
+        { label: 'Keep Open', onClick: (modal) => modal.classList.add('hidden') }
+      ]
+    });
+  }
+
+  function showProviderConflictDrawer() {
+    showAppointmentModal({
+      eyebrow: 'Schedule Conflict',
+      title: 'Resolve Marcus Sterling overlap',
+      description: 'Nventr found a conflict with hospital rounds and prepared the best alternatives.',
+      body: `
+        <div class="space-y-4 text-sm text-slate-200">
+          <div class="rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4">
+            <p class="font-bold text-amber-100">Overlap detected</p>
+            <p class="mt-2 text-amber-50/80">09:30 AM overlaps with hospital rounds by 20 minutes. Three options are ready below.</p>
+          </div>
+          <div class="space-y-3">
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="font-semibold text-white">09:50 AM same provider</p>
+              <p class="mt-1 text-slate-400">Keeps the same clinic room and avoids staff reshuffle.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="font-semibold text-white">10:15 AM virtual consult</p>
+              <p class="mt-1 text-slate-400">Best if patient agrees to a virtual follow-up.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+              <p class="font-semibold text-white">Escalate to front desk</p>
+              <p class="mt-1 text-slate-400">Creates a live-agent handoff for manual confirmation.</p>
+            </div>
+          </div>
+        </div>
+      `,
+      actions: [
+        {
+          label: 'Move to 09:50 AM',
+          primary: true,
+          onClick: (modal) => {
+            setProviderQueueState({ conflictStatus: 'Rescheduled', notes: ['Marcus Sterling moved to 09:50 AM'] });
+            renderProviderQueueState();
+            modal.classList.add('hidden');
+          }
+        },
+        {
+          label: 'Hand Off',
+          onClick: (modal) => {
+            setProviderQueueState({ conflictStatus: 'Handed Off', notes: ['Front desk handoff created'] });
+            renderProviderQueueState();
+            modal.classList.add('hidden');
+          }
+        }
+      ]
+    });
+  }
+
+  function showProviderWorkbench() {
+    showAppointmentModal({
+      eyebrow: 'Provider Workbench',
+      title: 'Appointment orchestration workspace',
+      description: 'Queue same-day follow-ups, monitor conflicts, and let Nventr prep outreach without navigating away.',
+      body: `
+        <div class="grid gap-3 md:grid-cols-2 text-sm text-slate-200">
+          <button class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4 text-left hover:border-indigo-400 provider-workbench-action" data-action="history" type="button">
+            <p class="font-semibold text-white">Review current session</p>
+            <p class="mt-2 text-slate-400">Open live encounter timeline for Elena Rodriguez.</p>
+          </button>
+          <button class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4 text-left hover:border-indigo-400 provider-workbench-action" data-action="conflict" type="button">
+            <p class="font-semibold text-white">Resolve conflict</p>
+            <p class="mt-2 text-slate-400">Handle Marcus Sterling's overlap before it becomes a no-show risk.</p>
+          </button>
+          <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+            <p class="font-semibold text-white">Live sync</p>
+            <p class="mt-2 text-slate-400">Epic and Cerner updates are reflected in the queue every 90 seconds.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-700 bg-slate-950/70 p-4">
+            <p class="font-semibold text-white">AI next action</p>
+            <p class="mt-2 text-slate-400">Nventr recommends closing the current session and moving the overlap to 09:50 AM.</p>
+          </div>
+        </div>
+      `,
+      actions: [{ label: 'Close', primary: true, onClick: (modal) => modal.classList.add('hidden') }]
+    });
+    const modal = document.getElementById('appointmentActionModal');
+    modal.querySelectorAll('.provider-workbench-action').forEach((button) => {
+      button.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        if (button.dataset.action === 'history') {
+          showProviderHistoryDrawer();
+        } else {
+          showProviderConflictDrawer();
+        }
+      });
+    });
+  }
+
+  findProviderButton.addEventListener('click', () => showProviderPicker('manual', appointmentAiInput.value));
+  findNearestProviderButton.addEventListener('click', () => showProviderPicker('ai', appointmentAiInput.value));
+  suggestEarlierSlotsButton.addEventListener('click', () => {
+    showAppointmentModal({
+      eyebrow: 'Earlier Slots',
+      title: 'Earlier appointment options',
+      description: 'Nventr found a few earlier openings within network.',
+      body: `
+        <div class="space-y-3 text-sm text-slate-200">
+          <div class="rounded-2xl border border-secondary/20 bg-secondary/10 p-4">
+            <p class="font-bold text-secondary">08:30 AM • Dr. Priya Nair • Northside Clinic</p>
+            <p class="mt-1 text-slate-300">Best for the earliest in-network cardiology consult.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
+            <p class="font-bold text-white">09:00 AM • Dr. Sarah Chen • Health Hub</p>
+            <p class="mt-1 text-slate-400">Keeps you at the same preferred facility.</p>
+          </div>
+        </div>
+      `,
+      actions: [
+        { label: 'Book 08:30 AM', primary: true, onClick: (modal) => { modal.classList.add('hidden'); bookAppointment('Dr. Priya Nair', '08:30 AM', 'Northside Clinic'); } },
+        { label: 'Close', onClick: (modal) => modal.classList.add('hidden') }
+      ]
+    });
+  });
+
+  slotButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      bookAppointment(button.dataset.provider, button.dataset.time, button.dataset.location);
+    });
+  });
+
+  appointmentAiSendButton.addEventListener('click', () => {
+    const prompt = appointmentAiInput.value.trim() || 'Book my next appointment';
+    const lowerPrompt = prompt.toLowerCase();
+    const bestMatch = getFilteredProviders(prompt)[0];
+
+    if (lowerPrompt.includes('book') || lowerPrompt.includes('schedule') || lowerPrompt.includes('appointment')) {
+      if (bestMatch) {
+        bookAppointment(bestMatch.name, bestMatch.nextSlot, bestMatch.location);
+        appointmentAiInput.value = '';
+      } else {
+        showProviderPicker('ai', prompt);
+      }
+      return;
+    }
+
+    showProviderPicker('ai', prompt);
+  });
+
+  appointmentAiInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      appointmentAiSendButton.click();
+    }
+  });
+
+  appointmentPrevMonth.addEventListener('click', () => {
+    currentMonthDate = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  appointmentNextMonth.addEventListener('click', () => {
+    currentMonthDate = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  if (appointmentRole === 'member') {
+    localStorage.setItem('preferredRole', 'member');
+    document.querySelector('h1.font-headline-lg').textContent = 'Book an Appointment';
+    document.querySelector('.text-on-surface-variant.font-body-md.mt-1').textContent = 'Search for an in-network provider or ask Nventr to schedule for you. If a slot is available, we will confirm it immediately.';
+    const providerQueueSection = Array.from(document.querySelectorAll('section')).find((section) =>
+      section.textContent.includes('Provider Queue')
+    );
+    if (providerQueueSection) {
+      providerQueueSection.classList.add('hidden');
+    }
+    if (appointmentStatsSection) {
+      appointmentStatsSection.classList.add('hidden');
+    }
+    if (appointmentFab) {
+      appointmentFab.classList.add('hidden');
+    }
+    appointmentSearchHint.textContent = 'Search providers or type a scheduling request like "Book Dr. Sarah Chen" or "Schedule a cardiology appointment".';
+    appointmentAiInput.placeholder = 'Ask Nventr to schedule an appointment...';
+  } else {
+    localStorage.setItem('preferredRole', 'provider');
+    renderProviderQueueState();
+    providerQueueMenuButton?.addEventListener('click', showProviderWorkbench);
+    viewAppointmentHistoryButton?.addEventListener('click', showProviderHistoryDrawer);
+    finishAppointmentSessionButton?.addEventListener('click', showProviderFinishDrawer);
+    providerRescheduleButton?.addEventListener('click', showProviderConflictDrawer);
+    providerAcceptButton?.addEventListener('click', () => {
+      setProviderQueueState({ conflictStatus: 'Accepted', notes: ['Marcus Sterling slot accepted as-is'] });
+      renderProviderQueueState();
+      showAppointmentModal({
+        eyebrow: 'Queue Updated',
+        title: 'Appointment accepted',
+        description: 'The provider queue was updated and the overlap risk was acknowledged.',
+        body: '<div class="rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4 text-sm text-cyan-50/90">Marcus Sterling remains scheduled at 09:30 AM. Nventr will keep monitoring the overlap and alert the front desk if a new conflict appears.</div>',
+        actions: [{ label: 'Done', primary: true, onClick: (modal) => modal.classList.add('hidden') }]
+      });
+    });
+    providerConflictCard?.addEventListener('dblclick', showProviderConflictDrawer);
+    appointmentFab?.addEventListener('click', showProviderWorkbench);
+  }
+
+  renderStoredBookings();
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

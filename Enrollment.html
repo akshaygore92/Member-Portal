@@ -1,0 +1,2317 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Enrollment | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#07131f",
+            surface: "#0b1b2b",
+            panel: "#11243a",
+            shell: "#091424",
+            primary: "#8ea4ff",
+            "primary-strong": "#5f79ff",
+            secondary: "#69e6ff",
+            mint: "#52d8b3",
+            accent: "#ffd58a",
+            outline: "#2d4059",
+            text: "#e4efff",
+            muted: "#95a7bf",
+            danger: "#ff8b9e",
+            success: "#6ee7b7"
+          },
+          fontFamily: {
+            display: ["Manrope", "Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"]
+          },
+          boxShadow: {
+            glow: "0 20px 80px rgba(95, 121, 255, 0.22)",
+            soft: "0 18px 50px rgba(2, 8, 23, 0.45)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(95, 121, 255, 0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(82, 216, 179, 0.15), transparent 30%),
+        linear-gradient(180deg, #07131f 0%, #091424 100%);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .glass-panel {
+      background: rgba(17, 36, 58, 0.76);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(143, 168, 201, 0.12);
+      box-shadow: 0 18px 50px rgba(2, 8, 23, 0.42);
+    }
+    .step-chip-active {
+      background: linear-gradient(135deg, rgba(95, 121, 255, 0.34), rgba(105, 230, 255, 0.16));
+      border-color: rgba(142, 164, 255, 0.55);
+      color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(142, 164, 255, 0.15);
+    }
+    .step-chip-complete {
+      background: rgba(82, 216, 179, 0.14);
+      border-color: rgba(82, 216, 179, 0.4);
+      color: #dffcf4;
+    }
+    .step-chip-pending {
+      background: rgba(10, 24, 40, 0.82);
+      border-color: rgba(149, 167, 191, 0.18);
+      color: #95a7bf;
+    }
+    .choice-active {
+      border-color: rgba(105, 230, 255, 0.52);
+      background: rgba(105, 230, 255, 0.12);
+      box-shadow: 0 0 0 1px rgba(105, 230, 255, 0.16);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .status-idle {
+      background: #41556d;
+    }
+    .status-active {
+      background: #ffd58a;
+      box-shadow: 0 0 0 6px rgba(255, 213, 138, 0.14);
+    }
+    .status-success {
+      background: #6ee7b7;
+      box-shadow: 0 0 0 6px rgba(110, 231, 183, 0.12);
+    }
+    .status-error {
+      background: #ff8b9e;
+      box-shadow: 0 0 0 6px rgba(255, 139, 158, 0.12);
+    }
+    .status-waived {
+      background: #69e6ff;
+      box-shadow: 0 0 0 6px rgba(105, 230, 255, 0.12);
+    }
+    .helper-visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .helper-hidden {
+      transform: translateY(12px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toggle-pill[data-enabled="true"] {
+      background: rgba(82, 216, 179, 0.18);
+      border-color: rgba(82, 216, 179, 0.42);
+      color: #dffcf4;
+    }
+    .toggle-pill[data-enabled="false"] {
+      background: rgba(17, 36, 58, 0.78);
+      border-color: rgba(149, 167, 191, 0.16);
+      color: #95a7bf;
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden bg-background text-text font-body selection:bg-primary/30">
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-20 right-0 h-96 w-96 rounded-full bg-primary-strong/20 blur-[130px]"></div>
+    <div class="absolute bottom-0 left-0 h-[28rem] w-[28rem] rounded-full bg-mint/10 blur-[140px]"></div>
+    <div class="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 rounded-full bg-secondary/10 blur-[120px]"></div>
+  </div>
+
+  <header class="sticky top-0 z-40 border-b border-white/5 bg-shell/80 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div>
+        <a class="font-display text-xl font-extrabold tracking-tight text-white" href="LandingPage.html">Axis Core AI</a>
+        <div class="mt-1 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted">
+          <span>Member Enrollment</span>
+          <span class="rounded-full border border-white/10 px-2 py-1 text-[10px] tracking-[0.24em]" id="roleEntryPill">Member Entry</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="hidden rounded-full border border-white/10 px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-white sm:inline-flex" id="saveDraftHeaderButton" type="button">Save Draft</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto grid max-w-[1500px] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.35fr)_360px] lg:px-8">
+    <section class="space-y-6">
+      <section class="hidden rounded-[30px] border border-primary/20 bg-gradient-to-br from-primary/12 to-secondary/8 p-6 shadow-[0_20px_60px_rgba(14,165,233,0.08)]" id="providerEnrollmentWrapper">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+              Provider-Assisted Orchestration
+            </div>
+            <h2 class="mt-4 font-display text-2xl font-bold text-white">Guide the member through enrollment while Nventr handles verification, payer checks, and next-best actions.</h2>
+            <p class="mt-3 text-sm leading-7 text-muted">This wrapper keeps the provider in control of outreach, sponsor validation, and enrollment operations without changing the underlying member wizard.</p>
+          </div>
+          <div class="grid min-w-[280px] gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            <button class="rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10" id="providerSendChecklistButton" type="button">Send Intake Checklist</button>
+            <button class="rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10" id="providerResumeLatestDraftButton" type="button">Resume Latest Draft</button>
+            <button class="rounded-[22px] bg-primary px-4 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-secondary" id="providerEscalateEnrollmentButton" type="button">Escalate to Enrollment Ops</button>
+          </div>
+        </div>
+        <div class="mt-5 grid gap-4 lg:grid-cols-3">
+          <div class="rounded-[24px] border border-white/10 bg-shell/70 p-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-muted">Current orchestration</p>
+            <p class="mt-3 text-sm font-semibold text-white" id="providerEnrollmentOpsStatus">Waiting for provider action.</p>
+            <p class="mt-2 text-sm leading-7 text-muted">Nventr updates this status as the provider sends instructions, resumes drafts, or escalates enrollment support.</p>
+          </div>
+          <div class="rounded-[24px] border border-white/10 bg-shell/70 p-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-muted">Draft visibility</p>
+            <p class="mt-3 text-sm font-semibold text-white" id="providerEnrollmentDraftSummary">Drafts and completed enrollments can be reviewed from Members.</p>
+            <p class="mt-2 text-sm leading-7 text-muted">Provider teams can pick up the latest in-progress member enrollment without losing step history.</p>
+          </div>
+          <div class="rounded-[24px] border border-white/10 bg-shell/70 p-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-muted">Live handoff</p>
+            <p class="mt-3 text-sm font-semibold text-white">Operations-ready</p>
+            <p class="mt-2 text-sm leading-7 text-muted">If enrollment gets blocked, Nventr can prepare the case summary for an enrollment operations specialist.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="glass-panel overflow-hidden rounded-[30px]">
+        <div class="border-b border-white/5 px-5 py-5 sm:px-8">
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div class="max-w-3xl">
+              <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                Guided Enrollment Flow
+              </div>
+              <h1 class="mt-4 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">A reliable, AI-assisted path from registration to active coverage.</h1>
+              <p class="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">Every step keeps the member informed, shows live system feedback, and gives Nventr room to guide without turning the experience into a wall of forms.</p>
+            </div>
+            <div class="min-w-[220px] rounded-[24px] border border-white/10 bg-white/5 px-5 py-4">
+              <div class="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-muted">
+                <span>Progress</span>
+                <span id="progressPercent">14%</span>
+              </div>
+              <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/5">
+                <div class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-500" id="progressBar" style="width: 14%;"></div>
+              </div>
+              <p class="mt-3 text-sm text-white" id="progressCopy">Step 1 of 7: Registration</p>
+            </div>
+          </div>
+          <div class="mt-6 flex gap-3 overflow-x-auto pb-1" id="stepper"></div>
+        </div>
+
+        <div class="px-5 py-6 sm:px-8 sm:py-8">
+          <div class="rounded-[26px] border border-danger/35 bg-danger/10 px-4 py-3 text-sm text-rose-100 hidden" id="wizardAlert"></div>
+
+          <section class="space-y-6" data-step-panel="1">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 1</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Registration</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Create a secure account, verify contact details, and move the member from unverified to ready-for-KYC.</p>
+              </div>
+              <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-muted">
+                System state:
+                <span class="font-semibold text-white" id="registrationStateLabel">User created (unverified)</span>
+              </div>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Full Name</label>
+                <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="fullName" placeholder="Avery Morgan" type="text"/>
+                <p class="mt-2 hidden text-sm text-danger" id="fullNameError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Email or Mobile</label>
+                <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="contactField" placeholder="avery@axiscore.ai or +1 555 010 1212" type="text"/>
+                <p class="mt-2 hidden text-sm text-danger" id="contactFieldError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Password</label>
+                <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="passwordField" placeholder="At least 8 characters" type="password"/>
+                <p class="mt-2 hidden text-sm text-danger" id="passwordFieldError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">OTP Code</label>
+                <div class="flex gap-3">
+                  <input class="flex-1 rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="otpField" maxlength="6" placeholder="Enter 6-digit code" type="text"/>
+                  <button class="rounded-[22px] border border-primary/25 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20" id="verifyOtpButton" type="button">Verify</button>
+                </div>
+                <p class="mt-2 hidden text-sm text-danger" id="otpFieldError"></p>
+              </div>
+            </div>
+
+            <div class="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+              <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p class="text-sm font-semibold text-white">Contact verification</p>
+                    <p class="mt-1 text-sm text-muted">We send an OTP before creating an active member profile. Demo code: <span class="font-semibold text-accent">246810</span></p>
+                  </div>
+                  <button class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-secondary" id="sendOtpButton" type="button">Send OTP</button>
+                </div>
+                <div class="mt-4 flex flex-wrap items-center gap-3 text-sm" id="otpStatus">
+                  <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-muted">
+                    <span class="status-dot status-idle"></span>
+                    Awaiting verification
+                  </span>
+                </div>
+              </div>
+              <div class="rounded-[26px] border border-white/10 bg-gradient-to-br from-primary/12 to-secondary/6 p-5">
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Inline validation</p>
+                <ul class="mt-3 space-y-3 text-sm text-muted">
+                  <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    Required fields validate as you type.
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary">security</span>
+                    OTP status is preserved locally so you can resume safely.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="2">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 2</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">KYC / Identity Verification</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Upload a government ID, confirm demographic details, and let the verification service move through uploading, verifying, and final review.</p>
+              </div>
+              <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-muted">
+                KYC status:
+                <span class="font-semibold text-white" id="kycStateLabel">Awaiting documents</span>
+              </div>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+              <div class="space-y-5">
+                <label class="block cursor-pointer rounded-[28px] border border-dashed border-primary/35 bg-shell/70 p-6 transition-colors hover:border-primary/55 hover:bg-primary/10" for="governmentIdInput" id="governmentIdDropzone">
+                  <input accept=".pdf,.png,.jpg,.jpeg" class="hidden" id="governmentIdInput" type="file"/>
+                  <div class="flex flex-col items-center justify-center text-center">
+                    <div class="rounded-full bg-primary/10 p-4 text-primary">
+                      <span class="material-symbols-outlined text-4xl">cloud_upload</span>
+                    </div>
+                    <p class="mt-4 text-lg font-semibold text-white">Government ID upload</p>
+                    <p class="mt-2 max-w-md text-sm text-muted">Drag and drop or browse a PDF, JPG, or PNG. Optional selfie capture can be added to improve confidence scores.</p>
+                    <p class="mt-3 text-sm text-secondary hidden" id="governmentIdFileName"></p>
+                  </div>
+                </label>
+                <p class="hidden text-sm text-danger" id="governmentIdInputError"></p>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Date of Birth</label>
+                    <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white [color-scheme:dark] focus:border-primary focus:ring-0" id="kycDob" type="date"/>
+                    <p class="mt-2 hidden text-sm text-danger" id="kycDobError"></p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Optional Selfie</label>
+                    <div class="flex items-center gap-3 rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3">
+                      <input accept=".jpg,.jpeg,.png" class="hidden" id="selfieInput" type="file"/>
+                      <button class="rounded-full border border-white/10 px-3 py-2 text-sm text-white transition-colors hover:bg-white/5" id="selfieButton" type="button">Capture / Upload</button>
+                      <span class="text-sm text-muted" id="selfieFileName">Not added</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Address</label>
+                  <textarea class="min-h-[130px] w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="kycAddress" placeholder="12 North Harbor Ave, Suite 401, Austin, TX 78701"></textarea>
+                  <p class="mt-2 hidden text-sm text-danger" id="kycAddressError"></p>
+                </div>
+              </div>
+
+              <aside class="space-y-4">
+                <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-semibold text-white">Verification pipeline</p>
+                      <p class="mt-1 text-sm text-muted">Document validation via API</p>
+                    </div>
+                    <button class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-secondary" id="startKycButton" type="button">Verify identity</button>
+                  </div>
+                  <div class="mt-5 space-y-3" id="kycTimeline"></div>
+                </div>
+                <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                  <p class="text-sm font-semibold text-white">Review notes</p>
+                  <p class="mt-3 text-sm leading-7 text-muted" id="kycReason">Upload a government ID, add date of birth, and confirm address to start verification.</p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="3">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 3</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Plan Selection / Member Identification</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Use an existing member ID plus sponsor information, or browse plans and map the member directly to coverage.</p>
+              </div>
+              <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-muted">
+                Plan mapping:
+                <span class="font-semibold text-white" id="planStateLabel">Awaiting selection</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <button class="choice-active rounded-full border px-4 py-2 text-sm font-semibold transition-colors" data-plan-mode="memberId" type="button">Enter Member ID</button>
+              <button class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-muted transition-colors hover:text-white" data-plan-mode="planList" type="button">Select a plan</button>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
+              <div class="space-y-5" id="memberIdModePanel">
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Member ID</label>
+                    <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="memberIdField" placeholder="AXM-204891" type="text"/>
+                    <p class="mt-2 hidden text-sm text-danger" id="memberIdFieldError"></p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Employer / Sponsor</label>
+                    <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="employerField" placeholder="Northwind Labs" type="text"/>
+                    <p class="mt-2 hidden text-sm text-danger" id="employerFieldError"></p>
+                  </div>
+                </div>
+                <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5">
+                  <p class="text-sm font-semibold text-white">How plan matching works</p>
+                  <p class="mt-3 text-sm leading-7 text-muted">Nventr checks the sponsor roster, maps the benefit design, and pulls the correct coverage details before eligibility is triggered.</p>
+                </div>
+              </div>
+
+              <div class="hidden space-y-4" id="planListModePanel">
+                <div class="grid gap-4" id="planCards"></div>
+                <p class="hidden text-sm text-danger" id="selectedPlanError"></p>
+              </div>
+
+              <aside class="space-y-4">
+                <div class="rounded-[26px] border border-white/10 bg-gradient-to-br from-primary/12 to-secondary/6 p-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-semibold text-white">Selected plan details</p>
+                      <p class="mt-1 text-sm text-muted">Coverage, benefits, and activation fee appear here.</p>
+                    </div>
+                    <button class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-secondary" id="validatePlanButton" type="button">Validate &amp; Continue</button>
+                  </div>
+                  <div class="mt-5 rounded-[22px] border border-white/10 bg-shell/70 p-4" id="planDetailsCard">
+                    <p class="text-sm text-muted">Nothing mapped yet. Validate the member ID or pick a plan card to continue.</p>
+                  </div>
+                </div>
+                <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                  <p class="text-sm font-semibold text-white">Plan mapping signal</p>
+                  <p class="mt-3 text-sm leading-7 text-muted" id="planMappingMessage">Choose a lookup method to fetch coverage, deductibles, and enrollment fee details.</p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 4</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Eligibility Verification</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">No manual input here. The payer check starts automatically, then returns an eligible or not eligible decision with clear next steps.</p>
+              </div>
+              <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-white" id="retryEligibilityButton" type="button">Retry Check</button>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+              <div class="rounded-[30px] border border-white/10 bg-shell/70 p-6" id="eligibilityCard"></div>
+              <aside class="space-y-4">
+                <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                  <p class="text-sm font-semibold text-white">Real-time payer check</p>
+                  <p class="mt-3 text-sm leading-7 text-muted" id="eligibilityMessage">As soon as plan mapping is complete, the system reaches out to the payer for live eligibility validation.</p>
+                </div>
+                <div class="rounded-[26px] border border-white/10 bg-gradient-to-br from-secondary/12 to-mint/8 p-5">
+                  <p class="text-sm font-semibold text-white">If not eligible</p>
+                  <ul class="mt-3 space-y-3 text-sm text-muted">
+                    <li class="flex items-start gap-3">
+                      <span class="material-symbols-outlined text-secondary">support_agent</span>
+                      Nventr explains what failed and suggests a correction path.
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <span class="material-symbols-outlined text-secondary">replay</span>
+                      Retry is available after plan data or sponsor details change.
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="5">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 5</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Profile Completion</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Complete the member profile, keep emergency contacts handy, and set communication preferences in the same pass.</p>
+              </div>
+              <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-white" id="autofillAddressButton" type="button">Use KYC address</button>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div class="md:col-span-2">
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Mailing Address</label>
+                <textarea class="min-h-[120px] w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="profileAddress" placeholder="Shipping and mailing address"></textarea>
+                <p class="mt-2 hidden text-sm text-danger" id="profileAddressError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Emergency Contact</label>
+                <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="emergencyName" placeholder="Jordan Morgan" type="text"/>
+                <p class="mt-2 hidden text-sm text-danger" id="emergencyNameError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Emergency Phone</label>
+                <input class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="emergencyPhone" placeholder="+1 555 010 4040" type="tel"/>
+                <p class="mt-2 hidden text-sm text-danger" id="emergencyPhoneError"></p>
+              </div>
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Preferred Language</label>
+                <select class="w-full rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white focus:border-primary focus:ring-0" id="preferredLanguage">
+                  <option value="">Choose language</option>
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Mandarin">Mandarin</option>
+                </select>
+                <p class="mt-2 hidden text-sm text-danger" id="preferredLanguageError"></p>
+              </div>
+              <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                <p class="text-sm font-semibold text-white">Communication preferences</p>
+                <div class="mt-4 grid grid-cols-2 gap-3" id="communicationPreferenceGrid"></div>
+                <p class="mt-3 hidden text-sm text-danger" id="communicationPreferencesError"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="6">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 6</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Payment Setup</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Only shown when the plan requires an upfront enrollment charge. Payment methods adapt to card, UPI, or bank transfer preferences.</p>
+              </div>
+              <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-muted">
+                Gateway:
+                <span class="font-semibold text-white" id="paymentStateLabel">Waiting for plan fee</span>
+              </div>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[1fr_0.95fr]">
+              <div class="space-y-5">
+                <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5" id="billingSummaryCard"></div>
+                <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5">
+                  <p class="text-sm font-semibold text-white">Payment method</p>
+                  <div class="mt-4 grid gap-3 sm:grid-cols-3" id="paymentMethodGrid"></div>
+
+                  <div class="mt-5 space-y-4" id="paymentFormPanel">
+                    <div class="grid gap-4 md:grid-cols-2" id="cardFields">
+                      <div>
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Cardholder Name</label>
+                        <input class="w-full rounded-[22px] border border-white/10 bg-background/60 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="cardholderName" placeholder="Avery Morgan" type="text"/>
+                      </div>
+                      <div>
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Card Number</label>
+                        <input class="w-full rounded-[22px] border border-white/10 bg-background/60 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="cardNumber" placeholder="4111 1111 1111 1111" type="text"/>
+                      </div>
+                      <div>
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Expiry</label>
+                        <input class="w-full rounded-[22px] border border-white/10 bg-background/60 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="cardExpiry" placeholder="09/29" type="text"/>
+                      </div>
+                    </div>
+
+                    <div class="hidden" id="upiFields">
+                      <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">UPI ID</label>
+                      <input class="w-full rounded-[22px] border border-white/10 bg-background/60 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="upiId" placeholder="member@bank" type="text"/>
+                    </div>
+
+                    <div class="hidden" id="bankFields">
+                      <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Bank / ACH Reference</label>
+                      <input class="w-full rounded-[22px] border border-white/10 bg-background/60 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="bankReference" placeholder="ACH-784201" type="text"/>
+                    </div>
+
+                    <p class="hidden text-sm text-danger" id="paymentInlineError"></p>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="space-y-4">
+                <div class="rounded-[26px] border border-white/10 bg-gradient-to-br from-primary/12 to-secondary/6 p-5">
+                  <p class="text-sm font-semibold text-white">Gateway status</p>
+                  <div class="mt-4 rounded-[20px] border border-white/10 bg-shell/70 p-4" id="paymentStatusCard"></div>
+                </div>
+                <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                  <p class="text-sm font-semibold text-white">Need help choosing a method?</p>
+                  <p class="mt-3 text-sm leading-7 text-muted">Card works best for most members. UPI and bank are available when the payer region allows alternate activation billing.</p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="hidden space-y-6" data-step-panel="7">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.22em] text-muted">Step 7</p>
+                <h2 class="mt-2 font-display text-2xl font-bold text-white">Confirmation</h2>
+                <p class="mt-2 text-sm leading-7 text-muted">Enrollment activation completes here. We surface the new member ID, plan summary, coverage date, and notification preferences before dashboard handoff.</p>
+              </div>
+              <div class="rounded-full border border-success/30 bg-success/10 px-4 py-2 text-sm font-semibold text-success" id="confirmationBadge">Activating enrollment...</div>
+            </div>
+
+            <div class="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+              <div class="space-y-5">
+                <div class="rounded-[30px] border border-success/20 bg-gradient-to-br from-success/14 to-secondary/8 p-6" id="confirmationCard"></div>
+                <div class="rounded-[26px] border border-white/10 bg-shell/70 p-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-semibold text-white">Stay Updated On</p>
+                      <p class="mt-1 text-sm text-muted">Choose the events the member wants to hear about.</p>
+                    </div>
+                    <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/5" id="saveSubscriptionsButton" type="button">Save Preferences</button>
+                  </div>
+                  <div class="mt-5 grid gap-3 sm:grid-cols-2" id="subscriptionGrid"></div>
+                  <p class="mt-3 hidden text-sm text-success" id="subscriptionStatus">Preferences saved.</p>
+                </div>
+              </div>
+
+              <aside class="space-y-4">
+                <div class="rounded-[26px] border border-white/10 bg-white/5 p-5">
+                  <p class="text-sm font-semibold text-white">Final activation</p>
+                  <p class="mt-3 text-sm leading-7 text-muted" id="confirmationMessage">We are issuing the member ID, activating coverage, and storing the enrollment payload for the dashboard handoff.</p>
+                </div>
+                <a class="inline-flex w-full items-center justify-center gap-3 rounded-[24px] bg-primary px-5 py-4 text-sm font-bold text-slate-950 transition-colors hover:bg-secondary" href="Dashborad.html" id="dashboardCta">
+                  <span id="dashboardCtaLabel">Go to Dashboard</span>
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+              </aside>
+            </div>
+          </section>
+        </div>
+
+        <div class="border-t border-white/5 px-5 py-5 sm:px-8">
+          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div class="flex flex-wrap items-center gap-3">
+              <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-white" id="backButton" type="button">Back</button>
+              <button class="rounded-full border border-white/10 px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-white" id="saveDraftFooterButton" type="button">Save Draft</button>
+              <span class="text-sm text-muted" id="draftStatus">Draft ready to save.</span>
+            </div>
+            <button class="rounded-full bg-primary px-5 py-3 text-sm font-bold text-slate-950 transition-colors hover:bg-secondary" id="nextButton" type="button">Continue</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="space-y-6 lg:sticky lg:top-24 lg:self-start">
+      <div class="hidden glass-panel rounded-[30px] p-6" id="providerOrchestrationCard">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">hub</span>
+              Orchestration Layer
+            </div>
+            <h2 class="mt-4 font-display text-xl font-bold text-white">Provider command center</h2>
+            <p class="mt-2 text-sm leading-7 text-muted">Use this wrapper to keep provider outreach, payer prep, and live handoff aligned with the member wizard.</p>
+          </div>
+          <div class="rounded-2xl bg-primary/10 p-3 text-primary">
+            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">lan</span>
+          </div>
+        </div>
+        <div class="mt-5 space-y-3 text-sm">
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Provider checklist</p>
+            <p class="mt-2 text-white">Confirm sponsor details, check payer readiness, and keep member communications on.</p>
+          </div>
+          <div class="rounded-[22px] border border-white/10 bg-white/5 p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Nventr next action</p>
+            <p class="mt-2 text-white" id="providerNextAction">Review the current step and prepare the member for the next required document or confirmation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-[30px] p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-secondary">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+              Nventr Active
+            </div>
+            <h2 class="mt-4 font-display text-xl font-bold text-white">Persistent AI guidance</h2>
+            <p class="mt-2 text-sm leading-7 text-muted">Helpful when you need context, not noisy when you do not.</p>
+          </div>
+          <div class="rounded-2xl bg-primary/10 p-3 text-primary">
+            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">forum</span>
+          </div>
+        </div>
+        <div class="mt-5 rounded-[24px] border border-white/10 bg-shell/70 p-5">
+          <p class="text-sm font-semibold text-white" id="aiHeadline">Let me help you complete this step</p>
+          <p class="mt-3 text-sm leading-7 text-muted" id="aiBody">I can explain why OTP is required and highlight anything blocking registration.</p>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2" id="aiSuggestionChips"></div>
+        <div class="mt-4">
+          <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">Ask Nventr</label>
+          <div class="flex gap-3">
+            <input class="flex-1 rounded-[22px] border border-white/10 bg-shell/70 px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:ring-0" id="aiQuestionInput" placeholder="What is KYC?" type="text"/>
+            <button class="rounded-[22px] bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10" id="aiQuestionButton" type="button">Ask</button>
+          </div>
+        </div>
+        <div class="mt-4 rounded-[24px] border border-white/10 bg-white/5 p-4 text-sm leading-7 text-muted" id="aiResponse">
+          Nventr is ready. Ask about KYC, plan mapping, OTP, payment, or eligibility.
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-[30px] p-6">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-white">System feedback</p>
+            <p class="mt-1 text-sm text-muted">Backend-aware UI states surfaced in plain language.</p>
+          </div>
+          <span class="rounded-full border border-white/10 px-3 py-1 text-xs text-muted" id="statusTimestamp">Live</span>
+        </div>
+        <div class="mt-5 space-y-3" id="systemStatusList"></div>
+      </div>
+
+      <div class="glass-panel rounded-[30px] p-6">
+        <p class="text-sm font-semibold text-white">Live summary</p>
+        <div class="mt-4 space-y-3 text-sm" id="summaryList"></div>
+      </div>
+    </aside>
+  </main>
+
+  <button class="fixed bottom-5 right-5 z-30 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-slate-950 shadow-glow transition-transform hover:scale-[1.02] lg:hidden" id="mobileHelperButton" type="button">
+    Nventr Help
+  </button>
+
+  <div class="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/70 p-4 transition-all duration-300 helper-hidden lg:hidden" id="mobileHelperSheet">
+    <div class="glass-panel w-full max-w-md rounded-[28px] p-5">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-white">Nventr</p>
+          <p class="mt-1 text-sm text-muted" id="mobileAiHeadline">Let me help you complete this step</p>
+        </div>
+        <button class="rounded-full border border-white/10 p-2 text-muted transition-colors hover:bg-white/5 hover:text-white" id="closeMobileHelperButton" type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="mt-4 rounded-[22px] border border-white/10 bg-shell/70 p-4 text-sm leading-7 text-muted" id="mobileAiBody"></div>
+      <div class="mt-4 flex flex-wrap gap-2" id="mobileAiSuggestionChips"></div>
+      <div class="mt-4 rounded-[22px] border border-white/10 bg-white/5 p-4 text-sm leading-7 text-muted" id="mobileAiResponse"></div>
+    </div>
+  </div>
+
+  <script>
+    const kycSeed = JSON.parse(localStorage.getItem("kycBasicDetails") || "{}");
+    const savedWizard = JSON.parse(localStorage.getItem("memberEnrollmentWizard") || "null");
+    const savedEnrollment = JSON.parse(localStorage.getItem("latestMemberEnrollment") || "null");
+    const rolePreference = localStorage.getItem("preferredRole") || localStorage.getItem("kycRole") || "member";
+    const roleContext = rolePreference === "provider" ? "provider" : "member";
+    localStorage.setItem("preferredRole", roleContext);
+
+    const planCatalog = [
+      {
+        id: "ppo-plus",
+        name: "Axis PPO Plus",
+        sponsor: "Northwind Labs",
+        coverage: "Nationwide PPO",
+        premium: "$129/mo",
+        activationFee: 35,
+        startDate: "May 1, 2026",
+        benefits: ["Telehealth 24/7", "Tier 1 Rx included", "Urgent care in-network"],
+        eligibilityState: "eligible"
+      },
+      {
+        id: "family-select",
+        name: "Family Select HMO",
+        sponsor: "Harbor Foods",
+        coverage: "Regional HMO",
+        premium: "$84/mo",
+        activationFee: 0,
+        startDate: "May 15, 2026",
+        benefits: ["Low copay PCP", "Pediatric urgent care", "Preventive care first-dollar"],
+        eligibilityState: "eligible"
+      },
+      {
+        id: "bridge-limited",
+        name: "Bridge Limited Access",
+        sponsor: "Inactive Sponsor Demo",
+        coverage: "Limited bridge plan",
+        premium: "$49/mo",
+        activationFee: 15,
+        startDate: "June 1, 2026",
+        benefits: ["Short-term support", "Eligibility review required", "Case management follow-up"],
+        eligibilityState: "not_eligible"
+      }
+    ];
+
+    const stepMeta = [
+      { id: 1, label: "Registration", icon: "person_add" },
+      { id: 2, label: "KYC", icon: "badge" },
+      { id: 3, label: "Plan", icon: "featured_play_list" },
+      { id: 4, label: "Eligibility", icon: "verified" },
+      { id: 5, label: "Profile", icon: "manage_accounts" },
+      { id: 6, label: "Payment", icon: "payments" },
+      { id: 7, label: "Confirmation", icon: "task_alt" }
+    ];
+
+    const aiGuidance = {
+      1: {
+        headline: "Let me help you complete registration",
+        body: "I can check whether the contact field looks like an email or phone number, explain OTP, and point out why the account still shows as unverified.",
+        suggestions: ["Why is OTP required?", "Check my contact format", "What happens after verification?"]
+      },
+      2: {
+        headline: "Let's verify your details",
+        body: "I can explain acceptable ID formats, suggest address corrections, and tell you why a KYC submission was rejected.",
+        suggestions: ["What documents work?", "Why was verification rejected?", "Do I need a selfie?"]
+      },
+      3: {
+        headline: "I can help with plan mapping",
+        body: "Tell me whether you have a member ID already or need to browse plans. I will explain the sponsor and benefit differences in plain language.",
+        suggestions: ["What is sponsor mapping?", "Compare these plans", "Which plan has no upfront fee?"]
+      },
+      4: {
+        headline: "Eligibility is running in real time",
+        body: "I can break down the status card, explain payer response codes, and suggest what to retry if the member is not eligible.",
+        suggestions: ["What does not eligible mean?", "How do I retry?", "Explain the payer check"]
+      },
+      5: {
+        headline: "Profile details are almost done",
+        body: "I can suggest corrections, help copy the KYC address safely, and make sure at least one communication channel is turned on.",
+        suggestions: ["Use my KYC address", "Why emergency contact?", "Best communication settings"]
+      },
+      6: {
+        headline: "Let's finish payment setup",
+        body: "I can recommend the fastest payment method, explain why payment might be waived, and suggest fixes if a gateway attempt fails.",
+        suggestions: ["Is payment required?", "Card vs UPI vs bank", "Why did payment fail?"]
+      },
+      7: {
+        headline: "Enrollment is activating now",
+        body: "I can summarize the final plan details, explain coverage start dates, and help the member choose which updates to subscribe to.",
+        suggestions: ["Explain my member ID", "When does coverage start?", "What updates should I keep on?"]
+      }
+    };
+
+    const defaultState = {
+      roleContext,
+      currentStep: 1,
+      planMode: "memberId",
+      registration: {
+        fullName: kycSeed.fullName || "",
+        contact: kycSeed.email || kycSeed.phone || "",
+        password: "",
+        otp: "",
+        otpSent: false,
+        otpVerified: false,
+        status: "unverified"
+      },
+      kyc: {
+        dob: kycSeed.dob || "",
+        address: "",
+        documentName: "",
+        selfieName: "",
+        status: "idle",
+        reason: "Upload a government ID, add date of birth, and confirm address to start verification."
+      },
+      plan: {
+        mode: "memberId",
+        memberId: savedEnrollment?.plan?.memberId || "",
+        employer: savedEnrollment?.plan?.employer || "",
+        selectedPlan: "",
+        validated: false,
+        detailsId: "",
+        message: "Choose a lookup method to fetch coverage, deductibles, and enrollment fee details."
+      },
+      eligibility: {
+        status: "idle",
+        message: "The payer check will start automatically once your plan is mapped.",
+        checkedAt: ""
+      },
+      profile: {
+        address: "",
+        emergencyName: "",
+        emergencyPhone: "",
+        language: "",
+        communications: {
+          email: true,
+          sms: true,
+          calls: false,
+          push: false
+        }
+      },
+      payment: {
+        required: true,
+        method: "card",
+        cardholderName: "",
+        cardNumber: "",
+        cardExpiry: "",
+        upiId: "",
+        bankReference: "",
+        status: "idle",
+        message: "Activation fee will appear after plan validation."
+      },
+      subscriptions: {
+        claims: true,
+        appointments: true,
+        payments: true,
+        prescriptions: false
+      },
+      confirmation: {
+        completed: false,
+        memberId: "",
+        coverageStart: "",
+        subscriptionsSaved: false
+      }
+    };
+
+    function mergeState(base, incoming) {
+      if (!incoming) return base;
+      return {
+        ...base,
+        ...incoming,
+        registration: { ...base.registration, ...(incoming.registration || {}) },
+        kyc: { ...base.kyc, ...(incoming.kyc || {}) },
+        plan: { ...base.plan, ...(incoming.plan || {}) },
+        eligibility: { ...base.eligibility, ...(incoming.eligibility || {}) },
+        profile: {
+          ...base.profile,
+          ...(incoming.profile || {}),
+          communications: { ...base.profile.communications, ...((incoming.profile || {}).communications || {}) }
+        },
+        payment: { ...base.payment, ...(incoming.payment || {}) },
+        subscriptions: { ...base.subscriptions, ...(incoming.subscriptions || {}) },
+        confirmation: { ...base.confirmation, ...(incoming.confirmation || {}) }
+      };
+    }
+
+    const state = mergeState(defaultState, savedWizard);
+    state.recordId = state.recordId || savedWizard?.recordId || savedEnrollment?.recordId || `enr-${Date.now()}`;
+
+    const stepper = document.getElementById("stepper");
+    const progressBar = document.getElementById("progressBar");
+    const progressPercent = document.getElementById("progressPercent");
+    const progressCopy = document.getElementById("progressCopy");
+    const wizardAlert = document.getElementById("wizardAlert");
+    const draftStatus = document.getElementById("draftStatus");
+    const roleEntryPill = document.getElementById("roleEntryPill");
+    const backButton = document.getElementById("backButton");
+    const nextButton = document.getElementById("nextButton");
+    const saveDraftHeaderButton = document.getElementById("saveDraftHeaderButton");
+    const saveDraftFooterButton = document.getElementById("saveDraftFooterButton");
+    const statusTimestamp = document.getElementById("statusTimestamp");
+    const systemStatusList = document.getElementById("systemStatusList");
+    const summaryList = document.getElementById("summaryList");
+    const aiHeadline = document.getElementById("aiHeadline");
+    const aiBody = document.getElementById("aiBody");
+    const aiSuggestionChips = document.getElementById("aiSuggestionChips");
+    const aiQuestionInput = document.getElementById("aiQuestionInput");
+    const aiQuestionButton = document.getElementById("aiQuestionButton");
+    const aiResponse = document.getElementById("aiResponse");
+    const mobileHelperButton = document.getElementById("mobileHelperButton");
+    const mobileHelperSheet = document.getElementById("mobileHelperSheet");
+    const closeMobileHelperButton = document.getElementById("closeMobileHelperButton");
+    const mobileAiHeadline = document.getElementById("mobileAiHeadline");
+    const mobileAiBody = document.getElementById("mobileAiBody");
+    const mobileAiSuggestionChips = document.getElementById("mobileAiSuggestionChips");
+    const mobileAiResponse = document.getElementById("mobileAiResponse");
+
+    const communicationPreferenceGrid = document.getElementById("communicationPreferenceGrid");
+    const paymentMethodGrid = document.getElementById("paymentMethodGrid");
+    const subscriptionGrid = document.getElementById("subscriptionGrid");
+    const planCards = document.getElementById("planCards");
+    const providerEnrollmentWrapper = document.getElementById("providerEnrollmentWrapper");
+    const providerOrchestrationCard = document.getElementById("providerOrchestrationCard");
+    const providerEnrollmentOpsStatus = document.getElementById("providerEnrollmentOpsStatus");
+    const providerEnrollmentDraftSummary = document.getElementById("providerEnrollmentDraftSummary");
+    const providerNextAction = document.getElementById("providerNextAction");
+    const providerSendChecklistButton = document.getElementById("providerSendChecklistButton");
+    const providerResumeLatestDraftButton = document.getElementById("providerResumeLatestDraftButton");
+    const providerEscalateEnrollmentButton = document.getElementById("providerEscalateEnrollmentButton");
+
+    let kycTimeouts = [];
+    let eligibilityTimeout = null;
+    let paymentTimeout = null;
+    let confirmationTimeout = null;
+
+    function persistState() {
+      localStorage.setItem("memberEnrollmentWizard", JSON.stringify(state));
+      statusTimestamp.textContent = `Saved ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    }
+
+    function getStoredCollection(key) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function setStoredCollection(key, records) {
+      localStorage.setItem(key, JSON.stringify(records));
+    }
+
+    function upsertStoredRecord(key, record) {
+      const collection = getStoredCollection(key).filter((item) => item.id !== record.id);
+      collection.unshift(record);
+      setStoredCollection(key, collection.slice(0, 50));
+    }
+
+    function removeStoredRecord(key, recordId) {
+      const collection = getStoredCollection(key).filter((item) => item.id !== recordId);
+      setStoredCollection(key, collection);
+    }
+
+    function setDraftStatus(message) {
+      draftStatus.textContent = message;
+    }
+
+    function showAlert(message) {
+      wizardAlert.textContent = message;
+      wizardAlert.classList.remove("hidden");
+    }
+
+    function hideAlert() {
+      wizardAlert.classList.add("hidden");
+      wizardAlert.textContent = "";
+    }
+
+    function getPlanDetails() {
+      const detailId = state.plan.detailsId || state.plan.selectedPlan;
+      return planCatalog.find((plan) => plan.id === detailId) || null;
+    }
+
+    function getDashboardRoute() {
+      return state.roleContext === "provider" ? "OperationalEffDashboard.html" : "Dashborad.html";
+    }
+
+    function getDashboardLabel() {
+      return state.roleContext === "provider" ? "Go to Main Dashboard" : "Go to Dashboard";
+    }
+
+    function buildMemberRecord(status, includeWizardState = false) {
+      const details = getPlanDetails();
+      return {
+        id: state.recordId,
+        fullName: state.registration.fullName || "Pending member name",
+        contact: state.registration.contact || "Pending contact",
+        memberId: state.confirmation.memberId || state.plan.memberId || "Pending assignment",
+        employer: state.plan.employer || "Direct enrollment",
+        planName: details ? details.name : "Plan not mapped",
+        coverageStart: state.confirmation.coverageStart || "Pending activation",
+        currentStep: state.currentStep,
+        status,
+        statusDetail: stepMeta[state.currentStep - 1]?.label || "Registration",
+        updatedAt: new Date().toISOString(),
+        roleContext: state.roleContext,
+        wizardState: includeWizardState ? JSON.parse(JSON.stringify(state)) : undefined
+      };
+    }
+
+    function syncDraftCollection() {
+      upsertStoredRecord("memberEnrollmentDrafts", buildMemberRecord(`Draft - ${stepMeta[state.currentStep - 1]?.label || "Registration"}`, true));
+    }
+
+    function syncMemberDirectory(status) {
+      upsertStoredRecord("providerMemberDirectory", buildMemberRecord(status));
+    }
+
+    function getProgressPercent() {
+      return Math.round((state.currentStep / stepMeta.length) * 100);
+    }
+
+    function getFieldValue(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function setError(id, message) {
+      const node = document.getElementById(`${id}Error`);
+      if (!node) return;
+      if (message) {
+        node.textContent = message;
+        node.classList.remove("hidden");
+      } else {
+        node.textContent = "";
+        node.classList.add("hidden");
+      }
+    }
+
+    function renderStepper() {
+      stepper.innerHTML = "";
+      stepMeta.forEach((step) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "step-chip-pending min-w-[120px] rounded-[22px] border px-4 py-3 text-left transition-all";
+        if (step.id === state.currentStep) button.className = "step-chip-active min-w-[120px] rounded-[22px] border px-4 py-3 text-left transition-all";
+        if (step.id < state.currentStep) button.className = "step-chip-complete min-w-[120px] rounded-[22px] border px-4 py-3 text-left transition-all";
+        button.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined ${step.id < state.currentStep ? "text-success" : ""}">${step.id < state.currentStep ? "check_circle" : step.icon}</span>
+            <div>
+              <p class="text-[11px] uppercase tracking-[0.22em] opacity-70">Step ${step.id}</p>
+              <p class="mt-1 text-sm font-semibold">${step.label}</p>
+            </div>
+          </div>
+        `;
+        if (step.id <= state.currentStep) {
+          button.addEventListener("click", () => {
+            state.currentStep = step.id;
+            onStepEnter();
+            render();
+          });
+        } else {
+          button.disabled = true;
+        }
+        stepper.appendChild(button);
+      });
+    }
+
+    function renderPanels() {
+      document.querySelectorAll("[data-step-panel]").forEach((panel) => {
+        panel.classList.toggle("hidden", Number(panel.getAttribute("data-step-panel")) !== state.currentStep);
+      });
+    }
+
+    function renderProgress() {
+      const percent = getProgressPercent();
+      progressBar.style.width = `${percent}%`;
+      progressPercent.textContent = `${percent}%`;
+      progressCopy.textContent = `Step ${state.currentStep} of ${stepMeta.length}: ${stepMeta[state.currentStep - 1].label}`;
+      roleEntryPill.textContent = state.roleContext === "provider" ? "Provider-Assisted Entry" : "Member Entry";
+    }
+
+    function renderRegistration() {
+      document.getElementById("fullName").value = state.registration.fullName;
+      document.getElementById("contactField").value = state.registration.contact;
+      document.getElementById("passwordField").value = state.registration.password;
+      document.getElementById("otpField").value = state.registration.otp;
+
+      const registrationStateLabel = document.getElementById("registrationStateLabel");
+      registrationStateLabel.textContent = state.registration.otpVerified ? "User verified" : state.registration.otpSent ? "User created (pending verification)" : "User created (unverified)";
+
+      const otpStatus = document.getElementById("otpStatus");
+      otpStatus.innerHTML = "";
+      const otpPill = document.createElement("span");
+      otpPill.className = "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-muted";
+      let dotClass = "status-idle";
+      let label = "Awaiting verification";
+      if (state.registration.otpSent) {
+        dotClass = "status-active";
+        label = "OTP sent";
+      }
+      if (state.registration.otpVerified) {
+        dotClass = "status-success";
+        label = "Verified";
+      }
+      otpPill.innerHTML = `<span class="status-dot ${dotClass}"></span>${label}`;
+      otpStatus.appendChild(otpPill);
+      if (state.registration.otpSent && !state.registration.otpVerified) {
+        const helper = document.createElement("span");
+        helper.className = "text-sm text-muted";
+        helper.textContent = "Use the demo code 246810 to continue.";
+        otpStatus.appendChild(helper);
+      }
+    }
+
+    function renderKyc() {
+      document.getElementById("kycDob").value = state.kyc.dob;
+      document.getElementById("kycAddress").value = state.kyc.address;
+      document.getElementById("governmentIdFileName").textContent = state.kyc.documentName ? `Attached: ${state.kyc.documentName}` : "";
+      document.getElementById("governmentIdFileName").classList.toggle("hidden", !state.kyc.documentName);
+      document.getElementById("selfieFileName").textContent = state.kyc.selfieName || "Not added";
+      document.getElementById("kycStateLabel").textContent =
+        state.kyc.status === "verified" ? "Verified" :
+        state.kyc.status === "verifying" ? "Verifying" :
+        state.kyc.status === "uploading" ? "Uploading" :
+        state.kyc.status === "rejected" ? "Rejected" : "Awaiting documents";
+      document.getElementById("kycReason").textContent = state.kyc.reason;
+
+      const timeline = document.getElementById("kycTimeline");
+      const states = [
+        { label: "Uploading", matches: ["uploading", "verifying", "verified", "rejected"] },
+        { label: "Verifying", matches: ["verifying", "verified", "rejected"] },
+        { label: "Verified", matches: ["verified"] }
+      ];
+      timeline.innerHTML = "";
+      states.forEach((item) => {
+        const active = item.matches.includes(state.kyc.status);
+        const success = item.label === "Verified" && state.kyc.status === "verified";
+        const error = item.label === "Verified" && state.kyc.status === "rejected";
+        const row = document.createElement("div");
+        row.className = "flex items-center gap-3 rounded-[20px] border border-white/10 bg-white/5 px-4 py-3 text-sm";
+        row.innerHTML = `
+          <span class="status-dot ${success ? "status-success" : error ? "status-error" : active ? "status-active" : "status-idle"}"></span>
+          <span class="${success ? "text-white" : error ? "text-danger" : "text-muted"}">${item.label}</span>
+        `;
+        timeline.appendChild(row);
+      });
+    }
+
+    function renderPlanCards() {
+      planCards.innerHTML = "";
+      planCatalog.forEach((plan) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `rounded-[24px] border px-5 py-5 text-left transition-all ${state.plan.selectedPlan === plan.id ? "choice-active" : "border-white/10 bg-shell/70 hover:bg-white/5"}`;
+        button.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-white">${plan.name}</p>
+              <p class="mt-1 text-sm text-muted">${plan.coverage}</p>
+            </div>
+            <span class="rounded-full border border-white/10 px-3 py-1 text-xs text-muted">${plan.premium}</span>
+          </div>
+          <p class="mt-4 text-xs uppercase tracking-[0.22em] text-muted">Benefits</p>
+          <ul class="mt-3 space-y-2 text-sm text-muted">
+            ${plan.benefits.map((benefit) => `<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span>${benefit}</li>`).join("")}
+          </ul>
+        `;
+        button.addEventListener("click", () => {
+          state.plan.selectedPlan = plan.id;
+          state.plan.detailsId = plan.id;
+          state.plan.validated = false;
+          state.plan.message = "Plan selected. Validate to fetch live sponsor and benefit details.";
+          render();
+          persistState();
+        });
+        planCards.appendChild(button);
+      });
+    }
+
+    function renderPlan() {
+      document.querySelectorAll("[data-plan-mode]").forEach((button) => {
+        const mode = button.getAttribute("data-plan-mode");
+        const active = mode === state.plan.mode;
+        button.className = active
+          ? "choice-active rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
+          : "rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-muted transition-colors hover:text-white";
+      });
+      document.getElementById("memberIdModePanel").classList.toggle("hidden", state.plan.mode !== "memberId");
+      document.getElementById("planListModePanel").classList.toggle("hidden", state.plan.mode !== "planList");
+      document.getElementById("memberIdField").value = state.plan.memberId;
+      document.getElementById("employerField").value = state.plan.employer;
+      renderPlanCards();
+
+      const details = getPlanDetails();
+      const detailCard = document.getElementById("planDetailsCard");
+      if (!details) {
+        detailCard.innerHTML = '<p class="text-sm text-muted">Nothing mapped yet. Validate the member ID or pick a plan card to continue.</p>';
+      } else {
+        detailCard.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-white">${details.name}</p>
+              <p class="mt-1 text-sm text-muted">${state.plan.mode === "memberId" ? state.plan.employer || details.sponsor : details.sponsor}</p>
+            </div>
+            <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary">${details.premium}</span>
+          </div>
+          <div class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+            <div class="rounded-[18px] border border-white/10 bg-white/5 p-3">
+              <p class="text-xs uppercase tracking-[0.2em] text-muted">Coverage</p>
+              <p class="mt-2 text-white">${details.coverage}</p>
+            </div>
+            <div class="rounded-[18px] border border-white/10 bg-white/5 p-3">
+              <p class="text-xs uppercase tracking-[0.2em] text-muted">Activation Fee</p>
+              <p class="mt-2 text-white">$${details.activationFee.toFixed(2)}</p>
+            </div>
+          </div>
+          <ul class="mt-4 space-y-2 text-sm text-muted">
+            ${details.benefits.map((benefit) => `<li class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span>${benefit}</li>`).join("")}
+          </ul>
+        `;
+      }
+      document.getElementById("planStateLabel").textContent = state.plan.validated ? "Mapped successfully" : "Awaiting selection";
+      document.getElementById("planMappingMessage").textContent = state.plan.message;
+    }
+
+    function renderEligibility() {
+      const card = document.getElementById("eligibilityCard");
+      let content = `
+        <div class="flex items-center gap-3">
+          <span class="status-dot status-idle"></span>
+          <div>
+            <p class="text-lg font-semibold text-white">Waiting to run</p>
+            <p class="mt-1 text-sm text-muted">Eligibility will start automatically after plan mapping.</p>
+          </div>
+        </div>
+      `;
+      if (state.eligibility.status === "checking") {
+        content = `
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 animate-spin rounded-full border-4 border-white/10 border-t-secondary"></div>
+            <div>
+              <p class="text-lg font-semibold text-white">Checking eligibility...</p>
+              <p class="mt-1 text-sm text-muted">Real-time payer check in progress.</p>
+            </div>
+          </div>
+        `;
+      }
+      if (state.eligibility.status === "success") {
+        content = `
+          <div class="rounded-[24px] border border-success/25 bg-success/10 p-5">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+              <div>
+                <p class="text-lg font-semibold text-white">Eligible</p>
+                <p class="mt-1 text-sm text-muted">${state.eligibility.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      if (state.eligibility.status === "error") {
+        content = `
+          <div class="rounded-[24px] border border-danger/25 bg-danger/10 p-5">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-danger" style="font-variation-settings: 'FILL' 1;">cancel</span>
+              <div>
+                <p class="text-lg font-semibold text-white">Not Eligible</p>
+                <p class="mt-1 text-sm text-muted">${state.eligibility.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      card.innerHTML = content;
+      document.getElementById("eligibilityMessage").textContent = state.eligibility.message;
+    }
+
+    function renderCommunicationPreferences() {
+      const labels = {
+        email: "Email updates",
+        sms: "SMS alerts",
+        calls: "Phone calls",
+        push: "Push notifications"
+      };
+      communicationPreferenceGrid.innerHTML = "";
+      Object.entries(labels).forEach(([key, label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "toggle-pill rounded-[20px] border px-4 py-3 text-left text-sm transition-colors";
+        button.dataset.enabled = state.profile.communications[key] ? "true" : "false";
+        button.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <span>${label}</span>
+            <span class="material-symbols-outlined">${state.profile.communications[key] ? "toggle_on" : "toggle_off"}</span>
+          </div>
+        `;
+        button.addEventListener("click", () => {
+          state.profile.communications[key] = !state.profile.communications[key];
+          renderCommunicationPreferences();
+          persistState();
+        });
+        communicationPreferenceGrid.appendChild(button);
+      });
+    }
+
+    function renderProfile() {
+      document.getElementById("profileAddress").value = state.profile.address;
+      document.getElementById("emergencyName").value = state.profile.emergencyName;
+      document.getElementById("emergencyPhone").value = state.profile.emergencyPhone;
+      document.getElementById("preferredLanguage").value = state.profile.language;
+      renderCommunicationPreferences();
+    }
+
+    function renderPaymentMethodGrid() {
+      const options = [
+        { id: "card", label: "Card", icon: "credit_card" },
+        { id: "upi", label: "UPI", icon: "qr_code_2" },
+        { id: "bank", label: "Bank", icon: "account_balance" }
+      ];
+      paymentMethodGrid.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `rounded-[22px] border px-4 py-4 text-left transition-all ${state.payment.method === option.id ? "choice-active" : "border-white/10 bg-white/5 hover:bg-white/10"}`;
+        button.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined ${state.payment.method === option.id ? "text-secondary" : "text-muted"}">${option.icon}</span>
+            <span class="text-sm font-semibold ${state.payment.method === option.id ? "text-white" : "text-muted"}">${option.label}</span>
+          </div>
+        `;
+        button.addEventListener("click", () => {
+          state.payment.method = option.id;
+          renderPayment();
+          persistState();
+        });
+        paymentMethodGrid.appendChild(button);
+      });
+    }
+
+    function renderPayment() {
+      const details = getPlanDetails();
+      state.payment.required = Boolean(details && details.activationFee > 0);
+      if (!state.payment.required && state.payment.status === "idle") {
+        state.payment.status = "waived";
+        state.payment.message = "No upfront payment is required for this plan.";
+      }
+      document.getElementById("cardholderName").value = state.payment.cardholderName;
+      document.getElementById("cardNumber").value = state.payment.cardNumber;
+      document.getElementById("cardExpiry").value = state.payment.cardExpiry;
+      document.getElementById("upiId").value = state.payment.upiId;
+      document.getElementById("bankReference").value = state.payment.bankReference;
+
+      renderPaymentMethodGrid();
+
+      document.getElementById("paymentStateLabel").textContent =
+        state.payment.status === "success" ? "Payment complete" :
+        state.payment.status === "processing" ? "Processing" :
+        state.payment.status === "failed" ? "Failed" :
+        state.payment.status === "waived" ? "Waived" : "Waiting for plan fee";
+
+      document.getElementById("cardFields").classList.toggle("hidden", !state.payment.required || state.payment.method !== "card");
+      document.getElementById("upiFields").classList.toggle("hidden", !state.payment.required || state.payment.method !== "upi");
+      document.getElementById("bankFields").classList.toggle("hidden", !state.payment.required || state.payment.method !== "bank");
+      document.getElementById("paymentFormPanel").classList.toggle("hidden", !state.payment.required);
+
+      const billingSummaryCard = document.getElementById("billingSummaryCard");
+      if (!details) {
+        billingSummaryCard.innerHTML = '<p class="text-sm text-muted">Billing summary will appear once a plan has been mapped.</p>';
+      } else {
+        billingSummaryCard.innerHTML = `
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-white">${details.name}</p>
+              <p class="mt-1 text-sm text-muted">${details.coverage}</p>
+            </div>
+            <span class="rounded-full border border-white/10 px-3 py-1 text-xs text-muted">${details.premium}</span>
+          </div>
+          <div class="mt-5 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-[18px] border border-white/10 bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-muted">Activation Fee</p>
+              <p class="mt-2 text-2xl font-semibold text-white">$${details.activationFee.toFixed(2)}</p>
+            </div>
+            <div class="rounded-[18px] border border-white/10 bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-muted">Coverage Start</p>
+              <p class="mt-2 text-lg font-semibold text-white">${details.startDate}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      const paymentStatusCard = document.getElementById("paymentStatusCard");
+      if (!state.payment.required) {
+        paymentStatusCard.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="status-dot status-waived"></span>
+            <div>
+              <p class="text-sm font-semibold text-white">Payment waived</p>
+              <p class="mt-1 text-sm text-muted">${state.payment.message}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        paymentStatusCard.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="status-dot ${state.payment.status === "success" ? "status-success" : state.payment.status === "processing" ? "status-active" : state.payment.status === "failed" ? "status-error" : "status-idle"}"></span>
+            <div>
+              <p class="text-sm font-semibold text-white">${state.payment.status === "success" ? "Success" : state.payment.status === "processing" ? "Processing" : state.payment.status === "failed" ? "Failed" : "Awaiting payment"}</p>
+              <p class="mt-1 text-sm text-muted">${state.payment.message}</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderSubscriptions() {
+      const labels = {
+        claims: "Claims updates",
+        appointments: "Appointment reminders",
+        payments: "Payment alerts",
+        prescriptions: "Prescription updates"
+      };
+      subscriptionGrid.innerHTML = "";
+      Object.entries(labels).forEach(([key, label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "toggle-pill rounded-[20px] border px-4 py-3 text-left text-sm transition-colors";
+        button.dataset.enabled = state.subscriptions[key] ? "true" : "false";
+        button.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <span>${label}</span>
+            <span class="material-symbols-outlined">${state.subscriptions[key] ? "toggle_on" : "toggle_off"}</span>
+          </div>
+        `;
+        button.addEventListener("click", () => {
+          state.subscriptions[key] = !state.subscriptions[key];
+          document.getElementById("subscriptionStatus").classList.add("hidden");
+          renderSubscriptions();
+          persistState();
+        });
+        subscriptionGrid.appendChild(button);
+      });
+    }
+
+    function renderConfirmation() {
+      const details = getPlanDetails();
+      document.getElementById("dashboardCta").href = getDashboardRoute();
+      document.getElementById("dashboardCtaLabel").textContent = getDashboardLabel();
+      document.getElementById("confirmationBadge").textContent = state.confirmation.completed ? "Enrollment Activated" : "Activating enrollment...";
+      document.getElementById("confirmationMessage").textContent = state.confirmation.completed
+        ? "The member is active and the final payload has been stored locally for demo continuity."
+        : "We are issuing the member ID, activating coverage, and storing the enrollment payload for the dashboard handoff.";
+
+      const confirmationCard = document.getElementById("confirmationCard");
+      confirmationCard.innerHTML = state.confirmation.completed ? `
+        <div class="flex items-start gap-4">
+          <div class="rounded-2xl bg-success/15 p-3 text-success">
+            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+          </div>
+          <div>
+            <p class="text-sm uppercase tracking-[0.22em] text-success">Success</p>
+            <h3 class="mt-2 font-display text-2xl font-bold text-white">You're successfully enrolled.</h3>
+            <p class="mt-3 text-sm leading-7 text-muted">The account is active, coverage details are mapped, and the member can move directly into the portal.</p>
+          </div>
+        </div>
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-[20px] border border-white/10 bg-white/5 p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Member ID</p>
+            <p class="mt-2 text-lg font-semibold text-white">${state.confirmation.memberId}</p>
+          </div>
+          <div class="rounded-[20px] border border-white/10 bg-white/5 p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Plan</p>
+            <p class="mt-2 text-lg font-semibold text-white">${details ? details.name : "Pending"}</p>
+          </div>
+          <div class="rounded-[20px] border border-white/10 bg-white/5 p-4">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Coverage Start</p>
+            <p class="mt-2 text-lg font-semibold text-white">${state.confirmation.coverageStart || (details ? details.startDate : "Pending")}</p>
+          </div>
+        </div>
+      ` : `
+        <div class="flex items-center gap-4">
+          <div class="h-14 w-14 animate-spin rounded-full border-4 border-white/10 border-t-success"></div>
+          <div>
+            <p class="text-lg font-semibold text-white">Finalizing enrollment</p>
+            <p class="mt-1 text-sm text-muted">Member ID, plan activation, and welcome payload are being prepared.</p>
+          </div>
+        </div>
+      `;
+      renderSubscriptions();
+    }
+
+    function renderAiPanel() {
+      const copy = aiGuidance[state.currentStep];
+      aiHeadline.textContent = copy.headline;
+      aiBody.textContent = copy.body;
+      mobileAiHeadline.textContent = copy.headline;
+      mobileAiBody.textContent = copy.body;
+      aiSuggestionChips.innerHTML = "";
+      mobileAiSuggestionChips.innerHTML = "";
+      copy.suggestions.forEach((suggestion) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-muted transition-colors hover:bg-white/10 hover:text-white";
+        button.textContent = suggestion;
+        button.addEventListener("click", () => answerAiQuestion(suggestion));
+        aiSuggestionChips.appendChild(button);
+
+        const mobileButton = button.cloneNode(true);
+        mobileButton.addEventListener("click", () => answerAiQuestion(suggestion));
+        mobileAiSuggestionChips.appendChild(mobileButton);
+      });
+      mobileAiResponse.textContent = aiResponse.textContent;
+    }
+
+    function getSystemStatuses() {
+      return [
+        {
+          label: "Registration",
+          description: state.registration.otpVerified ? "User created and verified." : state.registration.otpSent ? "User created, waiting for OTP verification." : "Registration not verified yet.",
+          status: state.registration.otpVerified ? "success" : state.registration.otpSent ? "active" : "idle"
+        },
+        {
+          label: "KYC",
+          description: state.kyc.status === "verified" ? "Document validation complete." : state.kyc.status === "rejected" ? `Rejected: ${state.kyc.reason}` : state.kyc.status === "verifying" ? "Document validation API running." : state.kyc.status === "uploading" ? "Uploading files to the verification service." : "Waiting for identity proof.",
+          status: state.kyc.status === "verified" ? "success" : state.kyc.status === "rejected" ? "error" : ["verifying", "uploading"].includes(state.kyc.status) ? "active" : "idle"
+        },
+        {
+          label: "Plan Mapping",
+          description: state.plan.validated ? `${getPlanDetails()?.name || "Plan"} fetched successfully.` : state.plan.message,
+          status: state.plan.validated ? "success" : getPlanDetails() ? "active" : "idle"
+        },
+        {
+          label: "Eligibility",
+          description: state.eligibility.message,
+          status: state.eligibility.status === "success" ? "success" : state.eligibility.status === "error" ? "error" : state.eligibility.status === "checking" ? "active" : "idle"
+        },
+        {
+          label: "Payment",
+          description: state.payment.message,
+          status: state.payment.status === "success" ? "success" : state.payment.status === "failed" ? "error" : state.payment.status === "processing" ? "active" : state.payment.status === "waived" ? "waived" : "idle"
+        },
+        {
+          label: "Enrollment",
+          description: state.confirmation.completed ? "Final activation complete." : "Awaiting final confirmation.",
+          status: state.confirmation.completed ? "success" : state.currentStep === 7 ? "active" : "idle"
+        }
+      ];
+    }
+
+    function renderSystemFeedback() {
+      systemStatusList.innerHTML = "";
+      getSystemStatuses().forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "rounded-[22px] border border-white/10 bg-white/5 p-4";
+        row.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="status-dot status-${item.status === "waived" ? "waived" : item.status}"></span>
+              <p class="text-sm font-semibold text-white">${item.label}</p>
+            </div>
+            <span class="text-xs uppercase tracking-[0.2em] text-muted">${item.status}</span>
+          </div>
+          <p class="mt-3 text-sm leading-7 text-muted">${item.description}</p>
+        `;
+        systemStatusList.appendChild(row);
+      });
+    }
+
+    function renderSummary() {
+      const details = getPlanDetails();
+      const rows = [
+        { label: "Entry mode", value: state.roleContext === "provider" ? "Provider-assisted member enrollment" : "Member self-service enrollment" },
+        { label: "Member", value: state.registration.fullName || "Waiting for registration" },
+        { label: "Contact", value: state.registration.contact || "No contact added yet" },
+        { label: "Plan", value: details ? details.name : "Plan not mapped" },
+        { label: "Eligibility", value: state.eligibility.status === "success" ? "Eligible" : state.eligibility.status === "error" ? "Not eligible" : "Not checked yet" }
+      ];
+      summaryList.innerHTML = rows.map((row) => `
+        <div class="rounded-[20px] border border-white/10 bg-white/5 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.2em] text-muted">${row.label}</p>
+          <p class="mt-2 text-sm font-semibold text-white">${row.value}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderProviderWrapper() {
+      const isProvider = state.roleContext === "provider";
+      providerEnrollmentWrapper.classList.toggle("hidden", !isProvider);
+      providerOrchestrationCard.classList.toggle("hidden", !isProvider);
+      if (!isProvider) {
+        return;
+      }
+      const latestDraft = getStoredCollection("memberEnrollmentDrafts").find((item) => item.id !== state.recordId) || getStoredCollection("memberEnrollmentDrafts")[0];
+      const currentStepLabel = stepMeta[state.currentStep - 1]?.label || "Registration";
+      providerEnrollmentOpsStatus.textContent = state.confirmation.completed
+        ? "Enrollment activated and routed back to the provider dashboard."
+        : `Provider-assisted flow is currently on ${currentStepLabel}.`;
+      providerEnrollmentDraftSummary.textContent = latestDraft
+        ? `${latestDraft.fullName || "Latest draft"} is available to resume from ${latestDraft.statusDetail || "Registration"}.`
+        : "No other provider drafts are waiting right now.";
+      providerNextAction.textContent =
+        state.currentStep === 1 ? "Confirm member contact and send the intake checklist before OTP verification." :
+        state.currentStep === 2 ? "Collect the government ID and make sure the provider has a clean address on file." :
+        state.currentStep === 3 ? "Validate sponsor mapping so eligibility can run without payer mismatch." :
+        state.currentStep === 4 ? "Wait for payer response or retry only after sponsor corrections are made." :
+        state.currentStep === 5 ? "Confirm profile and communication preferences before collecting payment details." :
+        state.currentStep === 6 ? "Complete or waive payment, then prepare the provider handoff summary." :
+        "Route the activated member back to the provider dashboard and archive the draft.";
+    }
+
+    function renderNavigation() {
+      backButton.disabled = state.currentStep === 1;
+      backButton.classList.toggle("opacity-50", state.currentStep === 1);
+      backButton.classList.toggle("cursor-not-allowed", state.currentStep === 1);
+
+      const labels = {
+        1: "Continue",
+        2: "Continue",
+        3: "Validate & Continue",
+        4: "Continue",
+        5: "Continue",
+        6: state.payment.required ? "Process Payment" : "Continue",
+        7: "Done"
+      };
+      nextButton.textContent = labels[state.currentStep];
+      nextButton.classList.toggle("hidden", state.currentStep === 7);
+    }
+
+    function render() {
+      renderStepper();
+      renderPanels();
+      renderProgress();
+      renderRegistration();
+      renderKyc();
+      renderPlan();
+      renderEligibility();
+      renderProfile();
+      renderPayment();
+      renderConfirmation();
+      renderAiPanel();
+      renderSystemFeedback();
+      renderSummary();
+      renderProviderWrapper();
+      renderNavigation();
+      persistState();
+    }
+
+    function answerAiQuestion(question) {
+      const text = question.toLowerCase();
+      let response = "I can help with OTP, KYC, plan mapping, payment, eligibility, and final activation.";
+      if (text.includes("kyc")) response = "KYC confirms identity before coverage is activated. In this demo flow, that means a valid ID upload, DOB, and address, then a verification pass from uploading to verified or rejected.";
+      if (text.includes("otp")) response = "OTP proves the member controls the email or phone used during registration. Send the code first, then use demo code 246810 to mark the account as verified.";
+      if (text.includes("plan")) response = "Plan mapping fetches benefits, sponsor details, and the activation fee. You can either enter a member ID with sponsor info or browse the plan cards directly.";
+      if (text.includes("eligibility")) response = "Eligibility runs automatically after plan mapping. If the result is not eligible, update sponsor or member details and retry the payer check.";
+      if (text.includes("payment")) response = "Payment is only required when the mapped plan has an activation fee. Family Select HMO is the demo plan with no upfront charge.";
+      if (text.includes("dashboard")) response = `After activation, the CTA routes to ${getDashboardLabel().toLowerCase()}.`;
+      aiResponse.textContent = response;
+      mobileAiResponse.textContent = response;
+    }
+
+    function clearTimeouts(list) {
+      list.forEach((timer) => clearTimeout(timer));
+      return [];
+    }
+
+    function sendOtp() {
+      const contact = getFieldValue("contactField");
+      const fullName = getFieldValue("fullName");
+      const password = document.getElementById("passwordField").value;
+      let valid = true;
+
+      if (fullName.length < 3) {
+        setError("fullName", "Enter the member's full name.");
+        valid = false;
+      } else {
+        setError("fullName", "");
+      }
+      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) || contact.replace(/\D/g, "").length >= 10)) {
+        setError("contactField", "Use a valid email or mobile number.");
+        valid = false;
+      } else {
+        setError("contactField", "");
+      }
+      if (password.length < 8) {
+        setError("passwordField", "Password must be at least 8 characters.");
+        valid = false;
+      } else {
+        setError("passwordField", "");
+      }
+
+      if (!valid) {
+        showAlert("Please complete the registration fields before sending the OTP.");
+        return;
+      }
+
+      hideAlert();
+      state.registration.fullName = fullName;
+      state.registration.contact = contact;
+      state.registration.password = password;
+      state.registration.otpSent = true;
+      state.registration.otpVerified = false;
+      state.registration.status = "pending";
+      setDraftStatus("OTP sent. Draft updated locally.");
+      render();
+    }
+
+    function verifyOtp() {
+      const otp = getFieldValue("otpField");
+      state.registration.otp = otp;
+      if (!state.registration.otpSent) {
+        setError("otpField", "Send the OTP first.");
+        showAlert("Send the OTP first so the registration state can move from unverified to pending.");
+        render();
+        return;
+      }
+      if (otp !== "246810") {
+        state.registration.otpVerified = false;
+        state.registration.status = "pending";
+        setError("otpField", "Use the demo code 246810.");
+        showAlert("The OTP was not accepted. Use demo code 246810.");
+        render();
+        return;
+      }
+      hideAlert();
+      setError("otpField", "");
+      state.registration.otpVerified = true;
+      state.registration.status = "verified";
+      setDraftStatus("Registration verified.");
+      render();
+    }
+
+    function validateRegistration() {
+      let valid = true;
+      if (getFieldValue("fullName").length < 3) {
+        setError("fullName", "Enter the member's full name.");
+        valid = false;
+      } else {
+        setError("fullName", "");
+      }
+      const contact = getFieldValue("contactField");
+      if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) || contact.replace(/\D/g, "").length >= 10)) {
+        setError("contactField", "Use a valid email or mobile number.");
+        valid = false;
+      } else {
+        setError("contactField", "");
+      }
+      if (document.getElementById("passwordField").value.length < 8) {
+        setError("passwordField", "Password must be at least 8 characters.");
+        valid = false;
+      } else {
+        setError("passwordField", "");
+      }
+      if (!state.registration.otpVerified) {
+        setError("otpField", "Verify the OTP to continue.");
+        valid = false;
+      } else {
+        setError("otpField", "");
+      }
+      if (!valid) showAlert("Registration is not complete yet. Verify the member contact before continuing.");
+      state.registration.fullName = getFieldValue("fullName");
+      state.registration.contact = contact;
+      state.registration.password = document.getElementById("passwordField").value;
+      state.registration.otp = getFieldValue("otpField");
+      return valid;
+    }
+
+    function startKycVerification() {
+      state.kyc.documentName = state.kyc.documentName || "";
+      state.kyc.dob = document.getElementById("kycDob").value;
+      state.kyc.address = document.getElementById("kycAddress").value.trim();
+      let valid = true;
+
+      if (!state.kyc.documentName) {
+        setError("governmentIdInput", "Upload a government ID to continue.");
+        valid = false;
+      } else {
+        setError("governmentIdInput", "");
+      }
+      if (!state.kyc.dob) {
+        setError("kycDob", "Date of birth is required.");
+        valid = false;
+      } else {
+        setError("kycDob", "");
+      }
+      if (state.kyc.address.length < 12) {
+        setError("kycAddress", "Enter the full address for verification.");
+        valid = false;
+      } else {
+        setError("kycAddress", "");
+      }
+
+      if (!valid) {
+        showAlert("KYC needs an ID, date of birth, and address before verification can begin.");
+        return false;
+      }
+
+      hideAlert();
+      state.kyc.status = "uploading";
+      state.kyc.reason = "Uploading the document package to the identity verification service.";
+      render();
+
+      kycTimeouts = clearTimeouts(kycTimeouts);
+      kycTimeouts.push(setTimeout(() => {
+        state.kyc.status = "verifying";
+        state.kyc.reason = "Running document authenticity, address, and identity checks.";
+        render();
+      }, 900));
+      kycTimeouts.push(setTimeout(() => {
+        const shouldReject = state.kyc.address.toLowerCase().includes("unknown") || state.kyc.documentName.toLowerCase().includes("blur");
+        if (shouldReject) {
+          state.kyc.status = "rejected";
+          state.kyc.reason = "The verification service could not confirm document clarity or address confidence. Replace the ID image or update the address and retry.";
+          showAlert("KYC was rejected. Update the details and run verification again.");
+        } else {
+          state.kyc.status = "verified";
+          state.kyc.reason = "Identity verified successfully. You can move on to plan mapping.";
+          hideAlert();
+        }
+        render();
+      }, 2200));
+      return true;
+    }
+
+    function validatePlan() {
+      let valid = true;
+      if (state.plan.mode === "memberId") {
+        state.plan.memberId = getFieldValue("memberIdField");
+        state.plan.employer = getFieldValue("employerField");
+        if (state.plan.memberId.length < 6) {
+          setError("memberIdField", "Enter a valid member ID.");
+          valid = false;
+        } else {
+          setError("memberIdField", "");
+        }
+        if (state.plan.employer.length < 3) {
+          setError("employerField", "Enter the employer or sponsor.");
+          valid = false;
+        } else {
+          setError("employerField", "");
+        }
+      } else {
+        if (!state.plan.selectedPlan) {
+          document.getElementById("selectedPlanError").textContent = "Choose a plan card before continuing.";
+          document.getElementById("selectedPlanError").classList.remove("hidden");
+          valid = false;
+        } else {
+          document.getElementById("selectedPlanError").classList.add("hidden");
+        }
+      }
+
+      if (!valid) {
+        showAlert("Plan mapping needs either a valid member ID plus sponsor or a selected plan card.");
+        return false;
+      }
+
+      hideAlert();
+      const matchedPlan = state.plan.mode === "memberId"
+        ? state.plan.employer.toLowerCase().includes("inactive")
+          ? planCatalog[2]
+          : state.plan.memberId.toLowerCase().includes("fam")
+            ? planCatalog[1]
+            : planCatalog[0]
+        : planCatalog.find((plan) => plan.id === state.plan.selectedPlan);
+
+      state.plan.detailsId = matchedPlan.id;
+      state.plan.validated = true;
+      state.plan.message = `Mapped ${matchedPlan.name} and fetched coverage details.`;
+      state.payment.required = matchedPlan.activationFee > 0;
+      state.payment.status = matchedPlan.activationFee > 0 ? "idle" : "waived";
+      state.payment.message = matchedPlan.activationFee > 0 ? "Payment gateway is ready for setup." : "No upfront payment is required for this plan.";
+      setDraftStatus("Plan mapped successfully.");
+      render();
+      return true;
+    }
+
+    function startEligibilityCheck(force = false) {
+      if (!state.plan.validated) return;
+      if (!force && (state.eligibility.status === "checking" || state.eligibility.status === "success")) return;
+      clearTimeout(eligibilityTimeout);
+      state.eligibility.status = "checking";
+      state.eligibility.message = "Checking eligibility with the payer in real time.";
+      render();
+
+      eligibilityTimeout = setTimeout(() => {
+        const details = getPlanDetails();
+        const failsMemberId = state.plan.memberId.toLowerCase().includes("999");
+        const failsEmployer = state.plan.employer.toLowerCase().includes("inactive");
+        const isEligible = details && details.eligibilityState === "eligible" && !failsMemberId && !failsEmployer;
+        state.eligibility.checkedAt = new Date().toISOString();
+        if (isEligible) {
+          state.eligibility.status = "success";
+          state.eligibility.message = "Eligible. Coverage was confirmed and the member can continue to profile completion.";
+          hideAlert();
+        } else {
+          state.eligibility.status = "error";
+          state.eligibility.message = "Not eligible. The payer could not match active coverage. Review sponsor or member information and retry.";
+          showAlert("Eligibility returned a not eligible result. Update sponsor or member information and retry.");
+        }
+        render();
+      }, 1800);
+    }
+
+    function validateProfile() {
+      state.profile.address = document.getElementById("profileAddress").value.trim();
+      state.profile.emergencyName = getFieldValue("emergencyName");
+      state.profile.emergencyPhone = getFieldValue("emergencyPhone");
+      state.profile.language = document.getElementById("preferredLanguage").value;
+
+      let valid = true;
+      if (state.profile.address.length < 12) {
+        setError("profileAddress", "Enter the member's full mailing address.");
+        valid = false;
+      } else {
+        setError("profileAddress", "");
+      }
+      if (state.profile.emergencyName.length < 3) {
+        setError("emergencyName", "Enter an emergency contact name.");
+        valid = false;
+      } else {
+        setError("emergencyName", "");
+      }
+      if (state.profile.emergencyPhone.replace(/\D/g, "").length < 10) {
+        setError("emergencyPhone", "Enter a valid emergency contact number.");
+        valid = false;
+      } else {
+        setError("emergencyPhone", "");
+      }
+      if (!state.profile.language) {
+        setError("preferredLanguage", "Choose the preferred language.");
+        valid = false;
+      } else {
+        setError("preferredLanguage", "");
+      }
+      const hasPreference = Object.values(state.profile.communications).some(Boolean);
+      const commError = document.getElementById("communicationPreferencesError");
+      if (!hasPreference) {
+        commError.textContent = "Turn on at least one communication preference.";
+        commError.classList.remove("hidden");
+        valid = false;
+      } else {
+        commError.classList.add("hidden");
+      }
+      if (!valid) showAlert("Profile completion still needs an address, emergency contact, language, and at least one communication preference.");
+      return valid;
+    }
+
+    function processPaymentAndContinue() {
+      const paymentInlineError = document.getElementById("paymentInlineError");
+      paymentInlineError.classList.add("hidden");
+
+      if (!state.payment.required) {
+        state.payment.status = "waived";
+        state.payment.message = "No upfront payment is required for this plan.";
+        state.currentStep = 7;
+        onStepEnter();
+        render();
+        return;
+      }
+
+      state.payment.cardholderName = getFieldValue("cardholderName");
+      state.payment.cardNumber = getFieldValue("cardNumber");
+      state.payment.cardExpiry = getFieldValue("cardExpiry");
+      state.payment.upiId = getFieldValue("upiId");
+      state.payment.bankReference = getFieldValue("bankReference");
+
+      let valid = true;
+      if (state.payment.method === "card") {
+        if (state.payment.cardholderName.length < 3 || state.payment.cardNumber.replace(/\D/g, "").length < 12 || state.payment.cardExpiry.length < 4) {
+          paymentInlineError.textContent = "Enter a valid cardholder name, card number, and expiry.";
+          paymentInlineError.classList.remove("hidden");
+          valid = false;
+        }
+      }
+      if (state.payment.method === "upi") {
+        if (!/^[a-zA-Z0-9._-]{2,}@[a-zA-Z]{2,}$/i.test(state.payment.upiId)) {
+          paymentInlineError.textContent = "Enter a valid UPI ID such as member@bank.";
+          paymentInlineError.classList.remove("hidden");
+          valid = false;
+        }
+      }
+      if (state.payment.method === "bank") {
+        if (state.payment.bankReference.length < 6) {
+          paymentInlineError.textContent = "Enter a bank or ACH reference.";
+          paymentInlineError.classList.remove("hidden");
+          valid = false;
+        }
+      }
+      if (!valid) {
+        showAlert("Payment details are incomplete. Add a valid payment method before continuing.");
+        return;
+      }
+
+      hideAlert();
+      clearTimeout(paymentTimeout);
+      state.payment.status = "processing";
+      state.payment.message = "Processing payment through the gateway.";
+      render();
+
+      paymentTimeout = setTimeout(() => {
+        const shouldFail =
+          (state.payment.method === "card" && state.payment.cardNumber.replace(/\D/g, "").endsWith("0000")) ||
+          (state.payment.method === "upi" && state.payment.upiId.toLowerCase().includes("fail")) ||
+          (state.payment.method === "bank" && state.payment.bankReference.toLowerCase().includes("fail"));
+        if (shouldFail) {
+          state.payment.status = "failed";
+          state.payment.message = "Payment failed. Use another method or correct the current details and retry.";
+          showAlert("The payment attempt failed. Update the method details and try again.");
+        } else {
+          state.payment.status = "success";
+          state.payment.message = "Payment successful. Enrollment can now be activated.";
+          hideAlert();
+          state.currentStep = 7;
+          onStepEnter();
+        }
+        render();
+      }, 1700);
+    }
+
+    function finalizeConfirmation() {
+      if (state.confirmation.completed) return;
+      clearTimeout(confirmationTimeout);
+      confirmationTimeout = setTimeout(() => {
+        const details = getPlanDetails();
+        const generatedMemberId = state.plan.memberId || `AXM-${String(Date.now()).slice(-6)}`;
+        state.confirmation.completed = true;
+        state.confirmation.memberId = generatedMemberId.toUpperCase();
+        state.confirmation.coverageStart = details ? details.startDate : "Pending payer confirmation";
+        localStorage.setItem("latestMemberEnrollment", JSON.stringify({
+          submittedAt: new Date().toISOString(),
+          recordId: state.recordId,
+          roleContext: state.roleContext,
+          registration: state.registration,
+          kyc: state.kyc,
+          plan: {
+            memberId: state.plan.memberId,
+            employer: state.plan.employer,
+            selectedPlan: state.plan.detailsId,
+            details
+          },
+          eligibility: state.eligibility,
+          profile: state.profile,
+          payment: state.payment,
+          subscriptions: state.subscriptions,
+          confirmation: state.confirmation
+        }));
+        syncMemberDirectory("Enrolled");
+        removeStoredRecord("memberEnrollmentDrafts", state.recordId);
+        localStorage.removeItem("memberEnrollmentWizard");
+        setDraftStatus("Enrollment completed and available from Members.");
+        render();
+      }, 1400);
+    }
+
+    function saveDraft() {
+      persistState();
+      syncDraftCollection();
+      syncMemberDirectory(`In Progress - ${stepMeta[state.currentStep - 1]?.label || "Registration"}`);
+      setDraftStatus("Draft saved and visible in Members.");
+    }
+
+    function onStepEnter() {
+      if (state.currentStep === 4) startEligibilityCheck();
+      if (state.currentStep === 7) finalizeConfirmation();
+    }
+
+    function handleNext() {
+      hideAlert();
+      if (state.currentStep === 1) {
+        if (validateRegistration()) state.currentStep += 1;
+      } else if (state.currentStep === 2) {
+        if (state.kyc.status === "verified") {
+          state.currentStep += 1;
+        } else if (!startKycVerification()) {
+          return;
+        } else {
+          showAlert("Verification has started. Wait for the status to reach verified before moving on.");
+          return;
+        }
+      } else if (state.currentStep === 3) {
+        if (validatePlan()) state.currentStep += 1;
+      } else if (state.currentStep === 4) {
+        if (state.eligibility.status === "success") {
+          state.currentStep += 1;
+        } else if (state.eligibility.status === "checking") {
+          showAlert("Eligibility is still running. Please wait for the result.");
+          return;
+        } else {
+          showAlert("Eligibility must return eligible before continuing.");
+          return;
+        }
+      } else if (state.currentStep === 5) {
+        if (validateProfile()) state.currentStep += 1;
+      } else if (state.currentStep === 6) {
+        processPaymentAndContinue();
+        return;
+      }
+      onStepEnter();
+      render();
+    }
+
+    function handleBack() {
+      if (state.currentStep === 1) return;
+      state.currentStep -= 1;
+      hideAlert();
+      render();
+    }
+
+    document.querySelectorAll("[data-plan-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.plan.mode = button.getAttribute("data-plan-mode");
+        state.plan.validated = false;
+        state.plan.detailsId = "";
+        state.plan.message = "Choose a lookup method to fetch coverage, deductibles, and enrollment fee details.";
+        render();
+      });
+    });
+
+    document.getElementById("fullName").addEventListener("input", (event) => {
+      state.registration.fullName = event.target.value;
+      persistState();
+    });
+    document.getElementById("contactField").addEventListener("input", (event) => {
+      state.registration.contact = event.target.value;
+      persistState();
+    });
+    document.getElementById("passwordField").addEventListener("input", (event) => {
+      state.registration.password = event.target.value;
+      persistState();
+    });
+    document.getElementById("otpField").addEventListener("input", (event) => {
+      state.registration.otp = event.target.value;
+      persistState();
+    });
+    document.getElementById("sendOtpButton").addEventListener("click", sendOtp);
+    document.getElementById("verifyOtpButton").addEventListener("click", verifyOtp);
+
+    document.getElementById("governmentIdInput").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      state.kyc.documentName = file.name;
+      state.kyc.status = "idle";
+      state.kyc.reason = "Document uploaded. Ready to verify.";
+      hideAlert();
+      render();
+    });
+    document.getElementById("selfieButton").addEventListener("click", () => document.getElementById("selfieInput").click());
+    document.getElementById("selfieInput").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      state.kyc.selfieName = file.name;
+      render();
+    });
+    document.getElementById("kycDob").addEventListener("change", (event) => {
+      state.kyc.dob = event.target.value;
+      persistState();
+    });
+    document.getElementById("kycAddress").addEventListener("input", (event) => {
+      state.kyc.address = event.target.value;
+      persistState();
+    });
+    document.getElementById("startKycButton").addEventListener("click", startKycVerification);
+
+    document.getElementById("memberIdField").addEventListener("input", (event) => {
+      state.plan.memberId = event.target.value;
+      state.plan.validated = false;
+      state.plan.detailsId = "";
+      persistState();
+    });
+    document.getElementById("employerField").addEventListener("input", (event) => {
+      state.plan.employer = event.target.value;
+      state.plan.validated = false;
+      state.plan.detailsId = "";
+      persistState();
+    });
+    document.getElementById("validatePlanButton").addEventListener("click", () => {
+      if (validatePlan()) {
+        state.currentStep = 4;
+        onStepEnter();
+        render();
+      }
+    });
+
+    document.getElementById("retryEligibilityButton").addEventListener("click", () => startEligibilityCheck(true));
+
+    document.getElementById("profileAddress").addEventListener("input", (event) => {
+      state.profile.address = event.target.value;
+      persistState();
+    });
+    document.getElementById("emergencyName").addEventListener("input", (event) => {
+      state.profile.emergencyName = event.target.value;
+      persistState();
+    });
+    document.getElementById("emergencyPhone").addEventListener("input", (event) => {
+      state.profile.emergencyPhone = event.target.value;
+      persistState();
+    });
+    document.getElementById("preferredLanguage").addEventListener("change", (event) => {
+      state.profile.language = event.target.value;
+      persistState();
+    });
+    document.getElementById("autofillAddressButton").addEventListener("click", () => {
+      if (state.kyc.address) {
+        state.profile.address = state.kyc.address;
+        hideAlert();
+        render();
+      } else {
+        showAlert("There is no KYC address to copy yet.");
+      }
+    });
+
+    document.getElementById("cardholderName").addEventListener("input", (event) => {
+      state.payment.cardholderName = event.target.value;
+      persistState();
+    });
+    document.getElementById("cardNumber").addEventListener("input", (event) => {
+      state.payment.cardNumber = event.target.value;
+      persistState();
+    });
+    document.getElementById("cardExpiry").addEventListener("input", (event) => {
+      state.payment.cardExpiry = event.target.value;
+      persistState();
+    });
+    document.getElementById("upiId").addEventListener("input", (event) => {
+      state.payment.upiId = event.target.value;
+      persistState();
+    });
+    document.getElementById("bankReference").addEventListener("input", (event) => {
+      state.payment.bankReference = event.target.value;
+      persistState();
+    });
+
+    document.getElementById("saveSubscriptionsButton").addEventListener("click", () => {
+      state.confirmation.subscriptionsSaved = true;
+      document.getElementById("subscriptionStatus").classList.remove("hidden");
+      persistState();
+    });
+
+    aiQuestionButton.addEventListener("click", () => answerAiQuestion(aiQuestionInput.value || stepMeta[state.currentStep - 1].label));
+    aiQuestionInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        answerAiQuestion(aiQuestionInput.value || stepMeta[state.currentStep - 1].label);
+      }
+    });
+
+    mobileHelperButton.addEventListener("click", () => {
+      mobileHelperSheet.classList.remove("helper-hidden");
+      mobileHelperSheet.classList.add("helper-visible");
+    });
+    closeMobileHelperButton.addEventListener("click", () => {
+      mobileHelperSheet.classList.remove("helper-visible");
+      mobileHelperSheet.classList.add("helper-hidden");
+    });
+    mobileHelperSheet.addEventListener("click", (event) => {
+      if (event.target === mobileHelperSheet) {
+        mobileHelperSheet.classList.remove("helper-visible");
+        mobileHelperSheet.classList.add("helper-hidden");
+      }
+    });
+
+    backButton.addEventListener("click", handleBack);
+    nextButton.addEventListener("click", handleNext);
+    saveDraftHeaderButton.addEventListener("click", saveDraft);
+    saveDraftFooterButton.addEventListener("click", saveDraft);
+
+    providerSendChecklistButton.addEventListener("click", () => {
+      providerEnrollmentOpsStatus.textContent = "Checklist sent to the member and care coordinator.";
+      aiResponse.textContent = "Nventr queued the intake checklist, document list, and sponsor reminder for the member.";
+      mobileAiResponse.textContent = aiResponse.textContent;
+      showAlert("The intake checklist was prepared for the member and provider care coordinator.");
+      persistState();
+    });
+
+    providerResumeLatestDraftButton.addEventListener("click", () => {
+      const latestDraft = getStoredCollection("memberEnrollmentDrafts").find((item) => item.id !== state.recordId) || getStoredCollection("memberEnrollmentDrafts")[0];
+      if (latestDraft?.wizardState) {
+        Object.assign(state, mergeState(defaultState, latestDraft.wizardState));
+        state.roleContext = "provider";
+        state.recordId = latestDraft.id || state.recordId;
+        hideAlert();
+        render();
+      } else {
+        showAlert("No other provider draft is available to resume right now.");
+      }
+    });
+
+    providerEscalateEnrollmentButton.addEventListener("click", () => {
+      providerEnrollmentOpsStatus.textContent = "Escalated to enrollment operations with provider summary attached.";
+      aiResponse.textContent = "Nventr prepared a handoff package with the current step, payer status, and missing requirements for enrollment ops.";
+      mobileAiResponse.textContent = aiResponse.textContent;
+      showAlert("Enrollment operations handoff is ready. The provider can keep the wizard open while ops reviews the case.");
+      persistState();
+    });
+
+    if (state.currentStep < 1 || state.currentStep > stepMeta.length) state.currentStep = 1;
+    onStepEnter();
+    render();
+  </script>
+  <script src="portal-shell.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,548 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Provider Dashboard | Axis Core AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#c0c1ff",
+                        "outline-variant": "#464554",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "surface": "#081425",
+                        "primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#131b2e",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "on-secondary": "#00363e",
+                        "on-primary-container": "#0d0096",
+                        "tertiary-fixed": "#dae2fd",
+                        "surface-container": "#152031",
+                        "secondary": "#5de6ff",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00cbe6",
+                        "tertiary": "#bec6e0",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#1f2a3c",
+                        "outline": "#908fa0",
+                        "primary-fixed": "#e1e0ff",
+                        "on-background": "#d8e3fb",
+                        "on-primary": "#1000a9",
+                        "tertiary-container": "#8990a8",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary-container": "#8083ff",
+                        "inverse-primary": "#494bd6",
+                        "error-container": "#93000a",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#040e1f",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "surface-container-low": "#111c2d",
+                        "surface-bright": "#2f3a4c",
+                        "on-secondary-fixed": "#001f25",
+                        "inverse-on-surface": "#263143",
+                        "on-surface-variant": "#c7c4d7",
+                        "inverse-surface": "#d8e3fb",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "on-surface": "#d8e3fb",
+                        "on-tertiary-container": "#22293d",
+                        "on-tertiary": "#283044",
+                        "background": "#081425",
+                        "secondary-fixed": "#a2eeff",
+                        "surface-container-highest": "#2a3548",
+                        "surface-variant": "#2a3548",
+                        "on-secondary-container": "#00515d",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-dim": "#081425"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "display-xl": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(144, 143, 160, 0.1);
+        }
+        .ai-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(99,102,241,0.1)] flex justify-between items-center px-6 h-16 z-50">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-indigo-500">Axis Core AI</span>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/30 w-96">
+<span class="material-symbols-outlined text-outline text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface-variant w-full px-2" placeholder="Global Orchestration Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:text-slate-200 transition-colors duration-300 ease-in-out hover:scale-105">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-slate-200 transition-colors duration-300 ease-in-out hover:scale-105">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30 ml-2">
+<img alt="Executive Profile" data-alt="Professional executive portrait of a healthcare administrator in a dark suit with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8go6SUE6jb3QStB2alM6Kd7ccJbbBLFK7kKClSBMH74Rnarg9jTfwCFzDCT8VfQdVUPc7IIUenmBPj71RWL4UeSqFRNvUo3kC-SeFlF1BJKXkvNmY8cbgyFrq4O4-Ptk0oR8-Wh0nGR62n1oBAC_aojnDK2EXFcfk10xgKyIY8OOhROtVYXnRLhESBEn5V_7vtAseZuTW2V5TVYaC-_DMWsK08UganCU-qDIOGWV-I_T6w_QTvpg7-xXkfcBmYpL7zx5KbLNm9A"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-full w-64 border-r border-slate-800/50 bg-slate-950 flex flex-col py-4 gap-2">
+<div class="px-6 mb-6">
+<h2 class="text-sm font-bold uppercase tracking-widest text-indigo-500">Provider Dashboard</h2>
+<p class="text-[10px] text-slate-500">AI Command Center</p>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 bg-indigo-500/10 text-indigo-400 border-l-4 border-indigo-500 font-label-sm text-label-sm" href="OperationalEffDashboard.html">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-900 hover:text-slate-300 transition-all duration-200 font-label-sm text-label-sm" href="Claim1.html">
+<span class="material-symbols-outlined">query_stats</span> Predictive
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-900 hover:text-slate-300 transition-all duration-200 font-label-sm text-label-sm" href="Appointment.html">
+<span class="material-symbols-outlined">public</span> Regional
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-900 hover:text-slate-300 transition-all duration-200 font-label-sm text-label-sm" href="Auth.html">
+<span class="material-symbols-outlined">account_tree</span> Orchestration
+            </a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:bg-slate-900 hover:text-slate-300 transition-all duration-200 font-label-sm text-label-sm" href="Denial.html">
+<span class="material-symbols-outlined">lightbulb</span> Insights
+            </a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-8 min-h-screen">
+<div class="max-w-[1600px] mx-auto space-y-8">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Dashboard Canvas -->
+<div class="flex-1 space-y-8">
+<!-- KPI Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<a class="glass-panel p-6 rounded-xl space-y-2 border-l-2 border-secondary ai-glow block hover:bg-slate-900/30 transition-colors" href="Enrollment.html" id="providerEnrollmentShortcut">
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Member Enrollment</span>
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-on-surface">New</span>
+<span class="text-xs text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">person_add</span> On behalf
+                                </span>
+</div>
+<div class="h-8 w-full mt-2 text-sm text-slate-400">Start enrollment for members directly from the provider workflow.</div>
+</a>
+<div class="glass-panel p-6 rounded-xl space-y-2 border-l-2 border-indigo-500 ai-glow" id="claimsYieldCard">
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Clean Claim First Pass</span>
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-on-surface">94.2%</span>
+<span class="text-xs text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +1.2%
+                                </span>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 20">
+<path d="M0 15 Q 10 10 20 12 T 40 8 T 60 14 T 80 5 T 100 10" fill="transparent" stroke="#5de6ff" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-2 border-l-2 border-error" id="denialRateCard">
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Denial Rate</span>
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-on-surface">4.8%</span>
+<span class="text-xs text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +0.4%
+                                </span>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 20">
+<path d="M0 18 Q 10 15 20 18 T 40 12 T 60 15 T 80 10 T 100 5" fill="transparent" stroke="#ffb4ab" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-2 border-l-2 border-primary" id="payerTurnaroundCard">
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Avg Processing Time</span>
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-on-surface">14d</span>
+<span class="text-xs text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_down</span> -2d
+                                </span>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 20">
+<path d="M0 10 Q 10 12 20 8 T 40 15 T 60 5 T 80 12 T 100 8" fill="transparent" stroke="#c0c1ff" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-2 border-l-2 border-secondary" id="recoveryOpportunityCard">
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Revenue Leakage</span>
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-on-surface">$142k</span>
+<span class="text-xs text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_down</span> -12%
+                                </span>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 20">
+<path d="M0 5 Q 10 8 20 5 T 40 12 T 60 8 T 80 15 T 100 12" fill="transparent" stroke="#5de6ff" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Secondary Data Row -->
+<section class="glass-panel rounded-2xl p-6 border-l-2 border-cyan-400 ai-glow" id="providerPromptPanel">
+<div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+<div class="max-w-3xl">
+<p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Prompt Workspace</p>
+<h2 class="mt-2 text-2xl font-bold text-white">Ask Nventr from the provider dashboard.</h2>
+<p class="mt-2 text-sm leading-7 text-slate-400">Run provider prompts directly from here for claims, prior auth, payments, member ops, or ambient intake without leaving the dashboard.</p>
+</div>
+<div class="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-200">Voice and file-aware AI ready</div>
+</div>
+<div class="mt-5 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+<div class="rounded-[24px] border border-slate-800 bg-slate-950/50 p-4">
+<label class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500" for="providerDashboardPromptInput">Provider Prompt</label>
+<div class="mt-3 flex flex-col gap-3 lg:flex-row">
+<input class="min-w-0 flex-1 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-400" id="providerDashboardPromptInput" placeholder="Try: start ambient listening for today's provider support queue" type="text"/>
+<div class="flex gap-3">
+<button class="rounded-full border border-slate-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" id="providerDashboardPromptSend" type="button">Run Prompt</button>
+<button class="rounded-full border border-slate-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" id="providerDashboardPromptVoice" type="button">Voice Prompt</button>
+<button class="rounded-full bg-cyan-400 px-4 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-px" data-nventr-workflow="ambient_handoff" data-nventr-title="Ambient intake and live handoff" data-nventr-body="Start ambient listening for provider calls, summarize intake context, and keep a live specialist handoff ready." data-nventr-prompt="Start ambient listening intake for today's provider call queue" id="providerAmbientListeningButton" type="button">Start Ambient Listening</button>
+</div>
+</div>
+<div class="mt-4 flex flex-wrap gap-2">
+<button class="rounded-full border border-slate-700 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" data-nventr-prompt="Review clean claim yield and coding QA for today's queue" type="button">Claims QA</button>
+<button class="rounded-full border border-slate-700 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" data-nventr-prompt="Review prior auth readiness and missing clinical evidence" type="button">Prior Auth</button>
+<button class="rounded-full border border-slate-700 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" data-nventr-prompt="Review ERA exceptions and recovery opportunities" type="button">Payments</button>
+<button class="rounded-full border border-slate-700 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-cyan-400 hover:text-cyan-100" data-nventr-prompt="Review member enrollment status and next provider actions" type="button">Members</button>
+</div>
+</div>
+<div class="rounded-[24px] border border-slate-800 bg-slate-950/50 p-5">
+<div class="flex items-start justify-between gap-4">
+<div>
+<p class="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Ambient Listening</p>
+<h3 class="mt-2 text-lg font-bold text-white">Visible from the dashboard now</h3>
+<p class="mt-2 text-sm leading-7 text-slate-400">Use ambient intake for provider call queues, member support escalations, and live handoff packaging. This is the front door for voice-led operations.</p>
+</div>
+<span class="material-symbols-outlined text-cyan-300 text-3xl">hearing</span>
+</div>
+<div class="mt-4 grid gap-3">
+<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+<p class="text-sm font-semibold text-white">What it does</p>
+<p class="mt-2 text-sm text-slate-400">Captures conversation context, structures intake, and prepares live-agent handoff when AI confidence is low or human help is requested.</p>
+</div>
+<button class="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-400/20" data-nventr-workflow="ambient_handoff" data-nventr-title="Ambient intake and live handoff" data-nventr-body="Open the ambient listening workflow from the provider dashboard." data-nventr-prompt="Start ambient listening intake for today's provider call queue" id="providerAmbientWorkflowButton" type="button">Open Ambient Listening Workflow</button>
+</div>
+</div>
+</div>
+<p class="text-sm text-slate-400" id="providerPromptStatus">Prompt workspace ready. You can type, speak, or launch ambient listening from here.</p>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Clinical & Quality -->
+<div class="glass-panel p-8 rounded-2xl space-y-6" id="qualitySignalsCard">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">health_and_safety</span> Clinical &amp; Quality
+                                </h3>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Verified</span>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-1">
+<span class="text-xs text-slate-400">CMS Star Rating</span>
+<div class="flex items-center gap-1 text-secondary">
+<span class="text-2xl font-bold text-on-surface">4.5</span>
+<span class="text-sm">/5</span>
+<span class="material-symbols-outlined text-sm ml-1" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="space-y-1">
+<span class="text-xs text-slate-400">MIPS Score</span>
+<div class="text-2xl font-bold text-on-surface">88<span class="text-sm font-normal text-slate-500">/100</span></div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">Member Engagement</span>
+<span class="text-sm text-secondary font-bold">64% HSA Usage</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary w-[64%]"></div>
+</div>
+</div>
+</div>
+<!-- Pharmacy & Ops -->
+<div class="glass-panel p-8 rounded-2xl space-y-6" id="pharmacyUtilizationCard">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">medication</span> Pharmacy &amp; Ops
+                            </h3>
+<div class="flex items-center justify-around">
+<div class="relative flex flex-col items-center gap-2">
+<svg class="w-24 h-24 transform -rotate-90">
+<circle class="text-surface-container" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="5" stroke-width="6"></circle>
+</svg>
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-8 flex flex-col items-center">
+<span class="text-lg font-bold">98%</span>
+</div>
+<span class="text-xs text-slate-400">Rx Fill Rate</span>
+</div>
+<div class="relative flex flex-col items-center gap-2">
+<svg class="w-24 h-24 transform -rotate-90">
+<circle class="text-surface-container" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-secondary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="60" stroke-width="6"></circle>
+</svg>
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-8 flex flex-col items-center">
+<span class="text-lg font-bold">4.2:1</span>
+</div>
+<span class="text-xs text-slate-400">AI Resolution</span>
+</div>
+<a class="inline-flex items-center gap-2 rounded-xl bg-secondary/10 px-4 py-3 text-sm font-semibold text-secondary hover:bg-secondary/20 transition-colors" href="RXandPharmacy.html">
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+Open Pharmacy Approvals
+</a>
+</div>
+</div>
+</div>
+<!-- Financial Performance (MLR Chart Simulation) -->
+<div class="glass-panel p-8 rounded-2xl space-y-8" id="mlrChartSection">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Financial Performance &amp; MLR Ratio</h3>
+<div class="flex items-center gap-3 bg-error-container/20 px-4 py-2 rounded-lg border border-error/20">
+<span class="material-symbols-outlined text-error text-lg">warning</span>
+<span class="text-sm text-error">MLR outside optimal range for Plan B</span>
+</div>
+</div>
+<div class="flex items-end justify-between h-48 gap-4 px-4">
+<!-- Simulated Chart Bars -->
+<div class="flex-1 flex flex-col items-center gap-3" id="planABar">
+<div class="w-full bg-primary/20 rounded-t-lg h-[70%] relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[80%] transition-all hover:brightness-125"></div>
+</div>
+<span class="text-xs text-slate-500">Plan A</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-3" id="planBBar">
+<div class="w-full bg-error/20 rounded-t-lg h-[95%] relative group">
+<div class="absolute bottom-0 w-full bg-error rounded-t-lg h-[90%] transition-all hover:brightness-125"></div>
+</div>
+<span class="text-xs text-slate-500 font-bold">Plan B</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-3" id="planCBar">
+<div class="w-full bg-primary/20 rounded-t-lg h-[65%] relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[75%] transition-all hover:brightness-125"></div>
+</div>
+<span class="text-xs text-slate-500">Plan C</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-3" id="planDBar">
+<div class="w-full bg-primary/20 rounded-t-lg h-[80%] relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[60%] transition-all hover:brightness-125"></div>
+</div>
+<span class="text-xs text-slate-500">Plan D</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-3" id="planEBar">
+<div class="w-full bg-primary/20 rounded-t-lg h-[75%] relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[85%] transition-all hover:brightness-125"></div>
+</div>
+<span class="text-xs text-slate-500">Plan E</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Intelligence Sidebar (30%) -->
+<div class="w-full lg:w-[32%] space-y-8">
+<div class="glass-panel p-8 rounded-3xl ai-glow border-t-4 border-indigo-500 bg-indigo-950/20 sticky top-24">
+<div class="flex items-center gap-3 mb-8">
+<div class="p-2 bg-indigo-500/20 rounded-lg">
+<span class="material-symbols-outlined text-indigo-400" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md leading-none">Nventr Command Center</h3>
+<span class="text-[10px] uppercase tracking-tighter text-indigo-400 font-bold">Live Provider Assist</span>
+</div>
+</div>
+<div class="space-y-8">
+<!-- Root Cause Analysis -->
+<section class="space-y-4" id="rootCauseSection">
+<h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+<span class="h-1.5 w-1.5 bg-error rounded-full"></span>
+                                    Root Cause Analysis
+                                </h4>
+<div class="p-4 rounded-xl bg-surface-container-high/50 border border-outline-variant/20 text-sm leading-relaxed text-slate-300">
+                                    Denial rate spikes for <strong class="text-indigo-400">BCBS</strong> identified in Region A. AI trace suggests 
+                                    mismatched <strong class="text-slate-100">ICD-10 coding</strong> logic for ambulatory respiratory services.
+                                </div>
+</section>
+<!-- Recommendation -->
+<section class="space-y-4" id="recommendationSection">
+<h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+<span class="h-1.5 w-1.5 bg-secondary rounded-full"></span>
+                                    Recommendation
+                                </h4>
+<div class="p-4 rounded-xl bg-surface-container-high/50 border border-outline-variant/20 space-y-4">
+<p class="text-sm text-slate-300">Apply the <strong class="text-secondary">Orchestration Ruleset v4.2</strong> to auto-correct ICD-10 mapping for active respiratory claims.</p>
+<button class="w-full py-3 bg-indigo-500 text-on-primary font-bold rounded-xl flex items-center justify-center gap-2 transition-all hover:bg-indigo-400 hover:shadow-lg hover:shadow-indigo-500/20">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                                        Apply Ruleset
+                                    </button>
+</div>
+</section>
+<!-- Predictive Analytics -->
+<section class="space-y-4" id="predictiveAnalyticsSection">
+<h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+<span class="h-1.5 w-1.5 bg-primary rounded-full"></span>
+                                    Predictive Analytics
+                                </h4>
+<div class="p-4 rounded-xl bg-surface-container-high/50 border border-outline-variant/20 space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-xs text-slate-400 uppercase">Respiratory Utilization Forecast</span>
+<span class="text-lg font-bold text-secondary">+14%</span>
+</div>
+<div class="h-2 w-full bg-slate-800 rounded-full flex gap-1">
+<div class="h-full bg-secondary rounded-full w-[40%]"></div>
+<div class="h-full bg-secondary/40 rounded-full w-[25%] opacity-50"></div>
+</div>
+<p class="text-[10px] text-slate-500 italic">Anticipated surge in next month based on historical regional trends.</p>
+</div>
+</section>
+<!-- Network Map Small Widget -->
+<section class="space-y-4" id="operationsMapSection">
+<h4 class="text-sm font-bold text-slate-200">Live Region A Hub</h4>
+<div class="h-32 rounded-xl overflow-hidden border border-outline-variant/20 relative">
+<div class="absolute inset-0 bg-slate-900 opacity-40"></div>
+<img class="w-full h-full object-cover" data-alt="Abstract glowing node network on a dark world map background with neon blue connections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_EvJ82xfnG5iCeznnDJeW6gvpu4KB1ehKlQkvo4BMpvw45VijCwMVHzCm9Ao2cw3ss90EUSPOzEXFvb_UTVgeiAs3rxa2ci5onOpkuZKtsLOaFIf2sXyzbTrC4yhSnCr7l4CvCqQ8XGdGqDz7wseCL7uCP6mPt0IPgMassL28nQnWQwNmHiEHiZoosGnv6PzILqvyO8FKZVCnYrdxXX8dKe4yV6zUAcUwKedh9oDQXfbqE4mK9LpXZzW_XUN2ltNUbIrY_JEwbw"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative">
+<div class="h-3 w-3 bg-secondary rounded-full ai-glow animate-pulse"></div>
+<div class="absolute -top-1 -left-1 h-5 w-5 border border-secondary rounded-full animate-ping opacity-75"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- User Feedback -->
+<section class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">sentiment_satisfied</span>
+<span class="text-xs font-medium text-slate-400">Provider Satisfaction</span>
+</div>
+<span class="text-sm font-bold text-on-surface">High 8.4/10</span>
+</section>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation suppression check: Top level dashboard, keeping nav as defined in Shell Visibility -->
+<script>
+  const providerEnrollmentShortcut = document.getElementById('providerEnrollmentShortcut');
+  const providerDashboardPromptStatus = document.getElementById('providerPromptStatus');
+  providerEnrollmentShortcut.addEventListener('click', () => {
+    localStorage.setItem('preferredRole', 'provider');
+    localStorage.removeItem('memberEnrollmentWizard');
+  });
+
+  const providerDashboardPromptInput = document.getElementById('providerDashboardPromptInput');
+  const providerDashboardPromptSend = document.getElementById('providerDashboardPromptSend');
+  const providerDashboardPromptVoice = document.getElementById('providerDashboardPromptVoice');
+  const providerAmbientListeningButton = document.getElementById('providerAmbientListeningButton');
+  const providerAmbientWorkflowButton = document.getElementById('providerAmbientWorkflowButton');
+
+  function setPromptStatus(message) {
+    if (providerDashboardPromptStatus) {
+      providerDashboardPromptStatus.textContent = message;
+    }
+  }
+
+  function runProviderDashboardPrompt(prompt) {
+    const cleanPrompt = (prompt || '').trim() || 'Summarize provider dashboard status and recommend the top next actions';
+    if (window.NventrPortal && typeof window.NventrPortal.submitPrompt === 'function') {
+      window.NventrPortal.submitPrompt(cleanPrompt, 'dashboard');
+      setPromptStatus(`Prompt sent: "${cleanPrompt}"`);
+    } else {
+      setPromptStatus('Nventr is still loading. Please try again.');
+    }
+  }
+
+  providerDashboardPromptSend.addEventListener('click', () => {
+    runProviderDashboardPrompt(providerDashboardPromptInput.value);
+  });
+
+  providerDashboardPromptInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      providerDashboardPromptSend.click();
+    }
+  });
+
+  providerDashboardPromptVoice.addEventListener('click', () => {
+    if (window.NventrPortal && typeof window.NventrPortal.startVoiceCapture === 'function') {
+      setPromptStatus('Listening for a provider voice prompt...');
+      window.NventrPortal.startVoiceCapture(providerDashboardPromptInput, () => {
+        providerDashboardPromptSend.click();
+      });
+    } else {
+      setPromptStatus('Voice prompting is not available right now.');
+    }
+  });
+
+  function launchAmbientListening() {
+    if (window.NventrPortal && typeof window.NventrPortal.openWorkflow === 'function') {
+      window.NventrPortal.openWorkflow('ambient_handoff', {
+        title: 'Ambient intake and live handoff',
+        body: 'Start ambient listening for provider calls, summarize intake context, and keep a live specialist handoff ready.',
+        prompt: 'Start ambient listening intake for today\'s provider call queue'
+      });
+      setPromptStatus('Ambient listening workflow opened.');
+    } else {
+      setPromptStatus('Ambient listening is still loading. Please try again.');
+    }
+  }
+
+  providerAmbientListeningButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    launchAmbientListening();
+  });
+
+  providerAmbientWorkflowButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    launchAmbientListening();
+  });
+</script>
+  <script src="portal-shell.js"></script>
+</body></html>
+
+

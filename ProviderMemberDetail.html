@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Provider Member Detail | Axis Core AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #081425; color: #d8e3fb; }
+    .glass-panel {
+      background: rgba(21, 32, 49, 0.72);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(70, 69, 84, 0.3);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="selection:bg-indigo-400/30 selection:text-white">
+  <main class="min-h-screen p-6 md:p-8">
+    <div class="mx-auto max-w-7xl space-y-8">
+      <section class="glass-panel rounded-[32px] p-8">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Provider Member Detail</p>
+            <h1 class="mt-3 text-4xl font-bold text-white" id="memberNameHeading">Member profile</h1>
+            <p class="mt-3 max-w-3xl text-sm leading-7 text-slate-400" id="memberHeaderCopy">Review coverage, enrollment status, next-best actions, and provider-side orchestration from one screen.</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a class="inline-flex items-center gap-2 rounded-2xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5" href="Members.html">
+              <span class="material-symbols-outlined text-base">arrow_back</span>
+              Back to Members
+            </a>
+            <button class="inline-flex items-center gap-2 rounded-2xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-400" id="continueMemberFlowButton" type="button">
+              <span class="material-symbols-outlined text-base">play_arrow</span>
+              Continue Flow
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-6 md:grid-cols-4">
+        <div class="glass-panel rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-500">Member ID</p>
+          <p class="mt-4 text-3xl font-bold text-white" id="memberIdValue">AXM-000000</p>
+          <p class="mt-2 text-sm text-slate-400">Provider-visible member reference.</p>
+        </div>
+        <div class="glass-panel rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-500">Plan</p>
+          <p class="mt-4 text-xl font-bold text-white" id="memberPlanValue">Plan not mapped</p>
+          <p class="mt-2 text-sm text-slate-400" id="memberCoverageValue">Coverage details unavailable.</p>
+        </div>
+        <div class="glass-panel rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-500">Status</p>
+          <p class="mt-4 text-xl font-bold text-white" id="memberStatusValue">Unknown</p>
+          <p class="mt-2 text-sm text-slate-400" id="memberUpdatedValue">No activity yet.</p>
+        </div>
+        <div class="glass-panel rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-500">Next Best Action</p>
+          <p class="mt-4 text-xl font-bold text-white" id="memberNextActionValue">Review enrollment state</p>
+          <p class="mt-2 text-sm text-slate-400">Prepared by Nventr using provider-side context.</p>
+        </div>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div class="space-y-6">
+          <div class="glass-panel rounded-[32px] p-6">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-xl font-bold text-white">Member Summary</h2>
+                <p class="mt-1 text-sm text-slate-400">Demographics, coverage, and orchestration state.</p>
+              </div>
+              <span class="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-cyan-200" id="memberRecordTypeBadge">Member</span>
+            </div>
+            <div class="mt-6 grid gap-4 md:grid-cols-2" id="memberSummaryGrid"></div>
+          </div>
+
+          <div class="glass-panel rounded-[32px] p-6">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-xl font-bold text-white">Status Timeline</h2>
+                <p class="mt-1 text-sm text-slate-400">What has happened so far, and what is still blocked.</p>
+              </div>
+              <span class="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-200">AI guided</span>
+            </div>
+            <div class="mt-6 space-y-4" id="memberTimeline"></div>
+          </div>
+
+          <div class="glass-panel rounded-[32px] p-6">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-xl font-bold text-white">Provider Actions</h2>
+                <p class="mt-1 text-sm text-slate-400">Stay in the provider workspace while routing the member to the right operational path.</p>
+              </div>
+            </div>
+            <div class="mt-6 grid gap-3 md:grid-cols-3">
+              <button class="rounded-[22px] border border-slate-700 px-4 py-4 text-left text-sm font-semibold text-white transition-colors hover:bg-white/5" id="memberOpenClaimsButton" type="button">
+                <span class="material-symbols-outlined mb-3 block text-cyan-300">description</span>
+                Open Claims Queue
+              </button>
+              <button class="rounded-[22px] border border-slate-700 px-4 py-4 text-left text-sm font-semibold text-white transition-colors hover:bg-white/5" id="memberOpenBillingButton" type="button">
+                <span class="material-symbols-outlined mb-3 block text-emerald-300">account_balance_wallet</span>
+                Open Billing & Payments
+              </button>
+              <button class="rounded-[22px] border border-slate-700 px-4 py-4 text-left text-sm font-semibold text-white transition-colors hover:bg-white/5" id="memberOpenAppointmentsButton" type="button">
+                <span class="material-symbols-outlined mb-3 block text-indigo-300">event</span>
+                Open Appointments
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="glass-panel rounded-[32px] p-6">
+            <h2 class="text-xl font-bold text-white">Enrollment Orchestration</h2>
+            <div class="mt-5 space-y-4 text-sm text-slate-300" id="memberOrchestrationList"></div>
+          </div>
+
+          <div class="glass-panel rounded-[32px] p-6">
+            <h2 class="text-xl font-bold text-white">Nventr Notes</h2>
+            <div class="mt-5 rounded-[24px] border border-slate-800 bg-slate-950/50 p-5 text-sm leading-7 text-slate-300" id="memberNventrNote">
+              Nventr is preparing a provider-side summary.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    localStorage.setItem('preferredRole', 'provider');
+
+    const storedMembers = JSON.parse(localStorage.getItem('providerMemberDirectory') || '[]');
+    const storedDrafts = JSON.parse(localStorage.getItem('memberEnrollmentDrafts') || '[]');
+    const selectedRecord = JSON.parse(localStorage.getItem('selectedProviderMemberRecord') || 'null');
+    const fallbackRecord = selectedRecord || storedMembers[0] || storedDrafts[0] || {
+      id: 'sample-1',
+      fullName: 'Elena Gilbert',
+      contact: 'elena.gilbert@example.com',
+      memberId: 'AXM-402311',
+      planName: 'PPO Plus 500',
+      status: 'Enrolled',
+      statusDetail: 'Confirmation',
+      coverageStart: 'May 1, 2026',
+      updatedAt: new Date().toISOString(),
+      recordType: 'member'
+    };
+
+    const relatedDraft = storedDrafts.find((item) => item.id === fallbackRecord.id);
+    const relatedMember = storedMembers.find((item) => item.id === fallbackRecord.id) || fallbackRecord;
+    const statusText = fallbackRecord.status || 'Unknown';
+    const isCompleted = /enrolled/i.test(statusText);
+    const isDraft = /draft/i.test(statusText) || fallbackRecord.recordType === 'draft';
+
+    document.getElementById('memberNameHeading').textContent = fallbackRecord.fullName || 'Provider member detail';
+    document.getElementById('memberHeaderCopy').textContent = isCompleted
+      ? 'This member is active. Use the actions below to move into claims, appointments, or billing from the provider workspace.'
+      : 'This record still needs provider attention. Use the orchestration view to continue enrollment or clear blockers.';
+    document.getElementById('memberIdValue').textContent = fallbackRecord.memberId || 'Pending assignment';
+    document.getElementById('memberPlanValue').textContent = fallbackRecord.planName || 'Plan not mapped';
+    document.getElementById('memberCoverageValue').textContent = fallbackRecord.coverageStart ? `Coverage start: ${fallbackRecord.coverageStart}` : 'Coverage start pending activation.';
+    document.getElementById('memberStatusValue').textContent = statusText;
+    document.getElementById('memberUpdatedValue').textContent = fallbackRecord.updatedAt ? new Date(fallbackRecord.updatedAt).toLocaleString() : 'No activity yet.';
+    document.getElementById('memberRecordTypeBadge').textContent = isDraft ? 'Draft' : 'Member';
+
+    const nextAction = isCompleted
+      ? 'Monitor claims, billing, and appointments'
+      : isDraft
+        ? 'Resume provider-assisted enrollment'
+        : 'Clear enrollment blockers and continue';
+    document.getElementById('memberNextActionValue').textContent = nextAction;
+
+    const summaryRows = [
+      ['Contact', fallbackRecord.contact || 'No contact captured'],
+      ['Record ID', fallbackRecord.id || 'Pending'],
+      ['Status Detail', fallbackRecord.statusDetail || 'Waiting for detail'],
+      ['Entry Mode', fallbackRecord.roleContext === 'provider' ? 'Provider-assisted member enrollment' : 'Member self-service'],
+      ['Employer / Sponsor', fallbackRecord.employer || 'Direct enrollment'],
+      ['Coverage Start', fallbackRecord.coverageStart || 'Pending activation']
+    ];
+    document.getElementById('memberSummaryGrid').innerHTML = summaryRows.map(([label, value]) => `
+      <div class="rounded-[22px] border border-slate-800 bg-slate-950/50 p-4">
+        <p class="text-xs uppercase tracking-[0.22em] text-slate-500">${label}</p>
+        <p class="mt-3 text-sm font-semibold text-white">${value}</p>
+      </div>
+    `).join('');
+
+    const timelineItems = [
+      {
+        label: 'Registration',
+        detail: fallbackRecord.fullName ? 'Member identity and contact are on file.' : 'Registration still needs basic identity details.',
+        tone: fallbackRecord.fullName ? 'emerald' : 'amber'
+      },
+      {
+        label: 'Plan Mapping',
+        detail: fallbackRecord.planName ? `${fallbackRecord.planName} is currently mapped.` : 'Plan mapping still needs provider review.',
+        tone: fallbackRecord.planName ? 'emerald' : 'amber'
+      },
+      {
+        label: 'Eligibility / Activation',
+        detail: isCompleted ? 'Coverage is active and routed back to the provider dashboard.' : 'Activation is still waiting on the remaining enrollment steps.',
+        tone: isCompleted ? 'emerald' : 'amber'
+      }
+    ];
+    document.getElementById('memberTimeline').innerHTML = timelineItems.map((item, index) => `
+      <div class="rounded-[24px] border border-slate-800 bg-slate-950/50 p-5">
+        <div class="flex items-start gap-4">
+          <div class="mt-1 flex h-9 w-9 items-center justify-center rounded-full ${item.tone === 'emerald' ? 'bg-emerald-500/10 text-emerald-200' : 'bg-amber-500/10 text-amber-200'} font-bold">${index + 1}</div>
+          <div>
+            <p class="text-sm font-semibold text-white">${item.label}</p>
+            <p class="mt-2 text-sm leading-7 text-slate-400">${item.detail}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const orchestrationItems = [
+      {
+        title: 'Primary recommendation',
+        detail: nextAction
+      },
+      {
+        title: 'Draft visibility',
+        detail: relatedDraft ? `A resumable draft is available from ${relatedDraft.statusDetail || relatedDraft.status || 'the current step'}.` : 'No saved draft exists beyond this current record.'
+      },
+      {
+        title: 'Provider handoff',
+        detail: isCompleted ? 'Use the provider dashboard for post-enrollment monitoring.' : 'If blocked, Nventr can hand this member to enrollment ops with the current summary.'
+      }
+    ];
+    document.getElementById('memberOrchestrationList').innerHTML = orchestrationItems.map((item) => `
+      <div class="rounded-[22px] border border-slate-800 bg-slate-950/50 p-4">
+        <p class="font-semibold text-white">${item.title}</p>
+        <p class="mt-2 text-slate-400">${item.detail}</p>
+      </div>
+    `).join('');
+
+    document.getElementById('memberNventrNote').textContent = isCompleted
+      ? `Nventr confirms ${fallbackRecord.fullName} is active. Suggested next step: open claims, appointments, or billing based on the provider's immediate need.`
+      : `Nventr confirms ${fallbackRecord.fullName} still needs provider-assisted follow-through. Suggested next step: resume the enrollment flow and clear the current blocker.`;
+
+    document.getElementById('continueMemberFlowButton').textContent = isCompleted ? 'Open Provider Dashboard' : 'Continue Enrollment';
+    document.getElementById('continueMemberFlowButton').addEventListener('click', () => {
+      if (!isCompleted) {
+        const wizardState = fallbackRecord.wizardState || relatedDraft?.wizardState;
+        if (wizardState) {
+          localStorage.setItem('memberEnrollmentWizard', JSON.stringify(wizardState));
+        }
+        window.location.href = 'Enrollment.html';
+        return;
+      }
+      window.location.href = 'OperationalEffDashboard.html';
+    });
+
+    document.getElementById('memberOpenClaimsButton').addEventListener('click', () => {
+      window.location.href = 'Claim1.html';
+    });
+    document.getElementById('memberOpenBillingButton').addEventListener('click', () => {
+      window.location.href = 'PaymentandRecon.html';
+    });
+    document.getElementById('memberOpenAppointmentsButton').addEventListener('click', () => {
+      window.location.href = 'Appointment.html';
+    });
+  </script>
+  <script src="portal-shell.js"></script>
+</body>
+</html>
