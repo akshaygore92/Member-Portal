@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Enrollment | Axis Core AI</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries:64"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script id="tailwind-config">
@@ -127,6 +127,9 @@
       border-color: rgba(149, 167, 191, 0.16);
       color: #95a7bf;
     }
+      #nventrFeatureSpotlight {
+    display: none !important;
+  }
   </style>
 </head>
 <body class="min-h-screen overflow-x-hidden bg-background text-text font-body selection:bg-primary/30">
@@ -152,8 +155,8 @@
   </header>
 
   <main class="mx-auto grid max-w-[1500px] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1.35fr)_360px] lg:px-8">
-    <section class="space-y-6">
-      <section class="hidden rounded-[30px] border border-primary/20 bg-gradient-to-br from-primary/12 to-secondary/8 p-6 shadow-[0_20px_60px_rgba(14,165,233,0.08)]" id="providerEnrollmentWrapper">
+    <section class="space-y-1">
+      <!-- <section class="hidden rounded-[30px] border border-primary/20 bg-gradient-to-br from-primary/12 to-secondary/8 p-6 shadow-[0_20px_60px_rgba(14,165,233,0.08)]" id="providerEnrollmentWrapper">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div class="max-w-3xl">
             <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
@@ -186,7 +189,7 @@
             <p class="mt-2 text-sm leading-7 text-muted">If enrollment gets blocked, Nventr can prepare the case summary for an enrollment operations specialist.</p>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <div class="glass-panel overflow-hidden rounded-[30px]">
         <div class="border-b border-white/5 px-5 py-5 sm:px-8">
